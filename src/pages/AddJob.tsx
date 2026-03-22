@@ -29,7 +29,7 @@ const AddJob = () => {
   const navigate = useNavigate();
   const [brands, setBrands] = useState<{ id: string; name: string }[]>([]);
   const [models, setModels] = useState<{ id: string; name: string }[]>([]);
-  const [clients, setClients] = useState<{ id: string; client_name: string; company_name: string; contact_number?: string }[]>([]);
+  const [clients, setClients] = useState<{ id: string; client_name: string; company_name: string; contact_number?: string; address?: string }[]>([]);
   const [branches, setBranches] = useState<{ id: string; name: string }[]>([]);
   const [boardsList, setBoardsList] = useState<{ id: string; name: string }[]>([]);
 
@@ -51,6 +51,8 @@ const AddJob = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(() => sessionStorage.getItem("addJob_customer") || "");
   const [manualCustomerName, setManualCustomerName] = useState(() => sessionStorage.getItem("addJob_manualName") || "");
   const [manualCustomerMobile, setManualCustomerMobile] = useState(() => sessionStorage.getItem("addJob_manualMobile") || "");
+  const [manualCompanyName, setManualCompanyName] = useState(() => sessionStorage.getItem("addJob_manualCompany") || "");
+  const [manualAddress, setManualAddress] = useState(() => sessionStorage.getItem("addJob_manualAddress") || "");
   const [factoryChallanNumber, setFactoryChallanNumber] = useState(() => sessionStorage.getItem("addJob_challan") || "");
   const [selectedBranch, setSelectedBranch] = useState(() => sessionStorage.getItem("addJob_branch") || "");
   const [date, setDate] = useState(() => sessionStorage.getItem("addJob_date") || new Date().toISOString().split("T")[0]);
@@ -65,6 +67,8 @@ const AddJob = () => {
   useEffect(() => { sessionStorage.setItem("addJob_customer", selectedCustomer); }, [selectedCustomer]);
   useEffect(() => { sessionStorage.setItem("addJob_manualName", manualCustomerName); }, [manualCustomerName]);
   useEffect(() => { sessionStorage.setItem("addJob_manualMobile", manualCustomerMobile); }, [manualCustomerMobile]);
+  useEffect(() => { sessionStorage.setItem("addJob_manualCompany", manualCompanyName); }, [manualCompanyName]);
+  useEffect(() => { sessionStorage.setItem("addJob_manualAddress", manualAddress); }, [manualAddress]);
   useEffect(() => { sessionStorage.setItem("addJob_challan", factoryChallanNumber); }, [factoryChallanNumber]);
   useEffect(() => { sessionStorage.setItem("addJob_branch", selectedBranch); }, [selectedBranch]);
   useEffect(() => { sessionStorage.setItem("addJob_date", date); }, [date]);
@@ -72,7 +76,7 @@ const AddJob = () => {
   useEffect(() => {
     supabase.from("brands").select("id, name").order("name").then(({ data }) => data && setBrands(data));
     supabase.from("models").select("id, name").order("name").then(({ data }) => data && setModels(data));
-    supabase.from("clients").select("id, client_name, company_name, contact_number").order("client_name").then(({ data }) => data && setClients(data));
+    supabase.from("clients").select("id, client_name, company_name, contact_number, address").order("client_name").then(({ data }) => data && setClients(data));
     supabase.from("branches").select("id, name").eq("status", "active").order("name").then(({ data }) => {
       if (data) {
         setBranches(data);
@@ -142,6 +146,8 @@ const AddJob = () => {
           .insert({
             client_name: manualCustomerName,
             contact_number: manualCustomerMobile,
+            company_name: manualCompanyName,
+            address: manualAddress,
           })
           .select()
           .single();
@@ -206,6 +212,8 @@ const AddJob = () => {
         sessionStorage.removeItem("addJob_customer");
         sessionStorage.removeItem("addJob_manualName");
         sessionStorage.removeItem("addJob_manualMobile");
+        sessionStorage.removeItem("addJob_manualCompany");
+        sessionStorage.removeItem("addJob_manualAddress");
         sessionStorage.removeItem("addJob_challan");
         sessionStorage.removeItem("addJob_branch");
         sessionStorage.removeItem("addJob_date");
@@ -213,6 +221,8 @@ const AddJob = () => {
         setSelectedCustomer("");
         setManualCustomerName("");
         setManualCustomerMobile("");
+        setManualCompanyName("");
+        setManualAddress("");
         setFactoryChallanNumber("");
         setSelectedBranch("");
         setBrandName("");
@@ -379,6 +389,8 @@ const AddJob = () => {
                 if (c) {
                   setManualCustomerName(c.client_name);
                   setManualCustomerMobile(c.contact_number || "");
+                  setManualCompanyName(c.company_name || "");
+                  setManualAddress(c.address || "");
                 }
               }}>
                 <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Select or type below" /></SelectTrigger>
@@ -400,8 +412,18 @@ const AddJob = () => {
             </div>
 
             <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
+              <Label className="text-right text-xs font-semibold">Company Name</Label>
+              <Input value={manualCompanyName} onChange={(e) => { setManualCompanyName(e.target.value); setSelectedCustomer(""); }} placeholder="Enter company name" className="h-8 text-sm" />
+            </div>
+
+            <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
               <Label className="text-right text-xs font-semibold">Mobile Number</Label>
               <Input value={manualCustomerMobile} onChange={(e) => { setManualCustomerMobile(e.target.value); setSelectedCustomer(""); }} placeholder="Enter mobile number" className="h-8 text-sm" />
+            </div>
+
+            <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
+              <Label className="text-right text-xs font-semibold">Address</Label>
+              <Input value={manualAddress} onChange={(e) => { setManualAddress(e.target.value); setSelectedCustomer(""); }} placeholder="Enter address" className="h-8 text-sm" />
             </div>
 
             <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
