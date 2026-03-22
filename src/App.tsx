@@ -21,6 +21,7 @@ import AddBranch from "./pages/branch/AddBranch";
 import EditBranch from "./pages/branch/EditBranch";
 import BrandList from "./pages/machine-data/BrandList";
 import ModelList from "./pages/machine-data/ModelList";
+import BoardList from "./pages/machine-data/BoardList";
 import AddJob from "./pages/AddJob";
 import NotFound from "./pages/NotFound";
 
