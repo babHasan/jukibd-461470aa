@@ -150,7 +150,8 @@ export default function PrintInvoice() {
 
   const firstJob = jobs[0];
   const printDate = format(new Date(), "dd-MM-yyyy hh:mm:ss a");
-  const isDelivery = copyType === "delivery" || firstJob.status === "picked-up";
+  const isDueCollection = copyType === "due-collection";
+  const isDelivery = copyType === "delivery" || firstJob.status === "picked-up" || isDueCollection;
 
   // Generate 15 empty rows to fill the table
   const totalRows = Math.max(isDelivery ? jobs.length : 15, jobs.length);
