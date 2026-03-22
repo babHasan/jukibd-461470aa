@@ -389,6 +389,8 @@ const AddJob = () => {
                 if (c) {
                   setManualCustomerName(c.client_name);
                   setManualCustomerMobile(c.contact_number || "");
+                  setManualCompanyName(c.company_name || "");
+                  setManualAddress((c as any).address || "");
                 }
               }}>
                 <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Select or type below" /></SelectTrigger>
@@ -410,8 +412,18 @@ const AddJob = () => {
             </div>
 
             <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
+              <Label className="text-right text-xs font-semibold">Company Name</Label>
+              <Input value={manualCompanyName} onChange={(e) => { setManualCompanyName(e.target.value); setSelectedCustomer(""); }} placeholder="Enter company name" className="h-8 text-sm" />
+            </div>
+
+            <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
               <Label className="text-right text-xs font-semibold">Mobile Number</Label>
               <Input value={manualCustomerMobile} onChange={(e) => { setManualCustomerMobile(e.target.value); setSelectedCustomer(""); }} placeholder="Enter mobile number" className="h-8 text-sm" />
+            </div>
+
+            <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
+              <Label className="text-right text-xs font-semibold">Address</Label>
+              <Input value={manualAddress} onChange={(e) => { setManualAddress(e.target.value); setSelectedCustomer(""); }} placeholder="Enter address" className="h-8 text-sm" />
             </div>
 
             <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
