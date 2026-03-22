@@ -27,6 +27,7 @@ import JobList from "./pages/JobList";
 import JobDetail from "./pages/JobDetail";
 import CustomerPortal from "./pages/CustomerPortal";
 import NotFound from "./pages/NotFound";
+import BackupDatabase from "./pages/BackupDatabase";
 
 const queryClient = new QueryClient();
 
