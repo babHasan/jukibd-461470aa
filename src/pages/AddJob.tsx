@@ -228,7 +228,7 @@ const AddJob = () => {
                       addedJobs.map((job, idx) => (
                         <TableRow key={job.id}>
                           <TableCell className="text-xs">{idx + 1}</TableCell>
-                          <TableCell className="text-xs">{job.service}</TableCell>
+                          
                           <TableCell className="text-xs">{job.brand}</TableCell>
                           <TableCell className="text-xs">{job.model}</TableCell>
                           <TableCell className="text-xs">{job.board}</TableCell>
