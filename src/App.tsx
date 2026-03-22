@@ -23,6 +23,7 @@ import BrandList from "./pages/machine-data/BrandList";
 import ModelList from "./pages/machine-data/ModelList";
 import BoardList from "./pages/machine-data/BoardList";
 import AddJob from "./pages/AddJob";
+import JobList from "./pages/JobList";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
