@@ -154,6 +154,44 @@ export default function SmsSettings() {
           </p>
         </div>
 
+        {/* SMS API Configuration */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Key className="h-4 w-4" />
+              SMS API কনফিগারেশন
+            </CardTitle>
+            <CardDescription className="text-xs">
+              BulkSMSBD এর API Key এবং Sender ID সেট করুন
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-sm font-semibold">API Key</Label>
+                <Input
+                  type="password"
+                  value={smsApiKey}
+                  onChange={(e) => setSmsApiKey(e.target.value)}
+                  placeholder="আপনার BulkSMSBD API Key দিন"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-sm font-semibold">Sender ID</Label>
+                <Input
+                  value={smsSenderId}
+                  onChange={(e) => setSmsSenderId(e.target.value)}
+                  placeholder="আপনার Sender ID দিন"
+                />
+              </div>
+            </div>
+            <Button onClick={handleSaveConfig} disabled={savingConfig} size="sm">
+              <Save className="h-4 w-4 mr-1" />
+              {savingConfig ? "সেভ হচ্ছে..." : "সেভ করুন"}
+            </Button>
+          </CardContent>
+        </Card>
+
         {/* Templates */}
         <div className="grid gap-4">
           {templates.map((t) => (
