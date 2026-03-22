@@ -3,12 +3,14 @@ import { AppLayout } from "@/components/AppLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { MessageSquare, Save, History } from "lucide-react";
+import { MessageSquare, Save, History, Key, Settings } from "lucide-react";
 
 interface SmsTemplate {
   id: string;
@@ -40,6 +42,12 @@ export default function SmsSettings() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState("");
   const [loading, setLoading] = useState(true);
+
+  // SMS Config
+  const [smsApiKey, setSmsApiKey] = useState("");
+  const [smsSenderId, setSmsSenderId] = useState("");
+  const [smsConfigId, setSmsConfigId] = useState("");
+  const [savingConfig, setSavingConfig] = useState(false);
 
   useEffect(() => {
     fetchTemplates();
