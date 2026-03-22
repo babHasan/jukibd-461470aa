@@ -39,6 +39,7 @@ import ChartOfAccounts from "./pages/accounts/ChartOfAccounts";
 import TransactionReport from "./pages/reports/TransactionReport";
 import CollectionReport from "./pages/reports/CollectionReport";
 import ExpenseReport from "./pages/reports/ExpenseReport";
+import CompanyInfo from "./pages/settings/CompanyInfo";
 
 const queryClient = new QueryClient();
 
