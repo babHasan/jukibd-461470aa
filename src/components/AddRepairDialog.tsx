@@ -52,6 +52,7 @@ export function AddRepairDialog({ onAdd }: AddRepairDialogProps) {
     setForm({
       customerName: "",
       customerPhone: "",
+      customerEmail: "",
       deviceType: "",
       deviceBrand: "",
       issue: "",
