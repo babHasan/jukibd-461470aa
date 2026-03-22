@@ -48,6 +48,19 @@ export default function CustomerPortal() {
   const [results, setResults] = useState<JobResult[]>([]);
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [scrollMessage, setScrollMessage] = useState("");
+
+  useEffect(() => {
+    supabase
+      .from("portal_scroll_messages")
+      .select("message_text")
+      .eq("is_active", true)
+      .limit(1)
+      .single()
+      .then(({ data }) => {
+        if (data) setScrollMessage(data.message_text);
+      });
+  }, []);
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
