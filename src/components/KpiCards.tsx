@@ -50,16 +50,16 @@ export function KpiCards({ jobs }: KpiCardsProps) {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-2 sm:gap-4 lg:grid-cols-4">
       {cards.map((card) => (
         <div
           key={card.label}
-          className="rounded-lg border-l-4 border-l-accent border bg-card p-4 shadow-sm transition-shadow hover:shadow-md"
+          className="rounded-lg border-l-4 border-l-accent border bg-card p-3 sm:p-4 shadow-sm transition-shadow hover:shadow-md"
         >
-          <p className="text-xs font-semibold uppercase tracking-wider text-accent">
+          <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-accent">
             {card.label}
           </p>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-foreground">
+          <p className="mt-1 sm:mt-2 text-xl sm:text-3xl font-bold tracking-tight text-foreground">
             {card.value}
           </p>
         </div>

@@ -199,7 +199,7 @@ export default function CustomerPortal() {
                   </div>
 
                   {/* Details */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
+                  <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
                       <p className="text-muted-foreground text-xs">Customer</p>
                       <p className="font-medium text-foreground">{job.customer_name}</p>
