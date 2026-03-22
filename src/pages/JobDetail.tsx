@@ -164,10 +164,21 @@ export default function JobDetailPage() {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
             <Badge variant="secondary" className={`${statusColors[job.status] || ""}`}>
               {jobStatusLabels[job.status] || job.status}
             </Badge>
+            {prevStatus && (
+              <Button
+                size="sm"
+                variant="outline"
+                className="gap-1"
+                onClick={handlePreviousStatus}
+              >
+                <ChevronLeft className="h-3 w-3" />
+                Back to {jobStatusLabels[prevStatus]}
+              </Button>
+            )}
             {nextStatus && (
               <Button
                 size="sm"
