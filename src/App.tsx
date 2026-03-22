@@ -97,6 +97,7 @@ function AppRoutes() {
       <Route path="/settings/company-info" element={<ProtectedRoute><CompanyInfo /></ProtectedRoute>} />
       <Route path="/settings/portal-message" element={<ProtectedRoute><PortalScrollMessage /></ProtectedRoute>} />
       <Route path="/settings/footer" element={<ProtectedRoute><FooterSettings /></ProtectedRoute>} />
+      <Route path="/settings/appearance" element={<ProtectedRoute><AppearanceSettings /></ProtectedRoute>} />
       <Route path="/print-invoice" element={<ProtectedRoute><PrintInvoice /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
