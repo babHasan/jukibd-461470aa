@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Save, ArrowLeft } from "lucide-react";
+import { UserPhotoUpload } from "@/components/UserPhotoUpload";
 
 const ALL_MODULES = [
   "Dashboard", "Branch", "Admin", "Machine Data", "Client Data",
@@ -34,6 +35,7 @@ export default function EditUser() {
   });
   const [selectedModules, setSelectedModules] = useState<string[]>([]);
   const [currentRole, setCurrentRole] = useState<string>("user");
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) fetchUser(id);
@@ -63,6 +65,7 @@ export default function EditUser() {
       address: p.address || "",
       status: p.status || "active",
     });
+    setPhotoUrl(p.photo_url || null);
     setSelectedModules((permsRes.data || []).map((r: any) => r.module));
     setCurrentRole((rolesRes.data || [])[0]?.role || "user");
     setLoading(false);
@@ -95,6 +98,7 @@ export default function EditUser() {
         nid: form.nid,
         address: form.address,
         status: form.status,
+        photo_url: photoUrl,
         updated_at: new Date().toISOString(),
       })
       .eq("id", id);
@@ -148,6 +152,9 @@ export default function EditUser() {
               <div className="grid gap-6 lg:grid-cols-2">
                 {/* Left: form fields */}
                 <div className="space-y-4">
+                  <div className="flex justify-center">
+                    <UserPhotoUpload photoUrl={photoUrl} onPhotoChange={setPhotoUrl} userId={id} />
+                  </div>
                   <div className="space-y-2">
                     <Label>User Name <span className="text-destructive">*</span></Label>
                     <Input

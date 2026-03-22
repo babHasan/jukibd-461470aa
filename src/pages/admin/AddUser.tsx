@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Save } from "lucide-react";
+import { UserPhotoUpload } from "@/components/UserPhotoUpload";
 
 const ALL_MODULES = [
   "Dashboard",
@@ -42,6 +43,7 @@ export default function AddUser() {
     password: "",
   });
   const [selectedModules, setSelectedModules] = useState<string[]>([]);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
 
   function toggleModule(mod: string) {
     setSelectedModules((prev) =>
@@ -97,6 +99,7 @@ export default function AddUser() {
         mobile: form.mobile,
         nid: form.nid,
         address: form.address,
+        photo_url: photoUrl,
       })
       .eq("id", userId);
 
@@ -124,9 +127,12 @@ export default function AddUser() {
           </CardHeader>
           <CardContent className="pt-6">
             <form onSubmit={handleSubmit}>
-              <div className="grid gap-6 lg:grid-cols-2">
+               <div className="grid gap-6 lg:grid-cols-2">
                 {/* Left: form fields */}
                 <div className="space-y-4">
+                  <div className="flex justify-center">
+                    <UserPhotoUpload photoUrl={photoUrl} onPhotoChange={setPhotoUrl} />
+                  </div>
                   <div className="space-y-2">
                     <Label>
                       User Name <span className="text-destructive">*</span>
