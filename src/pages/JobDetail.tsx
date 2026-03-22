@@ -200,6 +200,20 @@ export default function JobDetailPage() {
             <Badge variant="secondary" className={`${statusColors[job.status] || ""}`}>
               {jobStatusLabels[job.status] || job.status}
             </Badge>
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-1"
+              onClick={() => {
+                const url = job.factory_challan_number
+                  ? `/print-invoice?challan=${encodeURIComponent(job.factory_challan_number)}`
+                  : `/print-invoice?job=${job.id}`;
+                window.open(url, "_blank");
+              }}
+            >
+              <Printer className="h-3 w-3" />
+              Print
+            </Button>
             {prevStatus && (
               <Button
                 size="sm"
