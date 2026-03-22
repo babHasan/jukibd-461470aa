@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Search, Package, Clock, CheckCircle, Loader2, Printer } from "lucide-react";
+import { Search, Package, Clock, CheckCircle, Loader2, Printer, PartyPopper } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 
@@ -168,15 +168,17 @@ export default function CustomerPortal() {
                   <div className="flex items-center gap-1 overflow-x-auto pb-1">
                     {jobStatusFlow.map((s, i) => {
                       const isPast = i <= currentIdx;
+                      const isCurrent = i === currentIdx;
+                      const isPickedUp = job.status === "picked-up";
                       return (
                         <div key={s} className="flex items-center gap-1 shrink-0">
                           <div className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium border ${
                             isPast ? statusColors[s] : "bg-muted/50 text-muted-foreground border-border"
-                          }`}>
-                            {isPast && i === currentIdx ? (
-                              <Clock className="h-3 w-3" />
-                            ) : isPast ? (
+                          } ${isCurrent && !isPickedUp ? "animate-status-blink" : ""}`}>
+                            {isPast && !isCurrent ? (
                               <CheckCircle className="h-3 w-3" />
+                            ) : isCurrent ? (
+                              <Clock className="h-3 w-3" />
                             ) : null}
                             {jobStatusLabels[s]}
                           </div>
@@ -186,6 +188,12 @@ export default function CustomerPortal() {
                         </div>
                       );
                     })}
+                    {job.status === "picked-up" && (
+                      <div className="flex items-center gap-1.5 ml-2 rounded-full bg-green-100 text-green-800 border border-green-300 px-3 py-1 text-xs font-bold">
+                        <PartyPopper className="h-3.5 w-3.5" />
+                        Job Done
+                      </div>
+                    )}
                   </div>
 
                   {/* Details */}
