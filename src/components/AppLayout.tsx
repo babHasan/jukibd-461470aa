@@ -43,7 +43,8 @@ import {
   Palette,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { AddRepairDialog } from "@/components/AddRepairDialog";
 import { useRepairs } from "@/context/RepairContext";
 
@@ -265,6 +266,20 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const { signOut, user, isAdmin, permissions } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [profile, setProfile] = useState<{ name: string; photo_url: string | null } | null>(null);
+
+  useEffect(() => {
+    if (user) {
+      supabase
+        .from("profiles")
+        .select("name, photo_url")
+        .eq("id", user.id)
+        .single()
+        .then(({ data }) => {
+          if (data) setProfile(data);
+        });
+    }
+  }, [user]);
 
   const currentLabel =
     navItems.find((n) => n.to === location.pathname)?.label ||
@@ -350,10 +365,14 @@ export function AppLayout({ children }: { children: ReactNode }) {
           <div className="flex items-center gap-3">
             <AddRepairDialog onAdd={addOrder} />
             <Link to="/my-profile" className="hidden sm:flex items-center gap-2 rounded-full bg-primary px-3 py-1.5 hover:opacity-90 transition-opacity">
-              <div className="h-6 w-6 rounded-full bg-accent flex items-center justify-center text-xs font-bold text-accent-foreground overflow-hidden">
-                {isAdmin ? "A" : "U"}
+              <div className="h-6 w-6 rounded-full bg-accent flex items-center justify-center text-xs font-bold text-accent-foreground overflow-hidden shrink-0">
+                {profile?.photo_url ? (
+                  <img src={profile.photo_url} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  (profile?.name?.[0] || (isAdmin ? "A" : "U")).toUpperCase()
+                )}
               </div>
-              <span className="text-xs font-medium text-primary-foreground">{isAdmin ? "ADMIN" : "USER"}</span>
+              <span className="text-xs font-medium text-primary-foreground">{profile?.name || (isAdmin ? "ADMIN" : "USER")}</span>
             </Link>
           </div>
         </header>
