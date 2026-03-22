@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/AppLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, ClipboardList, Eye } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Search, ClipboardList, Phone, ChevronRight } from "lucide-react";
+import { toast } from "sonner";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -23,6 +24,7 @@ interface Job {
   details_of_problem: string;
   remarks: string;
   customer_name: string;
+  customer_mobile: string;
   branch_name: string;
   factory_challan_number: string;
   job_date: string;
@@ -30,6 +32,14 @@ interface Job {
   created_at: string;
 }
 
+const jobStatusFlow = ["received", "diagnosing", "in-progress", "completed", "picked-up"];
+const jobStatusLabels: Record<string, string> = {
+  received: "Received",
+  diagnosing: "Diagnosing",
+  "in-progress": "In Progress",
+  completed: "Completed",
+  "picked-up": "Picked Up",
+};
 const statusColors: Record<string, string> = {
   received: "bg-blue-100 text-blue-800",
   diagnosing: "bg-yellow-100 text-yellow-800",
@@ -39,32 +49,57 @@ const statusColors: Record<string, string> = {
 };
 
 export default function JobList() {
+  const navigate = useNavigate();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [perPage, setPerPage] = useState("10");
 
-  async function fetchJobs() {
+  function fetchJobs() {
     setLoading(true);
-    const { data, error } = await supabase
+    supabase
       .from("jobs")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (!error) setJobs(data || []);
-    setLoading(false);
+      .select("*, clients(contact_number)")
+      .order("created_at", { ascending: false })
+      .then(({ data, error }) => {
+        if (!error && data) {
+          setJobs(data.map((j: any) => ({
+            ...j,
+            customer_mobile: j.clients?.contact_number || "",
+          })));
+        }
+        setLoading(false);
+      });
   }
 
   useEffect(() => { fetchJobs(); }, []);
 
-  const filtered = jobs.filter((j) =>
-    j.job_number.toLowerCase().includes(search.toLowerCase()) ||
-    j.brand_name.toLowerCase().includes(search.toLowerCase()) ||
-    j.model_name.toLowerCase().includes(search.toLowerCase()) ||
-    j.board_name.toLowerCase().includes(search.toLowerCase()) ||
-    j.board_serial.toLowerCase().includes(search.toLowerCase()) ||
-    j.customer_name.toLowerCase().includes(search.toLowerCase()) ||
-    j.branch_name.toLowerCase().includes(search.toLowerCase())
-  );
+  async function handleJobStatusUpdate(jobId: string, currentStatus: string) {
+    const idx = jobStatusFlow.indexOf(currentStatus);
+    if (idx >= jobStatusFlow.length - 1) return;
+    const next = jobStatusFlow[idx + 1];
+    const { error } = await supabase.from("jobs").update({ status: next }).eq("id", jobId);
+    if (error) {
+      toast.error("Failed to update status");
+    } else {
+      toast.success(`Status updated to ${jobStatusLabels[next]}`);
+      fetchJobs();
+    }
+  }
+
+  const filtered = jobs.filter((j) => {
+    const matchesSearch =
+      j.job_number.toLowerCase().includes(search.toLowerCase()) ||
+      j.brand_name.toLowerCase().includes(search.toLowerCase()) ||
+      j.model_name.toLowerCase().includes(search.toLowerCase()) ||
+      j.board_name.toLowerCase().includes(search.toLowerCase()) ||
+      j.board_serial.toLowerCase().includes(search.toLowerCase()) ||
+      j.customer_name.toLowerCase().includes(search.toLowerCase()) ||
+      j.branch_name.toLowerCase().includes(search.toLowerCase());
+    const matchesStatus = statusFilter === "all" || j.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
   const displayed = perPage === "all" ? filtered : filtered.slice(0, parseInt(perPage));
 
   return (
@@ -75,7 +110,7 @@ export default function JobList() {
           <h2 className="text-xl font-bold text-foreground">JOB LIST</h2>
         </div>
 
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
             <Select value={perPage} onValueChange={setPerPage}>
               <SelectTrigger className="w-20"><SelectValue /></SelectTrigger>
@@ -89,56 +124,95 @@ export default function JobList() {
             </Select>
             <span className="text-sm text-muted-foreground">records</span>
           </div>
-          <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input className="pl-9 w-56" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <div className="relative">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input className="pl-9 w-56" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="sm:w-40">
+                <SelectValue placeholder="All Statuses" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="received">Received</SelectItem>
+                <SelectItem value="diagnosing">Diagnosing</SelectItem>
+                <SelectItem value="in-progress">In Progress</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="picked-up">Picked Up</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
         <div className="rounded-lg border bg-card overflow-auto">
           <Table>
             <TableHeader>
-              <TableRow className="bg-primary/10">
-                <TableHead className="w-12">SL</TableHead>
-                <TableHead>Job Number</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Customer</TableHead>
-                <TableHead>Branch</TableHead>
-                <TableHead>Brand</TableHead>
-                <TableHead>Model</TableHead>
-                <TableHead>Board</TableHead>
-                <TableHead>Board Serial</TableHead>
-                <TableHead>Problem</TableHead>
-                <TableHead>Challan No</TableHead>
-                <TableHead>Status</TableHead>
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="w-12 font-semibold">SL</TableHead>
+                <TableHead className="font-semibold">Job Number</TableHead>
+                <TableHead className="font-semibold">Date</TableHead>
+                <TableHead className="font-semibold">Customer</TableHead>
+                <TableHead className="font-semibold">Mobile</TableHead>
+                <TableHead className="font-semibold">Branch</TableHead>
+                <TableHead className="font-semibold">Brand</TableHead>
+                <TableHead className="font-semibold">Model</TableHead>
+                <TableHead className="font-semibold">Board</TableHead>
+                <TableHead className="font-semibold">Board Serial</TableHead>
+                <TableHead className="font-semibold">Problem</TableHead>
+                <TableHead className="font-semibold">Challan No</TableHead>
+                <TableHead className="font-semibold">Status</TableHead>
+                <TableHead className="font-semibold text-right">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
-                <TableRow><TableCell colSpan={12} className="text-center text-muted-foreground">Loading...</TableCell></TableRow>
+                <TableRow><TableCell colSpan={14} className="text-center text-muted-foreground">Loading...</TableCell></TableRow>
               ) : displayed.length === 0 ? (
-                <TableRow><TableCell colSpan={12} className="text-center text-muted-foreground">No jobs found</TableCell></TableRow>
+                <TableRow><TableCell colSpan={14} className="text-center text-muted-foreground">No jobs found</TableCell></TableRow>
               ) : (
-                displayed.map((job, idx) => (
-                  <TableRow key={job.id}>
-                    <TableCell className="text-xs">{idx + 1}</TableCell>
-                    <TableCell className="text-xs font-medium">{job.job_number}</TableCell>
-                    <TableCell className="text-xs">{job.job_date}</TableCell>
-                    <TableCell className="text-xs">{job.customer_name}</TableCell>
-                    <TableCell className="text-xs">{job.branch_name}</TableCell>
-                    <TableCell className="text-xs">{job.brand_name}</TableCell>
-                    <TableCell className="text-xs">{job.model_name}</TableCell>
-                    <TableCell className="text-xs">{job.board_name}</TableCell>
-                    <TableCell className="text-xs">{job.board_serial}</TableCell>
-                    <TableCell className="text-xs max-w-[150px] truncate">{job.details_of_problem}</TableCell>
-                    <TableCell className="text-xs">{job.factory_challan_number || "—"}</TableCell>
-                    <TableCell>
-                      <Badge variant="secondary" className={`text-[10px] ${statusColors[job.status] || ""}`}>
-                        {job.status.toUpperCase()}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                ))
+                displayed.map((job, idx) => {
+                  const sIdx = jobStatusFlow.indexOf(job.status);
+                  const next = sIdx < jobStatusFlow.length - 1 ? jobStatusFlow[sIdx + 1] : null;
+                  return (
+                    <TableRow key={job.id} className="group cursor-pointer" onClick={() => navigate(`/job/${job.id}`)}>
+                      <TableCell className="text-xs">{idx + 1}</TableCell>
+                      <TableCell className="text-xs font-mono font-medium">{job.job_number}</TableCell>
+                      <TableCell className="text-xs">{job.job_date}</TableCell>
+                      <TableCell className="text-xs">{job.customer_name}</TableCell>
+                      <TableCell className="text-xs">
+                        {job.customer_mobile ? (
+                          <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{job.customer_mobile}</span>
+                        ) : "—"}
+                      </TableCell>
+                      <TableCell className="text-xs">{job.branch_name}</TableCell>
+                      <TableCell className="text-xs">{job.brand_name}</TableCell>
+                      <TableCell className="text-xs">{job.model_name}</TableCell>
+                      <TableCell className="text-xs">{job.board_name}</TableCell>
+                      <TableCell className="text-xs">{job.board_serial}</TableCell>
+                      <TableCell className="text-xs max-w-[150px] truncate">{job.details_of_problem}</TableCell>
+                      <TableCell className="text-xs">{job.factory_challan_number || "—"}</TableCell>
+                      <TableCell>
+                        <Badge variant="secondary" className={`text-[10px] ${statusColors[job.status] || ""}`}>
+                          {job.status.toUpperCase()}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {next && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="gap-1 text-xs text-accent hover:text-accent"
+                            onClick={(e) => { e.stopPropagation(); handleJobStatusUpdate(job.id, job.status); }}
+                          >
+                            {jobStatusLabels[next]}
+                            <ChevronRight className="h-3 w-3" />
+                          </Button>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               )}
             </TableBody>
           </Table>
