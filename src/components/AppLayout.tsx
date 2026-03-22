@@ -241,10 +241,28 @@ function SidebarItem({
   );
 }
 
+// Map nav labels to permission module names
+const navPermissionMap: Record<string, string> = {
+  "DASHBOARD": "Dashboard",
+  "BRANCH": "Branch",
+  "MACHINE DATA": "Machine Data",
+  "CLIENT DATA": "Client Data",
+  "ADD JOB": "Add Job",
+  "JOB LIST": "Job List",
+  "COLLECTION": "Collection",
+  "EXPENSE / INCOME": "Expense / Income",
+  "LEDGER": "Ledger",
+  "REPORTS": "Reports",
+  "CASHBOOK": "Cashbook",
+  "CHALLAN VERIFY": "Challan Verify",
+  "SETTING": "Setting",
+  "BACKUP DATABASE": "Backup Database",
+};
+
 export function AppLayout({ children }: { children: ReactNode }) {
   const location = useLocation();
   const { addOrder } = useRepairs();
-  const { signOut, user } = useAuth();
+  const { signOut, user, isAdmin, permissions } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
