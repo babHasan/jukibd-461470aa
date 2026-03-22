@@ -29,6 +29,10 @@ import CustomerPortal from "./pages/CustomerPortal";
 import NotFound from "./pages/NotFound";
 import BackupDatabase from "./pages/BackupDatabase";
 import DueBill from "./pages/collection/DueBill";
+import ExpenseCategory from "./pages/expense-income/ExpenseCategory";
+import Expenses from "./pages/expense-income/Expenses";
+import IncomeCategory from "./pages/expense-income/IncomeCategory";
+import Income from "./pages/expense-income/Income";
 
 const queryClient = new QueryClient();
 
