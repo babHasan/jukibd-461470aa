@@ -120,8 +120,9 @@ const AddJob = () => {
       toast.error("Please add at least one job");
       return;
     }
-    if (!selectedCustomer || !selectedBranch) {
-      toast.error("Please select Customer and Branch");
+    const hasCustomer = selectedCustomer || manualCustomerName;
+    if (!hasCustomer) {
+      toast.error("Please select or enter a Customer");
       return;
     }
     setSubmitting(true);
@@ -130,12 +131,8 @@ const AddJob = () => {
       const customerObj = clients.find((c) => c.id === selectedCustomer);
       const branchObj = branches.find((b) => b.id === selectedBranch);
 
-      // Fetch customer contact number for SMS
-      const { data: customerData } = await supabase
-        .from("clients")
-        .select("contact_number")
-        .eq("id", selectedCustomer)
-        .maybeSingle();
+      const customerName = customerObj ? customerObj.client_name : manualCustomerName;
+      const customerMobile = customerObj ? (customerObj.contact_number || "") : manualCustomerMobile;
 
       const jobRows = addedJobs.map((job) => ({
         job_number: job.jobNumber,
@@ -145,9 +142,9 @@ const AddJob = () => {
         board_serial: job.boardSerial,
         details_of_problem: job.detailsOfProblem,
         remarks: job.remarks,
-        customer_id: selectedCustomer,
-        customer_name: customerObj ? customerObj.client_name : "",
-        branch_id: selectedBranch,
+        customer_id: selectedCustomer || null,
+        customer_name: customerName,
+        branch_id: selectedBranch || null,
         branch_name: branchObj ? branchObj.name : "",
         factory_challan_number: factoryChallanNumber,
         job_date: date,
@@ -162,13 +159,13 @@ const AddJob = () => {
         toast.success(`${addedJobs.length} job(s) submitted successfully`);
 
         // Send SMS for each job (trigger_status = "received")
-        if (customerData?.contact_number) {
+        if (customerMobile) {
           for (const job of insertedJobs || []) {
             try {
               await supabase.functions.invoke("send-sms", {
                 body: {
                   repair_order_id: job.id,
-                  customer_phone: customerData.contact_number,
+                  customer_phone: customerMobile,
                   customer_name: job.customer_name,
                   device_brand: job.brand_name,
                   ticket_number: job.job_number,
