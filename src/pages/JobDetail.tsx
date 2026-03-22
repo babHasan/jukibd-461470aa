@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ArrowLeft, ChevronRight, Phone, Clock, MapPin } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Phone, Clock, MapPin, DollarSign } from "lucide-react";
 import { format } from "date-fns";
 import { CompletionWizard } from "@/components/CompletionWizard";
 
@@ -42,6 +42,9 @@ interface JobDetail {
   status: string;
   created_at: string;
   challan_url: string | null;
+  service_charge: number | null;
+  charge_type: string | null;
+  completed_date: string | null;
 }
 
 export default function JobDetailPage() {
@@ -122,6 +125,25 @@ export default function JobDetailPage() {
 
   const currentIdx = jobStatusFlow.indexOf(job.status);
   const nextStatus = currentIdx < jobStatusFlow.length - 1 ? jobStatusFlow[currentIdx + 1] : null;
+  const prevStatus = currentIdx > 0 ? jobStatusFlow[currentIdx - 1] : null;
+
+  async function handlePreviousStatus() {
+    if (!job || !prevStatus) return;
+    const updates: Record<string, unknown> = { status: prevStatus };
+    // If moving back from completed, clear cost fields
+    if (job.status === "completed") {
+      updates.service_charge = 0;
+      updates.charge_type = "Normal";
+      updates.completed_date = null;
+    }
+    const { error } = await supabase.from("jobs").update(updates).eq("id", job.id);
+    if (error) {
+      toast.error("Failed to update status");
+    } else {
+      toast.success(`Status reverted to ${jobStatusLabels[prevStatus]}`);
+      reloadJob();
+    }
+  }
 
   return (
     <AppLayout>
@@ -142,10 +164,21 @@ export default function JobDetailPage() {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
             <Badge variant="secondary" className={`${statusColors[job.status] || ""}`}>
               {jobStatusLabels[job.status] || job.status}
             </Badge>
+            {prevStatus && (
+              <Button
+                size="sm"
+                variant="outline"
+                className="gap-1"
+                onClick={handlePreviousStatus}
+              >
+                <ChevronLeft className="h-3 w-3" />
+                Back to {jobStatusLabels[prevStatus]}
+              </Button>
+            )}
             {nextStatus && (
               <Button
                 size="sm"
@@ -259,6 +292,35 @@ export default function JobDetailPage() {
                 })}
               </div>
             </div>
+
+            {/* Cost Summary - show when completed or picked-up */}
+            {(job.status === "completed" || job.status === "picked-up") && (
+              <div className="rounded-lg border bg-card p-5">
+                <h3 className="mb-4 text-sm font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                  <DollarSign className="h-4 w-4" /> Cost Summary
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Charge Type</span>
+                    <Badge variant={job.charge_type === "FOC" ? "secondary" : "default"}>
+                      {job.charge_type || "Normal"}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Service Charge</span>
+                    <span className="text-lg font-bold text-foreground">
+                      ৳{job.service_charge ?? 0}
+                    </span>
+                  </div>
+                  {job.completed_date && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Completed Date</span>
+                      <span className="text-sm font-medium text-foreground">{job.completed_date}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
         {job && (
