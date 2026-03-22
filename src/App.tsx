@@ -13,6 +13,7 @@ import SmsSettings from "./pages/SmsSettings";
 import Login from "./pages/Login";
 import UserList from "./pages/admin/UserList";
 import AddUser from "./pages/admin/AddUser";
+import EditUser from "./pages/admin/EditUser";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -37,6 +38,7 @@ function AppRoutes() {
       <Route path="/sms-settings" element={<ProtectedRoute><SmsSettings /></ProtectedRoute>} />
       <Route path="/admin/users" element={<ProtectedRoute><UserList /></ProtectedRoute>} />
       <Route path="/admin/add-user" element={<ProtectedRoute><AddUser /></ProtectedRoute>} />
+      <Route path="/admin/edit-user/:id" element={<ProtectedRoute><EditUser /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
