@@ -255,10 +255,10 @@ export default function PrintInvoice() {
               margin: 0,
             }}
           >
-            Receive
+            {isDelivery ? "Delivery" : "Receive"}
           </h2>
           <div style={{ textAlign: "right", fontSize: 12 }}>
-            <div>Date : {firstJob.job_date}</div>
+            <div>Date : {isDelivery && firstJob.delivery_date ? firstJob.delivery_date : firstJob.job_date}</div>
             <div>Challan Number : {firstJob.factory_challan_number || "—"}</div>
           </div>
         </div>
