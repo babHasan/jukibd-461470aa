@@ -113,18 +113,28 @@ export default function UserLogs() {
                     <TableCell>{i + 1}</TableCell>
                     <TableCell className="font-medium">{log.user_name || "Unknown"}</TableCell>
                     <TableCell>
-                      <Badge
-                        variant={log.action === "login" ? "default" : "secondary"}
-                        className="gap-1"
-                      >
-                        {log.action === "login" ? (
-                          <LogIn className="h-3 w-3" />
-                        ) : (
-                          <LogOut className="h-3 w-3" />
-                        )}
-                        {log.action.toUpperCase()}
-                      </Badge>
+                      {(() => {
+                        const actionKey = log.action.split(":")[0].trim();
+                        const detail = log.action.includes(":") ? log.action.split(":").slice(1).join(":").trim() : "";
+                        const config: Record<string, { icon: any; label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
+                          login: { icon: LogIn, label: "LOGIN", variant: "default" },
+                          logout: { icon: LogOut, label: "LOGOUT", variant: "secondary" },
+                          new_repair: { icon: Wrench, label: "NEW REPAIR", variant: "outline" },
+                          delivery: { icon: PackageCheck, label: "DELIVERY", variant: "default" },
+                        };
+                        const c = config[actionKey] || { icon: LogIn, label: actionKey.toUpperCase(), variant: "secondary" as const };
+                        const Icon = c.icon;
+                        return (
+                          <Badge variant={c.variant} className="gap-1">
+                            <Icon className="h-3 w-3" />
+                            {c.label}
+                          </Badge>
+                        );
+                      })()}
                     </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">{
+                      log.action.includes(":") ? log.action.split(":").slice(1).join(":").trim() : "—"
+                    }</TableCell>
                     <TableCell className="font-mono text-sm">
                       {format(new Date(log.created_at), "hh:mm:ss a")}
                     </TableCell>
