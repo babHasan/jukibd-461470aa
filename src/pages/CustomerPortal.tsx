@@ -117,17 +117,17 @@ export default function CustomerPortal() {
       )}
 
       {/* Search */}
-      <div className="mx-auto max-w-3xl px-4 py-8">
+      <div className="mx-auto max-w-3xl px-3 sm:px-4 py-4 sm:py-8">
         <form onSubmit={handleSearch} className="flex gap-2">
           <Input
             placeholder="Enter Challan Number..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="text-base"
+            className="text-sm sm:text-base"
           />
-          <Button type="submit" disabled={loading} className="gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
+          <Button type="submit" disabled={loading} className="gap-1.5 sm:gap-2 bg-accent text-accent-foreground hover:bg-accent/90 px-3 sm:px-4">
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-            Search
+            <span className="hidden sm:inline">Search</span>
           </Button>
         </form>
 
