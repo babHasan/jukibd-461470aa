@@ -166,6 +166,7 @@ const navItems: NavItem[] = [
     children: [
       { to: "/settings/company-info", label: "Company Info", icon: Building },
       { to: "/sms-settings", label: "SMS Settings", icon: MessageSquare },
+      { to: "/bulk-sms", label: "Bulk SMS / ঘোষণা", icon: Megaphone },
       { to: "/settings/portal-message", label: "Portal Scroll Message", icon: MessageSquare },
       { to: "/settings/footer", label: "Footer Settings", icon: FileText },
       { to: "/settings/notifications", label: "Notifications", icon: Bell },
