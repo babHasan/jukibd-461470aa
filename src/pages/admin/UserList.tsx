@@ -4,9 +4,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Search, UserPlus } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -28,6 +32,9 @@ export default function UserList() {
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [resetUser, setResetUser] = useState<UserProfile | null>(null);
+  const [newPassword, setNewPassword] = useState("");
+  const [resetting, setResetting] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -64,6 +71,44 @@ export default function UserList() {
 
     setUsers(mapped);
     setLoading(false);
+  }
+
+  async function handleResetPassword() {
+    if (!resetUser || !newPassword) return;
+    if (newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+
+    setResetting(true);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+    const res = await fetch(
+      `https://${projectId}.supabase.co/functions/v1/reset-password`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.access_token}`,
+        },
+        body: JSON.stringify({
+          user_id: resetUser.id,
+          new_password: newPassword,
+        }),
+      }
+    );
+
+    const result = await res.json();
+    setResetting(false);
+
+    if (result.success) {
+      toast.success(`${resetUser.name} এর পাসওয়ার্ড রিসেট হয়েছে`);
+      setResetUser(null);
+      setNewPassword("");
+    } else {
+      toast.error(result.error || "Reset failed");
+    }
   }
 
   const filtered = users.filter(
@@ -160,8 +205,9 @@ export default function UserList() {
                           size="sm"
                           variant="secondary"
                           className="bg-accent text-accent-foreground hover:bg-accent/80"
-                          onClick={async () => {
-                            toast.info("Password reset feature coming soon");
+                          onClick={() => {
+                            setResetUser(user);
+                            setNewPassword("");
                           }}
                         >
                           RESET PASSWORD
@@ -175,6 +221,38 @@ export default function UserList() {
           </Table>
         </div>
       </div>
+
+      {/* Reset Password Dialog */}
+      <Dialog open={!!resetUser} onOpenChange={(open) => !open && setResetUser(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reset Password — {resetUser?.name}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <p className="text-sm text-muted-foreground">
+              Mobile: <span className="font-mono">{resetUser?.mobile}</span>
+            </p>
+            <div className="space-y-2">
+              <Label>New Password</Label>
+              <Input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Minimum 6 characters"
+                minLength={6}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setResetUser(null)}>
+              Cancel
+            </Button>
+            <Button onClick={handleResetPassword} disabled={resetting || newPassword.length < 6}>
+              {resetting ? "Resetting..." : "Reset Password"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AppLayout>
   );
 }
