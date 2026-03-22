@@ -49,16 +49,22 @@ export default function CustomerPortal() {
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [scrollMessage, setScrollMessage] = useState("");
+  const [scrollFontSize, setScrollFontSize] = useState(14);
+  const [scrollFontColor, setScrollFontColor] = useState("#FFFFFF");
 
   useEffect(() => {
     supabase
       .from("portal_scroll_messages")
-      .select("message_text")
+      .select("message_text, font_size, font_color")
       .eq("is_active", true)
       .limit(1)
       .single()
       .then(({ data }) => {
-        if (data) setScrollMessage(data.message_text);
+        if (data) {
+          setScrollMessage(data.message_text);
+          setScrollFontSize(data.font_size ?? 14);
+          setScrollFontColor(data.font_color ?? "#FFFFFF");
+        }
       });
   }, []);
 
@@ -99,8 +105,11 @@ export default function CustomerPortal() {
 
       {/* Scroll Message */}
       {scrollMessage && (
-        <div className="overflow-hidden bg-primary text-primary-foreground py-2">
-          <div className="animate-marquee whitespace-nowrap text-sm font-medium">
+        <div className="overflow-hidden bg-primary py-2">
+          <div
+            className="animate-marquee whitespace-nowrap font-medium"
+            style={{ fontSize: `${scrollFontSize}px`, color: scrollFontColor }}
+          >
             {scrollMessage} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {scrollMessage} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {scrollMessage}
           </div>
         </div>
