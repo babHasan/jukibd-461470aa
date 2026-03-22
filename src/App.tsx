@@ -40,6 +40,7 @@ import TransactionReport from "./pages/reports/TransactionReport";
 import CollectionReport from "./pages/reports/CollectionReport";
 import ExpenseReport from "./pages/reports/ExpenseReport";
 import CompanyInfo from "./pages/settings/CompanyInfo";
+import PrintInvoice from "./pages/PrintInvoice";
 
 const queryClient = new QueryClient();
 
