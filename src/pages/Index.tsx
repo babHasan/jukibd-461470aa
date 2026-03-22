@@ -140,12 +140,9 @@ const Index = () => {
                   <TableHead className="font-semibold">Job No</TableHead>
                   <TableHead className="font-semibold">Date</TableHead>
                   <TableHead className="font-semibold">Customer</TableHead>
-                  <TableHead className="font-semibold">Mobile</TableHead>
                   <TableHead className="font-semibold">Branch</TableHead>
-                  <TableHead className="font-semibold">Brand</TableHead>
-                  <TableHead className="font-semibold">Model</TableHead>
+                  <TableHead className="font-semibold">Device</TableHead>
                   <TableHead className="font-semibold">Board</TableHead>
-                  <TableHead className="font-semibold">Board Serial</TableHead>
                   <TableHead className="font-semibold">Problem</TableHead>
                   <TableHead className="font-semibold">Challan</TableHead>
                   <TableHead className="font-semibold">Status</TableHead>
@@ -155,7 +152,7 @@ const Index = () => {
               <TableBody>
                 {filteredJobs.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={13} className="py-8 text-center text-muted-foreground">
+                    <TableCell colSpan={10} className="py-8 text-center text-muted-foreground">
                       No jobs found.
                     </TableCell>
                   </TableRow>
@@ -167,18 +164,31 @@ const Index = () => {
                       <TableRow key={job.id} className="group cursor-pointer" onClick={() => navigate(`/job/${job.id}`)}>
                         <TableCell className="font-mono text-sm font-medium">{job.job_number}</TableCell>
                         <TableCell className="text-sm">{job.job_date}</TableCell>
-                        <TableCell className="text-sm">{job.customer_name}</TableCell>
-                        <TableCell className="text-sm">
-                          {job.customer_mobile ? (
-                            <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{job.customer_mobile}</span>
-                          ) : "—"}
+                        <TableCell>
+                          <div>
+                            <p className="font-medium text-sm">{job.customer_name}</p>
+                            {job.company_name && <p className="text-xs text-muted-foreground">{job.company_name}</p>}
+                            {job.customer_mobile && (
+                              <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                                <Phone className="h-3 w-3" />{job.customer_mobile}
+                              </p>
+                            )}
+                          </div>
                         </TableCell>
                         <TableCell className="text-sm">{job.branch_name}</TableCell>
-                        <TableCell className="text-sm">{job.brand_name}</TableCell>
-                        <TableCell className="text-sm">{job.model_name}</TableCell>
-                        <TableCell className="text-sm">{job.board_name}</TableCell>
-                        <TableCell className="text-sm">{job.board_serial}</TableCell>
-                        <TableCell className="text-sm max-w-[150px] truncate">{job.details_of_problem}</TableCell>
+                        <TableCell>
+                          <div>
+                            <p className="font-medium text-sm">{job.brand_name}</p>
+                            <p className="text-xs text-muted-foreground">{job.model_name}</p>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div>
+                            <p className="text-sm">{job.board_name}</p>
+                            <p className="text-xs text-muted-foreground">{job.board_serial}</p>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-sm max-w-[200px] truncate">{job.details_of_problem}</TableCell>
                         <TableCell className="text-sm">{job.factory_challan_number || "—"}</TableCell>
                         <TableCell>
                           <Badge variant="secondary" className={`text-[10px] ${statusColors[job.status] || ""}`}>
