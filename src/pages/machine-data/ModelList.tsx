@@ -116,33 +116,40 @@ export default function ModelList() {
             <h2 className="text-xl font-bold text-foreground">MODEL LIST</h2>
           </div>
           {isAdmin && (
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button onClick={openAdd}>
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  ADD NEW MODEL
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>{editing ? "Edit Model" : "Add New Model"}</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 py-2">
-                  <div className="space-y-2">
-                    <Label>Model Name *</Label>
-                    <Input value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="e.g. DDL-8000A" />
+            <div className="flex items-center gap-2">
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button onClick={openAdd}>
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    ADD NEW MODEL
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>{editing ? "Edit Model" : "Add New Model"}</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 py-2">
+                    <div className="space-y-2">
+                      <Label>Model Name *</Label>
+                      <Input value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="e.g. DDL-8000A" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Remarks</Label>
+                      <Input value={form.remarks} onChange={(e) => setForm((f) => ({ ...f, remarks: e.target.value }))} placeholder="Optional remarks" />
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label>Remarks</Label>
-                    <Input value={form.remarks} onChange={(e) => setForm((f) => ({ ...f, remarks: e.target.value }))} placeholder="Optional remarks" />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
-                  <Button onClick={handleSave} disabled={saving}>{saving ? "Saving..." : editing ? "Update" : "Add"}</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+                  <DialogFooter>
+                    <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
+                    <Button onClick={handleSave} disabled={saving}>{saving ? "Saving..." : editing ? "Update" : "Add"}</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+              <input type="file" accept=".xlsx,.xls,.csv" ref={fileInputRef} className="hidden" onChange={handleImportExcel} />
+              <Button variant="secondary" onClick={() => fileInputRef.current?.click()}>
+                <FileUp className="mr-2 h-4 w-4" />
+                IMPORT EXCEL
+              </Button>
+            </div>
           )}
         </div>
 
