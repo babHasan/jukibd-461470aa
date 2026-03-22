@@ -40,6 +40,7 @@ function AppRoutes() {
       <Route path="/admin/users" element={<ProtectedRoute><UserList /></ProtectedRoute>} />
       <Route path="/admin/add-user" element={<ProtectedRoute><AddUser /></ProtectedRoute>} />
       <Route path="/admin/edit-user/:id" element={<ProtectedRoute><EditUser /></ProtectedRoute>} />
+      <Route path="/my-profile" element={<ProtectedRoute><MyProfile /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
