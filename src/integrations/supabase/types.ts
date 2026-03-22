@@ -131,6 +131,84 @@ export type Database = {
         }
         Relationships: []
       }
+      jobs: {
+        Row: {
+          board_name: string
+          board_serial: string
+          branch_id: string | null
+          branch_name: string
+          brand_name: string
+          challan_url: string | null
+          created_at: string
+          created_by: string | null
+          customer_id: string | null
+          customer_name: string
+          details_of_problem: string
+          factory_challan_number: string
+          id: string
+          job_date: string
+          job_number: string
+          model_name: string
+          remarks: string
+          status: string
+        }
+        Insert: {
+          board_name?: string
+          board_serial?: string
+          branch_id?: string | null
+          branch_name?: string
+          brand_name?: string
+          challan_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          customer_name?: string
+          details_of_problem?: string
+          factory_challan_number?: string
+          id?: string
+          job_date?: string
+          job_number: string
+          model_name?: string
+          remarks?: string
+          status?: string
+        }
+        Update: {
+          board_name?: string
+          board_serial?: string
+          branch_id?: string | null
+          branch_name?: string
+          brand_name?: string
+          challan_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          customer_name?: string
+          details_of_problem?: string
+          factory_challan_number?: string
+          id?: string
+          job_date?: string
+          job_number?: string
+          model_name?: string
+          remarks?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jobs_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jobs_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       models: {
         Row: {
           created_at: string
