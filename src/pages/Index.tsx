@@ -32,7 +32,14 @@ interface Job {
   status: string;
 }
 
-const statusColors: Record<string, string> = {
+const jobStatusFlow = ["received", "diagnosing", "in-progress", "completed", "picked-up"];
+const jobStatusLabels: Record<string, string> = {
+  received: "Received",
+  diagnosing: "Diagnosing",
+  "in-progress": "In Progress",
+  completed: "Completed",
+  "picked-up": "Picked Up",
+};
   received: "bg-blue-100 text-blue-800",
   diagnosing: "bg-yellow-100 text-yellow-800",
   "in-progress": "bg-orange-100 text-orange-800",
