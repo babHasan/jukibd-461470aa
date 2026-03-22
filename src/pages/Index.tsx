@@ -157,7 +157,7 @@ const Index = () => {
   return (
     <AppLayout>
       <div className="space-y-6">
-        <KpiCards orders={orders} />
+        <KpiCards jobs={jobs} />
 
         {/* Job Orders Section */}
         <div className="rounded-lg border bg-card shadow-sm">
