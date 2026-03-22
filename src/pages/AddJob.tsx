@@ -390,7 +390,7 @@ const AddJob = () => {
                   setManualCustomerName(c.client_name);
                   setManualCustomerMobile(c.contact_number || "");
                   setManualCompanyName(c.company_name || "");
-                  setManualAddress((c as any).address || "");
+                  setManualAddress(c.address || "");
                 }
               }}>
                 <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Select or type below" /></SelectTrigger>
