@@ -110,7 +110,9 @@ const navItems: NavItem[] = [
     label: "EXPENSE / INCOME",
     icon: DollarSign,
     children: [
-      { to: "/expense-income/expenses", label: "Expenses", icon: TrendingDown },
+      { to: "/expense-income/expense-category", label: "Expense Category", icon: FolderOpen },
+      { to: "/expense-income/expenses", label: "Expense", icon: TrendingDown },
+      { to: "/expense-income/income-category", label: "Income Category", icon: FolderOpen },
       { to: "/expense-income/income", label: "Income", icon: TrendingUp },
     ],
   },
