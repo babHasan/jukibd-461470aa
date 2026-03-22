@@ -49,9 +49,41 @@ const statusColors: Record<string, string> = {
 };
 
 const Index = () => {
+  const navigate = useNavigate();
   const { orders, updateStatus } = useRepairs();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [jobSearch, setJobSearch] = useState("");
+  const [jobFilter, setJobFilter] = useState("all");
+
+  function fetchJobs() {
+    supabase
+      .from("jobs")
+      .select("*, clients(contact_number)")
+      .order("created_at", { ascending: false })
+      .then(({ data }) => {
+        if (data) {
+          setJobs(data.map((j: any) => ({
+            ...j,
+            customer_mobile: j.clients?.contact_number || "",
+          })));
+        }
+      });
+  }
+
+  useEffect(() => { fetchJobs(); }, []);
+
+  async function handleJobStatusUpdate(jobId: string, currentStatus: string) {
+    const idx = jobStatusFlow.indexOf(currentStatus);
+    if (idx >= jobStatusFlow.length - 1) return;
+    const next = jobStatusFlow[idx + 1];
+    const { error } = await supabase.from("jobs").update({ status: next }).eq("id", jobId);
+    if (error) {
+      toast.error("Failed to update status");
+    } else {
+      toast.success(`Status updated to ${jobStatusLabels[next]}`);
+      fetchJobs();
+    }
+  }
   const [jobFilter, setJobFilter] = useState("all");
 
   useEffect(() => {
