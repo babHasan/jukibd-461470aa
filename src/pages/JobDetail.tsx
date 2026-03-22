@@ -261,6 +261,14 @@ export default function JobDetailPage() {
             </div>
           </div>
         </div>
+        {job && (
+          <CompletionWizard
+            open={wizardOpen}
+            onOpenChange={setWizardOpen}
+            jobs={[job]}
+            onCompleted={reloadJob}
+          />
+        )}
       </div>
     </AppLayout>
   );
