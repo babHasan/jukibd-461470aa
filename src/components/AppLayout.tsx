@@ -137,6 +137,7 @@ const navItems: NavItem[] = [
       { to: "/reports/transaction", label: "Transaction Report", icon: Receipt },
       { to: "/reports/collection", label: "Collection", icon: CreditCard },
       { to: "/reports/expense", label: "Expense", icon: TrendingDown },
+      { to: "/reports/company-wise", label: "Company Wise", icon: FileText },
     ],
   },
   {

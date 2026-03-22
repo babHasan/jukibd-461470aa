@@ -39,6 +39,7 @@ import ChartOfAccounts from "./pages/accounts/ChartOfAccounts";
 import TransactionReport from "./pages/reports/TransactionReport";
 import CollectionReport from "./pages/reports/CollectionReport";
 import ExpenseReport from "./pages/reports/ExpenseReport";
+import CompanyWiseReport from "./pages/reports/CompanyWiseReport";
 import CompanyInfo from "./pages/settings/CompanyInfo";
 import PrintInvoice from "./pages/PrintInvoice";
 import PortalScrollMessage from "./pages/settings/PortalScrollMessage";
@@ -93,6 +94,7 @@ function AppRoutes() {
       <Route path="/reports/transaction" element={<ProtectedRoute><TransactionReport /></ProtectedRoute>} />
       <Route path="/reports/collection" element={<ProtectedRoute><CollectionReport /></ProtectedRoute>} />
       <Route path="/reports/expense" element={<ProtectedRoute><ExpenseReport /></ProtectedRoute>} />
+      <Route path="/reports/company-wise" element={<ProtectedRoute><CompanyWiseReport /></ProtectedRoute>} />
       <Route path="/challan-verify" element={<ProtectedRoute><ChallanVerify /></ProtectedRoute>} />
       <Route path="/settings/company-info" element={<ProtectedRoute><CompanyInfo /></ProtectedRoute>} />
       <Route path="/settings/portal-message" element={<ProtectedRoute><PortalScrollMessage /></ProtectedRoute>} />
