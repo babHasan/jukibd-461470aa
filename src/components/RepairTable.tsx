@@ -104,7 +104,7 @@ export function RepairTable({ orders, onUpdateStatus }: RepairTableProps) {
               filtered.map((order) => {
                 const next = getNextStatus(order.status);
                 return (
-                  <TableRow key={order.id} className="group">
+                  <TableRow key={order.id} className="group cursor-pointer" onClick={() => navigate(`/repair/${order.id}`)}>
                     <TableCell className="font-mono text-sm font-medium">
                       {order.ticketNumber}
                     </TableCell>
