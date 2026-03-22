@@ -57,6 +57,17 @@ async function sendSmsNotification(order: RepairOrder, status: RepairStatus) {
 
 export function RepairProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<RepairOrder[]>(sampleOrders);
+  const { user } = useAuth();
+
+  async function logActivity(action: string, detail?: string) {
+    if (!user) return;
+    const { data } = await supabase.from("profiles").select("name").eq("id", user.id).single();
+    await supabase.from("user_activity_logs").insert({
+      user_id: user.id,
+      user_name: data?.name || "",
+      action: detail ? `${action}: ${detail}` : action,
+    });
+  }
 
   function updateStatus(id: string, status: RepairStatus) {
     setOrders((prev) =>
