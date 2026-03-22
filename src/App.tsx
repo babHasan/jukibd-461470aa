@@ -41,6 +41,7 @@ import CollectionReport from "./pages/reports/CollectionReport";
 import ExpenseReport from "./pages/reports/ExpenseReport";
 import CompanyInfo from "./pages/settings/CompanyInfo";
 import PrintInvoice from "./pages/PrintInvoice";
+import PortalScrollMessage from "./pages/settings/PortalScrollMessage";
 
 const queryClient = new QueryClient();
 
@@ -91,6 +92,7 @@ function AppRoutes() {
       <Route path="/reports/expense" element={<ProtectedRoute><ExpenseReport /></ProtectedRoute>} />
       <Route path="/challan-verify" element={<ProtectedRoute><ChallanVerify /></ProtectedRoute>} />
       <Route path="/settings/company-info" element={<ProtectedRoute><CompanyInfo /></ProtectedRoute>} />
+      <Route path="/settings/portal-message" element={<ProtectedRoute><PortalScrollMessage /></ProtectedRoute>} />
       <Route path="/print-invoice" element={<ProtectedRoute><PrintInvoice /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>

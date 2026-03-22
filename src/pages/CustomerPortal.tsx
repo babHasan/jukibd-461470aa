@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -48,6 +48,19 @@ export default function CustomerPortal() {
   const [results, setResults] = useState<JobResult[]>([]);
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [scrollMessage, setScrollMessage] = useState("");
+
+  useEffect(() => {
+    supabase
+      .from("portal_scroll_messages")
+      .select("message_text")
+      .eq("is_active", true)
+      .limit(1)
+      .single()
+      .then(({ data }) => {
+        if (data) setScrollMessage(data.message_text);
+      });
+  }, []);
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -83,6 +96,15 @@ export default function CustomerPortal() {
           </p>
         </div>
       </div>
+
+      {/* Scroll Message */}
+      {scrollMessage && (
+        <div className="overflow-hidden bg-primary text-primary-foreground py-2">
+          <div className="animate-marquee whitespace-nowrap text-sm font-medium">
+            {scrollMessage} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {scrollMessage} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {scrollMessage}
+          </div>
+        </div>
+      )}
 
       {/* Search */}
       <div className="mx-auto max-w-3xl px-4 py-8">
