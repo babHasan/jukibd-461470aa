@@ -79,7 +79,7 @@ const AddJob = () => {
     setBrandName("");
     setSelectedModel("");
     setBoard("");
-    setMachineSerial("");
+    
     setBoardSerial("");
     setDetailsOfProblem("");
     setRemarks("");
