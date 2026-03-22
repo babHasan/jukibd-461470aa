@@ -1,3 +1,4 @@
+import { Footer } from "@/components/Footer";
 import { SearchJobWizard } from "@/components/SearchJobWizard";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -165,6 +166,7 @@ const navItems: NavItem[] = [
       { to: "/settings/company-info", label: "Company Info", icon: Building },
       { to: "/sms-settings", label: "SMS Settings", icon: MessageSquare },
       { to: "/settings/portal-message", label: "Portal Scroll Message", icon: MessageSquare },
+      { to: "/settings/footer", label: "Footer Settings", icon: FileText },
       { to: "/settings/notifications", label: "Notifications", icon: Bell },
       { to: "/settings/appearance", label: "Appearance", icon: Palette },
     ],
@@ -388,7 +390,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 pb-16">{children}</main>
+        <Footer />
       </div>
       <SearchJobWizard />
     </div>
