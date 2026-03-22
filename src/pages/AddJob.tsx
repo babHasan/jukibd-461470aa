@@ -211,7 +211,7 @@ const AddJob = () => {
 
               <div className="grid grid-cols-[140px_1fr] items-center gap-2">
                 <div />
-                <Button onClick={handleAddJob} size="sm" className="w-fit bg-green-600 hover:bg-green-700 text-white">
+                <Button onClick={handleAddJob} size="sm" className="w-fit bg-accent hover:bg-accent/90 text-accent-foreground">
                   <Plus className="h-3 w-3 mr-1" /> ADD
                 </Button>
               </div>
