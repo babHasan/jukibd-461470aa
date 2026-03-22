@@ -97,7 +97,7 @@ export default function UserLogs() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                     Loading...
                   </TableCell>
                 </TableRow>
