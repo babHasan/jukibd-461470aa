@@ -89,6 +89,7 @@ const navItems: NavItem[] = [
     children: [
       { to: "/machine-data/brands", label: "Brands", icon: Laptop },
       { to: "/machine-data/models", label: "Models", icon: Smartphone },
+      { to: "/machine-data/boards", label: "Boards", icon: HardDrive },
     ],
   },
   {

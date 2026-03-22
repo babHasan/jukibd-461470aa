@@ -29,6 +29,7 @@ const AddJob = () => {
   const [models, setModels] = useState<{ id: string; name: string }[]>([]);
   const [clients, setClients] = useState<{ id: string; client_name: string; company_name: string }[]>([]);
   const [branches, setBranches] = useState<{ id: string; name: string }[]>([]);
+  const [boardsList, setBoardsList] = useState<{ id: string; name: string }[]>([]);
 
   // Job form
   const [jobNumber, setJobNumber] = useState("");
@@ -54,6 +55,7 @@ const AddJob = () => {
     supabase.from("models").select("id, name").order("name").then(({ data }) => data && setModels(data));
     supabase.from("clients").select("id, client_name, company_name").order("client_name").then(({ data }) => data && setClients(data));
     supabase.from("branches").select("id, name").eq("status", "active").order("name").then(({ data }) => data && setBranches(data));
+    supabase.from("boards").select("id, name").order("name").then(({ data }) => data && setBoardsList(data));
   }, []);
 
   function handleAddJob() {
@@ -66,7 +68,7 @@ const AddJob = () => {
       service: "",
       brand: brands.find((b) => b.id === brandName)?.name || brandName,
       model: models.find((m) => m.id === selectedModel)?.name || selectedModel,
-      board,
+      board: boardsList.find((b) => b.id === board)?.name || board,
       machineSerial: "",
       boardSerial,
       detailsOfProblem,
@@ -159,11 +161,9 @@ const AddJob = () => {
                 <Select value={board} onValueChange={setBoard}>
                   <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Select Board" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Motherboard">Motherboard</SelectItem>
-                    <SelectItem value="Power Board">Power Board</SelectItem>
-                    <SelectItem value="Controller Board">Controller Board</SelectItem>
-                    <SelectItem value="Formatter Board">Formatter Board</SelectItem>
-                    <SelectItem value="Other">Other</SelectItem>
+                    {boardsList.map((b) => (
+                      <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
