@@ -32,7 +32,6 @@ const AddJob = () => {
 
   // Job form
   const [jobNumber, setJobNumber] = useState("");
-  const [machineType, setMachineType] = useState("");
   const [brandName, setBrandName] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
   const [board, setBoard] = useState("");
