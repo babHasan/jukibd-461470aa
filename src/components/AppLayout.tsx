@@ -45,7 +45,7 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { ReactNode, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface SubItem {
   to: string;
