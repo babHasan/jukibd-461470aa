@@ -77,7 +77,7 @@ export default function CustomerPortal() {
             <h1 className="text-2xl font-bold text-foreground">Job Status Tracker</h1>
           </div>
           <p className="text-muted-foreground text-sm">
-            Enter your Challan Number or Job Number to check the current status of your repair.
+            Enter your Challan Number to check the current status of your repair.
           </p>
         </div>
       </div>
