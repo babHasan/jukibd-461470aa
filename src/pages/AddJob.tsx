@@ -212,6 +212,8 @@ const AddJob = () => {
         sessionStorage.removeItem("addJob_customer");
         sessionStorage.removeItem("addJob_manualName");
         sessionStorage.removeItem("addJob_manualMobile");
+        sessionStorage.removeItem("addJob_manualCompany");
+        sessionStorage.removeItem("addJob_manualAddress");
         sessionStorage.removeItem("addJob_challan");
         sessionStorage.removeItem("addJob_branch");
         sessionStorage.removeItem("addJob_date");
@@ -219,6 +221,8 @@ const AddJob = () => {
         setSelectedCustomer("");
         setManualCustomerName("");
         setManualCustomerMobile("");
+        setManualCompanyName("");
+        setManualAddress("");
         setFactoryChallanNumber("");
         setSelectedBranch("");
         setBrandName("");
