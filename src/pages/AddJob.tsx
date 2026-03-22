@@ -110,6 +110,13 @@ const AddJob = () => {
       const customerObj = clients.find((c) => c.id === selectedCustomer);
       const branchObj = branches.find((b) => b.id === selectedBranch);
 
+      // Fetch customer contact number for SMS
+      const { data: customerData } = await supabase
+        .from("clients")
+        .select("contact_number")
+        .eq("id", selectedCustomer)
+        .maybeSingle();
+
       const jobRows = addedJobs.map((job) => ({
         job_number: job.jobNumber,
         brand_name: job.brand,
@@ -128,11 +135,34 @@ const AddJob = () => {
         created_by: user?.id,
       }));
 
-      const { error } = await supabase.from("jobs").insert(jobRows);
+      const { data: insertedJobs, error } = await supabase.from("jobs").insert(jobRows).select();
       if (error) {
         toast.error("Failed to submit: " + error.message);
       } else {
         toast.success(`${addedJobs.length} job(s) submitted successfully`);
+
+        // Send SMS for each job (trigger_status = "received")
+        if (customerData?.contact_number) {
+          for (const job of insertedJobs || []) {
+            try {
+              await supabase.functions.invoke("send-sms", {
+                body: {
+                  repair_order_id: job.id,
+                  customer_phone: customerData.contact_number,
+                  customer_name: job.customer_name,
+                  device_brand: job.brand_name,
+                  ticket_number: job.job_number,
+                  issue: job.details_of_problem,
+                  estimated_cost: 0,
+                  trigger_status: "received",
+                },
+              });
+            } catch (smsErr) {
+              console.error("SMS send failed for job:", job.job_number, smsErr);
+            }
+          }
+        }
+
         setAddedJobs([]);
         setSelectedCustomer("");
         setFactoryChallanNumber("");
