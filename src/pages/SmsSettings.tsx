@@ -3,12 +3,14 @@ import { AppLayout } from "@/components/AppLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { MessageSquare, Save, History } from "lucide-react";
+import { MessageSquare, Save, History, Key, Settings } from "lucide-react";
 
 interface SmsTemplate {
   id: string;
@@ -41,10 +43,44 @@ export default function SmsSettings() {
   const [editText, setEditText] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // SMS Config
+  const [smsApiKey, setSmsApiKey] = useState("");
+  const [smsSenderId, setSmsSenderId] = useState("");
+  const [smsConfigId, setSmsConfigId] = useState("");
+  const [savingConfig, setSavingConfig] = useState(false);
+
   useEffect(() => {
     fetchTemplates();
     fetchLogs();
+    fetchSmsConfig();
   }, []);
+
+  async function fetchSmsConfig() {
+    const { data } = await supabase.from("sms_config").select("*").limit(1).maybeSingle();
+    if (data) {
+      setSmsApiKey(data.api_key);
+      setSmsSenderId(data.sender_id);
+      setSmsConfigId(data.id);
+    }
+  }
+
+  async function handleSaveConfig() {
+    if (!smsApiKey.trim() || !smsSenderId.trim()) {
+      toast.error("API Key এবং Sender ID দুটোই দিতে হবে");
+      return;
+    }
+    setSavingConfig(true);
+    const { error } = await supabase
+      .from("sms_config")
+      .update({ api_key: smsApiKey.trim(), sender_id: smsSenderId.trim(), updated_at: new Date().toISOString() })
+      .eq("id", smsConfigId);
+    if (error) {
+      toast.error("সেভ ব্যর্থ: " + error.message);
+    } else {
+      toast.success("SMS কনফিগারেশন সেভ হয়েছে");
+    }
+    setSavingConfig(false);
+  }
 
   async function fetchTemplates() {
     const { data, error } = await supabase
@@ -117,6 +153,44 @@ export default function SmsSettings() {
             বাংলা SMS টেমপ্লেট ম্যানেজ করুন। প্লেসহোল্ডার: {`{{customer_name}}, {{device_brand}}, {{ticket_number}}, {{issue}}, {{estimated_cost}}`}
           </p>
         </div>
+
+        {/* SMS API Configuration */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Key className="h-4 w-4" />
+              SMS API কনফিগারেশন
+            </CardTitle>
+            <CardDescription className="text-xs">
+              BulkSMSBD এর API Key এবং Sender ID সেট করুন
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-sm font-semibold">API Key</Label>
+                <Input
+                  type="password"
+                  value={smsApiKey}
+                  onChange={(e) => setSmsApiKey(e.target.value)}
+                  placeholder="আপনার BulkSMSBD API Key দিন"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-sm font-semibold">Sender ID</Label>
+                <Input
+                  value={smsSenderId}
+                  onChange={(e) => setSmsSenderId(e.target.value)}
+                  placeholder="আপনার Sender ID দিন"
+                />
+              </div>
+            </div>
+            <Button onClick={handleSaveConfig} disabled={savingConfig} size="sm">
+              <Save className="h-4 w-4 mr-1" />
+              {savingConfig ? "সেভ হচ্ছে..." : "সেভ করুন"}
+            </Button>
+          </CardContent>
+        </Card>
 
         {/* Templates */}
         <div className="grid gap-4">

@@ -272,6 +272,27 @@ export type Database = {
         }
         Relationships: []
       }
+      sms_config: {
+        Row: {
+          api_key: string
+          id: string
+          sender_id: string
+          updated_at: string
+        }
+        Insert: {
+          api_key?: string
+          id?: string
+          sender_id?: string
+          updated_at?: string
+        }
+        Update: {
+          api_key?: string
+          id?: string
+          sender_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       sms_logs: {
         Row: {
           api_response: Json | null
