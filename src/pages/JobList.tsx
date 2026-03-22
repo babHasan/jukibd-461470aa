@@ -128,7 +128,6 @@ export default function JobList() {
       setDeliveryWizardOpen(true);
       return;
     }
-    }
 
     const jobsToUpdate = group.jobs.filter((j) => {
       const idx = jobStatusFlow.indexOf(j.status);
