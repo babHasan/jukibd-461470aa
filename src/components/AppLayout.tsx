@@ -365,10 +365,14 @@ export function AppLayout({ children }: { children: ReactNode }) {
           <div className="flex items-center gap-3">
             <AddRepairDialog onAdd={addOrder} />
             <Link to="/my-profile" className="hidden sm:flex items-center gap-2 rounded-full bg-primary px-3 py-1.5 hover:opacity-90 transition-opacity">
-              <div className="h-6 w-6 rounded-full bg-accent flex items-center justify-center text-xs font-bold text-accent-foreground overflow-hidden">
-                {isAdmin ? "A" : "U"}
+              <div className="h-6 w-6 rounded-full bg-accent flex items-center justify-center text-xs font-bold text-accent-foreground overflow-hidden shrink-0">
+                {profile?.photo_url ? (
+                  <img src={profile.photo_url} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  (profile?.name?.[0] || (isAdmin ? "A" : "U")).toUpperCase()
+                )}
               </div>
-              <span className="text-xs font-medium text-primary-foreground">{isAdmin ? "ADMIN" : "USER"}</span>
+              <span className="text-xs font-medium text-primary-foreground">{profile?.name || (isAdmin ? "ADMIN" : "USER")}</span>
             </Link>
           </div>
         </header>
