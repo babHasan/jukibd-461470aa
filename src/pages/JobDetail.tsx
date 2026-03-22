@@ -74,6 +74,11 @@ export default function JobDetailPage() {
 
   async function handleUpdateStatus(newStatus: string) {
     if (!job) return;
+    // Intercept in-progress → completed transition
+    if (job.status === "in-progress" && newStatus === "completed") {
+      setWizardOpen(true);
+      return;
+    }
     const { error } = await supabase.from("jobs").update({ status: newStatus }).eq("id", job.id);
     if (error) {
       toast.error("Failed to update status");
@@ -81,6 +86,21 @@ export default function JobDetailPage() {
       toast.success(`Status updated to ${jobStatusLabels[newStatus]}`);
       setJob({ ...job, status: newStatus });
     }
+  }
+
+  function reloadJob() {
+    if (!id) return;
+    supabase
+      .from("jobs")
+      .select("*, clients(contact_number)")
+      .eq("id", id)
+      .single()
+      .then(({ data, error }: any) => {
+        if (!error && data) {
+          setCustomerMobile(data.clients?.contact_number || "");
+          setJob(data);
+        }
+      });
   }
 
   if (loading) {
