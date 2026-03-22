@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { ArrowLeft, ChevronLeft, ChevronRight, Phone, Clock, MapPin, DollarSign } from "lucide-react";
 import { format } from "date-fns";
 import { CompletionWizard } from "@/components/CompletionWizard";
+import { DeliveryWizard } from "@/components/DeliveryWizard";
 
 const jobStatusFlow = ["received", "diagnosing", "in-progress", "completed", "picked-up"];
 const jobStatusLabels: Record<string, string> = {
@@ -54,6 +55,7 @@ export default function JobDetailPage() {
   const [customerMobile, setCustomerMobile] = useState("");
   const [loading, setLoading] = useState(true);
   const [wizardOpen, setWizardOpen] = useState(false);
+  const [deliveryWizardOpen, setDeliveryWizardOpen] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -78,6 +80,11 @@ export default function JobDetailPage() {
     // Intercept in-progress → completed transition
     if (job.status === "in-progress" && newStatus === "completed") {
       setWizardOpen(true);
+      return;
+    }
+    // Intercept completed → picked-up transition
+    if (job.status === "completed" && newStatus === "picked-up") {
+      setDeliveryWizardOpen(true);
       return;
     }
     const { error } = await supabase.from("jobs").update({ status: newStatus }).eq("id", job.id);
@@ -324,12 +331,20 @@ export default function JobDetailPage() {
           </div>
         </div>
         {job && (
-          <CompletionWizard
-            open={wizardOpen}
-            onOpenChange={setWizardOpen}
-            jobs={[job]}
-            onCompleted={reloadJob}
-          />
+          <>
+            <CompletionWizard
+              open={wizardOpen}
+              onOpenChange={setWizardOpen}
+              jobs={[job]}
+              onCompleted={reloadJob}
+            />
+            <DeliveryWizard
+              open={deliveryWizardOpen}
+              onOpenChange={setDeliveryWizardOpen}
+              jobs={[job]}
+              onCompleted={reloadJob}
+            />
+          </>
         )}
       </div>
     </AppLayout>

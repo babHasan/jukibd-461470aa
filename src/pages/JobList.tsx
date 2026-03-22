@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Search, ClipboardList, Phone, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { CompletionWizard } from "@/components/CompletionWizard";
+import { DeliveryWizard } from "@/components/DeliveryWizard";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -89,6 +90,8 @@ export default function JobList() {
 
   const [wizardOpen, setWizardOpen] = useState(false);
   const [wizardJobs, setWizardJobs] = useState<Job[]>([]);
+  const [deliveryWizardOpen, setDeliveryWizardOpen] = useState(false);
+  const [deliveryWizardJobs, setDeliveryWizardJobs] = useState<Job[]>([]);
 
   function fetchJobs() {
     setLoading(true);
@@ -114,10 +117,17 @@ export default function JobList() {
     // Check if any job is transitioning from in-progress to completed
     const inProgressJobs = group.jobs.filter((j) => j.status === "in-progress");
     if (inProgressJobs.length > 0) {
-      // Show completion wizard
       setWizardJobs(group.jobs);
       setWizardOpen(true);
       return;
+    }
+    // Check if any job is transitioning from completed to picked-up
+    const completedJobs = group.jobs.filter((j) => j.status === "completed");
+    if (completedJobs.length > 0) {
+      setDeliveryWizardJobs(group.jobs);
+      setDeliveryWizardOpen(true);
+      return;
+    }
     }
 
     const jobsToUpdate = group.jobs.filter((j) => {
@@ -361,6 +371,12 @@ export default function JobList() {
           open={wizardOpen}
           onOpenChange={setWizardOpen}
           jobs={wizardJobs}
+          onCompleted={fetchJobs}
+        />
+        <DeliveryWizard
+          open={deliveryWizardOpen}
+          onOpenChange={setDeliveryWizardOpen}
+          jobs={deliveryWizardJobs}
           onCompleted={fetchJobs}
         />
       </div>
