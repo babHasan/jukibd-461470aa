@@ -20,20 +20,17 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
 
-    // Look up email by mobile number from profiles
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("email")
-      .eq("mobile", mobile)
-      .maybeSingle();
+    // Look up email by mobile number using secure RPC
+    const { data: email } = await supabase
+      .rpc("lookup_email_by_mobile", { _mobile: mobile });
 
-    if (!profile?.email) {
+    if (!email) {
       toast.error("এই মোবাইল নম্বর দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি");
       setLoading(false);
       return;
     }
 
-    const { error } = await signIn(profile.email, password);
+    const { error } = await signIn(email, password);
     setLoading(false);
     if (error) {
       toast.error("পাসওয়ার্ড ভুল হয়েছে");
