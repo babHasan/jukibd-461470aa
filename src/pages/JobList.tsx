@@ -85,6 +85,8 @@ export default function JobList() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [companyFilter, setCompanyFilter] = useState("all");
+  const [mobileFilter, setMobileFilter] = useState("all");
   const [perPage, setPerPage] = useState("10");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -148,6 +150,16 @@ export default function JobList() {
     fetchJobs();
   }
 
+  const companyOptions = useMemo(() => {
+    const set = new Set(jobs.map((j) => j.company_name).filter(Boolean));
+    return Array.from(set).sort();
+  }, [jobs]);
+
+  const mobileOptions = useMemo(() => {
+    const set = new Set(jobs.map((j) => j.customer_mobile).filter(Boolean));
+    return Array.from(set).sort();
+  }, [jobs]);
+
   const filtered = jobs.filter((j) => {
     const s = search.toLowerCase();
     const matchesSearch =
@@ -162,7 +174,9 @@ export default function JobList() {
       j.board_serial.toLowerCase().includes(s) ||
       j.branch_name.toLowerCase().includes(s);
     const matchesStatus = statusFilter === "all" || j.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesCompany = companyFilter === "all" || j.company_name === companyFilter;
+    const matchesMobile = mobileFilter === "all" || j.customer_mobile === mobileFilter;
+    return matchesSearch && matchesStatus && matchesCompany && matchesMobile;
   });
 
   const groups = useMemo(() => {
@@ -192,7 +206,7 @@ export default function JobList() {
     : groups.slice((currentPage - 1) * parseInt(perPage), currentPage * parseInt(perPage));
   const totalPages = perPage === "all" ? 1 : Math.ceil(totalGroups / parseInt(perPage));
 
-  useEffect(() => { setCurrentPage(1); }, [search, statusFilter, perPage]);
+  useEffect(() => { setCurrentPage(1); }, [search, statusFilter, companyFilter, mobileFilter, perPage]);
 
   return (
     <AppLayout>
@@ -232,6 +246,28 @@ export default function JobList() {
                 <SelectItem value="in-progress">In Progress</SelectItem>
                 <SelectItem value="completed">Completed</SelectItem>
                 <SelectItem value="picked-up">Picked Up</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={companyFilter} onValueChange={setCompanyFilter}>
+              <SelectTrigger className="sm:w-44">
+                <SelectValue placeholder="All Companies" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Companies</SelectItem>
+                {companyOptions.map((c) => (
+                  <SelectItem key={c} value={c}>{c}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={mobileFilter} onValueChange={setMobileFilter}>
+              <SelectTrigger className="sm:w-44">
+                <SelectValue placeholder="All Mobiles" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Mobiles</SelectItem>
+                {mobileOptions.map((m) => (
+                  <SelectItem key={m} value={m}>{m}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
