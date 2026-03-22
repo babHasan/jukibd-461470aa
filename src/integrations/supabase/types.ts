@@ -14,7 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      sms_logs: {
+        Row: {
+          api_response: Json | null
+          created_at: string
+          customer_phone: string
+          id: string
+          message_text: string
+          repair_order_id: string
+          status: string
+          trigger_status: string
+        }
+        Insert: {
+          api_response?: Json | null
+          created_at?: string
+          customer_phone: string
+          id?: string
+          message_text: string
+          repair_order_id: string
+          status?: string
+          trigger_status: string
+        }
+        Update: {
+          api_response?: Json | null
+          created_at?: string
+          customer_phone?: string
+          id?: string
+          message_text?: string
+          repair_order_id?: string
+          status?: string
+          trigger_status?: string
+        }
+        Relationships: []
+      }
+      sms_templates: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          template_text: string
+          trigger_status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          template_text: string
+          trigger_status: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          template_text?: string
+          trigger_status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
