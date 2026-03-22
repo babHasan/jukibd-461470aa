@@ -8,9 +8,11 @@ interface UserPhotoUploadProps {
   photoUrl: string | null;
   onPhotoChange: (url: string | null) => void;
   userId?: string;
+  /** If true, uploads to a user-owned folder so RLS allows non-admins */
+  userFolder?: boolean;
 }
 
-export function UserPhotoUpload({ photoUrl, onPhotoChange, userId }: UserPhotoUploadProps) {
+export function UserPhotoUpload({ photoUrl, onPhotoChange, userId, userFolder }: UserPhotoUploadProps) {
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -29,7 +31,8 @@ export function UserPhotoUpload({ photoUrl, onPhotoChange, userId }: UserPhotoUp
 
     setUploading(true);
     const ext = file.name.split(".").pop();
-    const fileName = `${userId || crypto.randomUUID()}.${ext}`;
+    const id = userId || crypto.randomUUID();
+    const fileName = userFolder ? `${id}/avatar.${ext}` : `${id}.${ext}`;
 
     const { error } = await supabase.storage
       .from("avatars")

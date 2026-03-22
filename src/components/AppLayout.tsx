@@ -349,12 +349,12 @@ export function AppLayout({ children }: { children: ReactNode }) {
           </div>
           <div className="flex items-center gap-3">
             <AddRepairDialog onAdd={addOrder} />
-            <div className="hidden sm:flex items-center gap-2 rounded-full bg-primary px-3 py-1.5">
-              <div className="h-6 w-6 rounded-full bg-accent flex items-center justify-center text-xs font-bold text-accent-foreground">
+            <Link to="/my-profile" className="hidden sm:flex items-center gap-2 rounded-full bg-primary px-3 py-1.5 hover:opacity-90 transition-opacity">
+              <div className="h-6 w-6 rounded-full bg-accent flex items-center justify-center text-xs font-bold text-accent-foreground overflow-hidden">
                 {isAdmin ? "A" : "U"}
               </div>
               <span className="text-xs font-medium text-primary-foreground">{isAdmin ? "ADMIN" : "USER"}</span>
-            </div>
+            </Link>
           </div>
         </header>
 
