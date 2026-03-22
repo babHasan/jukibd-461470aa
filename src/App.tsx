@@ -16,6 +16,9 @@ import AddUser from "./pages/admin/AddUser";
 import EditUser from "./pages/admin/EditUser";
 import UserLogs from "./pages/admin/UserLogs";
 import MyProfile from "./pages/MyProfile";
+import BranchList from "./pages/branch/BranchList";
+import AddBranch from "./pages/branch/AddBranch";
+import EditBranch from "./pages/branch/EditBranch";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +45,9 @@ function AppRoutes() {
       <Route path="/admin/add-user" element={<ProtectedRoute><AddUser /></ProtectedRoute>} />
       <Route path="/admin/edit-user/:id" element={<ProtectedRoute><EditUser /></ProtectedRoute>} />
       <Route path="/admin/user-logs" element={<ProtectedRoute><UserLogs /></ProtectedRoute>} />
+      <Route path="/branch/list" element={<ProtectedRoute><BranchList /></ProtectedRoute>} />
+      <Route path="/branch/add" element={<ProtectedRoute><AddBranch /></ProtectedRoute>} />
+      <Route path="/branch/edit/:id" element={<ProtectedRoute><EditBranch /></ProtectedRoute>} />
       <Route path="/my-profile" element={<ProtectedRoute><MyProfile /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
