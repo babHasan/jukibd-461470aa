@@ -301,7 +301,14 @@ export default function TransactionReport() {
                               <Printer className="h-3 w-3 mr-1" />
                               OFFICE COPY
                             </Button>
-                            <Button size="sm" variant="outline" className="text-[10px] h-7 bg-green-600 text-white hover:bg-green-700 border-green-600">
+                            <Button size="sm" variant="outline" className="text-[10px] h-7 bg-green-600 text-white hover:bg-green-700 border-green-600"
+                              onClick={() => {
+                                const url = group.factory_challan_number
+                                  ? `/print-invoice?challan=${encodeURIComponent(group.factory_challan_number)}`
+                                  : `/print-invoice?job=${group.jobs[0].id}`;
+                                window.open(url, "_blank");
+                              }}
+                            >
                               <Printer className="h-3 w-3 mr-1" />
                               CLIENT COPY
                             </Button>
