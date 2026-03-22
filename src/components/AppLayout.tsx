@@ -14,6 +14,7 @@ import {
   Monitor,
   UserCircle,
   PlusCircle,
+  Plus,
   ClipboardList,
   Diamond,
   DollarSign,
@@ -45,8 +46,7 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { ReactNode, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { AddRepairDialog } from "@/components/AddRepairDialog";
-import { useRepairs } from "@/context/RepairContext";
+import { Button } from "@/components/ui/button";
 
 interface SubItem {
   to: string;
@@ -257,7 +257,7 @@ const navPermissionMap: Record<string, string> = {
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const location = useLocation();
-  const { addOrder } = useRepairs();
+  
   const { signOut, user, isAdmin, permissions } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -358,7 +358,10 @@ export function AppLayout({ children }: { children: ReactNode }) {
             <h1 className="text-base font-semibold text-foreground">{currentLabel}</h1>
           </div>
           <div className="flex items-center gap-3">
-            <AddRepairDialog onAdd={addOrder} />
+            <Link to="/add-job" className="gap-2 bg-accent text-accent-foreground hover:bg-accent/90 inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2">
+              <Plus className="h-4 w-4" />
+              New Job
+            </Link>
             <Link to="/my-profile" className="hidden sm:flex items-center gap-2 rounded-full bg-primary px-3 py-1.5 hover:opacity-90 transition-opacity">
               <div className="h-6 w-6 rounded-full bg-accent flex items-center justify-center text-xs font-bold text-accent-foreground overflow-hidden shrink-0">
                 {profile?.photo_url ? (
