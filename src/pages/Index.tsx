@@ -6,6 +6,7 @@ import { RepairTable } from "@/components/RepairTable";
 import { AppLayout } from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Search, Phone, ChevronRight, Eye } from "lucide-react";
