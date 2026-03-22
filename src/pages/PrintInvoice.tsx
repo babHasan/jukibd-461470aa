@@ -16,6 +16,12 @@ interface Job {
   factory_challan_number: string;
   job_date: string;
   status: string;
+  service_charge: number | null;
+  discount: number | null;
+  payable_amount: number | null;
+  receive_amount: number | null;
+  charge_type: string | null;
+  delivery_date: string | null;
 }
 
 interface CompanyInfo {
@@ -111,9 +117,17 @@ export default function PrintInvoice() {
 
   const firstJob = jobs[0];
   const printDate = format(new Date(), "dd-MM-yyyy hh:mm:ss a");
+  const isDelivery = copyType === "delivery" || firstJob.status === "picked-up";
 
   // Generate 15 empty rows to fill the table
-  const totalRows = Math.max(15, jobs.length);
+  const totalRows = Math.max(isDelivery ? jobs.length : 15, jobs.length);
+
+  // Calculate totals for delivery invoice
+  const totalServiceCharge = jobs.reduce((sum, j) => sum + (j.service_charge || 0), 0);
+  const totalDiscount = jobs.reduce((sum, j) => sum + (j.discount || 0), 0);
+  const totalPayable = jobs.reduce((sum, j) => sum + (j.payable_amount || 0), 0);
+  const totalReceived = jobs.reduce((sum, j) => sum + (j.receive_amount || 0), 0);
+  const totalDue = totalPayable - totalReceived;
 
   return (
     <>
@@ -175,7 +189,7 @@ export default function PrintInvoice() {
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 4 }}>
           <h1 style={{ fontSize: 18, fontWeight: 800, letterSpacing: 2, margin: 0 }}>
-            {copyType === "office" ? "OFFICE COPY" : "CUSTOMER COPY"}
+            {copyType === "office" ? "OFFICE COPY" : isDelivery ? "DELIVERY INVOICE" : "CUSTOMER COPY"}
           </h1>
         </div>
 
@@ -241,10 +255,10 @@ export default function PrintInvoice() {
               margin: 0,
             }}
           >
-            Receive
+            {isDelivery ? "Delivery" : "Receive"}
           </h2>
           <div style={{ textAlign: "right", fontSize: 12 }}>
-            <div>Date : {firstJob.job_date}</div>
+            <div>Date : {isDelivery && firstJob.delivery_date ? firstJob.delivery_date : firstJob.job_date}</div>
             <div>Challan Number : {firstJob.factory_challan_number || "—"}</div>
           </div>
         </div>
@@ -260,7 +274,15 @@ export default function PrintInvoice() {
               <th>Model</th>
               <th>Board</th>
               <th>Board Serial</th>
-              <th>Details of Problem</th>
+              {isDelivery ? (
+                <>
+                  <th style={{ textAlign: "right" }}>Charge</th>
+                  <th style={{ textAlign: "right" }}>Discount</th>
+                  <th style={{ textAlign: "right" }}>Payable</th>
+                </>
+              ) : (
+                <th>Details of Problem</th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -275,10 +297,36 @@ export default function PrintInvoice() {
                   <td>{job?.model_name || ""}</td>
                   <td>{job?.board_name || ""}</td>
                   <td>{job?.board_serial || ""}</td>
-                  <td>{job?.details_of_problem || ""}</td>
+                  {isDelivery ? (
+                    <>
+                      <td style={{ textAlign: "right" }}>{job ? (job.service_charge || 0).toLocaleString() : ""}</td>
+                      <td style={{ textAlign: "right" }}>{job ? (job.discount || 0).toLocaleString() : ""}</td>
+                      <td style={{ textAlign: "right" }}>{job ? (job.payable_amount || 0).toLocaleString() : ""}</td>
+                    </>
+                  ) : (
+                    <td>{job?.details_of_problem || ""}</td>
+                  )}
                 </tr>
               );
             })}
+            {isDelivery && (
+              <>
+                <tr style={{ fontWeight: 700, background: "#f0f0f0" }}>
+                  <td colSpan={7} style={{ textAlign: "right" }}>Total</td>
+                  <td style={{ textAlign: "right" }}>{totalServiceCharge.toLocaleString()}</td>
+                  <td style={{ textAlign: "right" }}>{totalDiscount.toLocaleString()}</td>
+                  <td style={{ textAlign: "right" }}>{totalPayable.toLocaleString()}</td>
+                </tr>
+                <tr style={{ fontWeight: 700 }}>
+                  <td colSpan={9} style={{ textAlign: "right" }}>Received Amount</td>
+                  <td style={{ textAlign: "right" }}>{totalReceived.toLocaleString()}</td>
+                </tr>
+                <tr style={{ fontWeight: 700 }}>
+                  <td colSpan={9} style={{ textAlign: "right" }}>Due Amount</td>
+                  <td style={{ textAlign: "right" }}>{totalDue.toLocaleString()}</td>
+                </tr>
+              </>
+            )}
           </tbody>
         </table>
 
