@@ -21,6 +21,7 @@ import AddBranch from "./pages/branch/AddBranch";
 import EditBranch from "./pages/branch/EditBranch";
 import BrandList from "./pages/machine-data/BrandList";
 import ModelList from "./pages/machine-data/ModelList";
+import AddJob from "./pages/AddJob";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ function AppRoutes() {
       <Route path="/branch/edit/:id" element={<ProtectedRoute><EditBranch /></ProtectedRoute>} />
       <Route path="/machine-data/brands" element={<ProtectedRoute><BrandList /></ProtectedRoute>} />
       <Route path="/machine-data/models" element={<ProtectedRoute><ModelList /></ProtectedRoute>} />
+      <Route path="/add-job" element={<ProtectedRoute><AddJob /></ProtectedRoute>} />
       <Route path="/my-profile" element={<ProtectedRoute><MyProfile /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
