@@ -90,6 +90,8 @@ export default function JobList() {
 
   const [wizardOpen, setWizardOpen] = useState(false);
   const [wizardJobs, setWizardJobs] = useState<Job[]>([]);
+  const [deliveryWizardOpen, setDeliveryWizardOpen] = useState(false);
+  const [deliveryWizardJobs, setDeliveryWizardJobs] = useState<Job[]>([]);
 
   function fetchJobs() {
     setLoading(true);
