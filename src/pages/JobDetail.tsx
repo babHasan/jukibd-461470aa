@@ -125,6 +125,25 @@ export default function JobDetailPage() {
 
   const currentIdx = jobStatusFlow.indexOf(job.status);
   const nextStatus = currentIdx < jobStatusFlow.length - 1 ? jobStatusFlow[currentIdx + 1] : null;
+  const prevStatus = currentIdx > 0 ? jobStatusFlow[currentIdx - 1] : null;
+
+  async function handlePreviousStatus() {
+    if (!job || !prevStatus) return;
+    const updates: Record<string, unknown> = { status: prevStatus };
+    // If moving back from completed, clear cost fields
+    if (job.status === "completed") {
+      updates.service_charge = 0;
+      updates.charge_type = "Normal";
+      updates.completed_date = null;
+    }
+    const { error } = await supabase.from("jobs").update(updates).eq("id", job.id);
+    if (error) {
+      toast.error("Failed to update status");
+    } else {
+      toast.success(`Status reverted to ${jobStatusLabels[prevStatus]}`);
+      reloadJob();
+    }
+  }
 
   return (
     <AppLayout>
