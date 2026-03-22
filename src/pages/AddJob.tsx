@@ -29,7 +29,7 @@ const AddJob = () => {
   const navigate = useNavigate();
   const [brands, setBrands] = useState<{ id: string; name: string }[]>([]);
   const [models, setModels] = useState<{ id: string; name: string }[]>([]);
-  const [clients, setClients] = useState<{ id: string; client_name: string; company_name: string }[]>([]);
+  const [clients, setClients] = useState<{ id: string; client_name: string; company_name: string; contact_number?: string }[]>([]);
   const [branches, setBranches] = useState<{ id: string; name: string }[]>([]);
   const [boardsList, setBoardsList] = useState<{ id: string; name: string }[]>([]);
 
