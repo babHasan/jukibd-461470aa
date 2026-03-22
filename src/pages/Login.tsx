@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,17 +12,28 @@ import { toast } from "sonner";
 export default function Login() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
+
+    // Look up email by mobile number using secure RPC
+    const { data: email } = await supabase
+      .rpc("lookup_email_by_mobile", { _mobile: mobile });
+
+    if (!email) {
+      toast.error("এই মোবাইল নম্বর দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি");
+      setLoading(false);
+      return;
+    }
+
     const { error } = await signIn(email, password);
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      toast.error("পাসওয়ার্ড ভুল হয়েছে");
     } else {
       navigate("/");
     }
@@ -39,13 +51,13 @@ export default function Login() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email / Mobile</Label>
+              <Label htmlFor="mobile">Mobile (Log in ID)</Label>
               <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@example.com"
+                id="mobile"
+                type="tel"
+                value={mobile}
+                onChange={(e) => setMobile(e.target.value)}
+                placeholder="01777704525"
                 required
               />
             </div>
