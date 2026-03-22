@@ -161,11 +161,9 @@ const AddJob = () => {
                 <Select value={board} onValueChange={setBoard}>
                   <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Select Board" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Motherboard">Motherboard</SelectItem>
-                    <SelectItem value="Power Board">Power Board</SelectItem>
-                    <SelectItem value="Controller Board">Controller Board</SelectItem>
-                    <SelectItem value="Formatter Board">Formatter Board</SelectItem>
-                    <SelectItem value="Other">Other</SelectItem>
+                    {boardsList.map((b) => (
+                      <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
