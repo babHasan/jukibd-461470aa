@@ -130,6 +130,8 @@ const navItems: NavItem[] = [
     icon: FileText,
     children: [
       { to: "/reports/transaction", label: "Transaction Report", icon: Receipt },
+      { to: "/reports/collection", label: "Collection", icon: CreditCard },
+      { to: "/reports/expense", label: "Expense", icon: TrendingDown },
     ],
   },
   {
