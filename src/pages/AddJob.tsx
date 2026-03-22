@@ -32,11 +32,9 @@ const AddJob = () => {
 
   // Job form
   const [jobNumber, setJobNumber] = useState("");
-  const [machineType, setMachineType] = useState("");
   const [brandName, setBrandName] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
   const [board, setBoard] = useState("");
-  const [machineSerial, setMachineSerial] = useState("");
   const [boardSerial, setBoardSerial] = useState("");
   const [detailsOfProblem, setDetailsOfProblem] = useState("");
   const [remarks, setRemarks] = useState("");
@@ -58,8 +56,6 @@ const AddJob = () => {
     supabase.from("branches").select("id, name").eq("status", "active").order("name").then(({ data }) => data && setBranches(data));
   }, []);
 
-  const machineTypes = ["Laptop", "Desktop", "Printer", "Photocopier", "Scanner", "UPS", "Monitor", "Other"];
-
   function handleAddJob() {
     if (!brandName || !selectedModel || !boardSerial) {
       toast.error("Please fill required fields (Brand, Model, Board Serial)");
@@ -67,11 +63,11 @@ const AddJob = () => {
     }
     const newJob: JobItem = {
       id: crypto.randomUUID(),
-      service: machineType,
+      service: "",
       brand: brands.find((b) => b.id === brandName)?.name || brandName,
       model: models.find((m) => m.id === selectedModel)?.name || selectedModel,
       board,
-      machineSerial,
+      machineSerial: "",
       boardSerial,
       detailsOfProblem,
       remarks,
@@ -80,11 +76,10 @@ const AddJob = () => {
     setAddedJobs((prev) => [...prev, newJob]);
     // Reset job fields
     setJobNumber("");
-    setMachineType("");
     setBrandName("");
     setSelectedModel("");
     setBoard("");
-    setMachineSerial("");
+    
     setBoardSerial("");
     setDetailsOfProblem("");
     setRemarks("");
@@ -127,20 +122,6 @@ const AddJob = () => {
               <div className="grid grid-cols-[140px_1fr] items-center gap-2">
                 <Label className="text-right text-xs font-semibold">Job Number</Label>
                 <Input value={jobNumber} onChange={(e) => setJobNumber(e.target.value)} placeholder="Auto-generated if empty" className="h-8 text-sm" />
-              </div>
-
-              <div className="grid grid-cols-[140px_1fr] items-center gap-2">
-                <Label className="text-right text-xs font-semibold">
-                  Select Machine Type <span className="text-destructive">*</span>
-                </Label>
-                <Select value={machineType} onValueChange={setMachineType}>
-                  <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Select Machine Type" /></SelectTrigger>
-                  <SelectContent>
-                    {machineTypes.map((t) => (
-                      <SelectItem key={t} value={t}>{t}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
               </div>
 
               <div className="grid grid-cols-[140px_1fr] items-center gap-2">
@@ -188,11 +169,6 @@ const AddJob = () => {
               </div>
 
               <div className="grid grid-cols-[140px_1fr] items-center gap-2">
-                <Label className="text-right text-xs font-semibold">Machine Serial Number</Label>
-                <Input value={machineSerial} onChange={(e) => setMachineSerial(e.target.value)} className="h-8 text-sm" />
-              </div>
-
-              <div className="grid grid-cols-[140px_1fr] items-center gap-2">
                 <Label className="text-right text-xs font-semibold">
                   Board Serial Number <span className="text-destructive">*</span>
                 </Label>
@@ -229,11 +205,11 @@ const AddJob = () => {
                   <TableHeader>
                     <TableRow>
                       <TableHead className="text-xs font-bold">SL</TableHead>
-                      <TableHead className="text-xs font-bold">SERVICE</TableHead>
+                      
                       <TableHead className="text-xs font-bold">BRAND</TableHead>
                       <TableHead className="text-xs font-bold">MODEL</TableHead>
                       <TableHead className="text-xs font-bold">BOARD</TableHead>
-                      <TableHead className="text-xs font-bold">MACHINE SERIAL</TableHead>
+                      
                       <TableHead className="text-xs font-bold">BOARD SERIAL</TableHead>
                       <TableHead className="text-xs font-bold">DETAILS OF PROBLEM</TableHead>
                       <TableHead className="text-xs font-bold">REMARKS</TableHead>
@@ -244,7 +220,7 @@ const AddJob = () => {
                   <TableBody>
                     {addedJobs.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={11} className="text-center text-muted-foreground text-xs py-8">
+                        <TableCell colSpan={9} className="text-center text-muted-foreground text-xs py-8">
                           No jobs added yet
                         </TableCell>
                       </TableRow>
@@ -252,11 +228,11 @@ const AddJob = () => {
                       addedJobs.map((job, idx) => (
                         <TableRow key={job.id}>
                           <TableCell className="text-xs">{idx + 1}</TableCell>
-                          <TableCell className="text-xs">{job.service}</TableCell>
+                          
                           <TableCell className="text-xs">{job.brand}</TableCell>
                           <TableCell className="text-xs">{job.model}</TableCell>
                           <TableCell className="text-xs">{job.board}</TableCell>
-                          <TableCell className="text-xs">{job.machineSerial}</TableCell>
+                          
                           <TableCell className="text-xs">{job.boardSerial}</TableCell>
                           <TableCell className="text-xs max-w-[120px] truncate">{job.detailsOfProblem}</TableCell>
                           <TableCell className="text-xs max-w-[100px] truncate">{job.remarks}</TableCell>
