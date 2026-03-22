@@ -131,6 +131,145 @@ export type Database = {
         }
         Relationships: []
       }
+      expense_categories: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          remarks: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          remarks?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          remarks?: string
+        }
+        Relationships: []
+      }
+      expenses: {
+        Row: {
+          amount: number
+          category_id: string | null
+          category_name: string
+          created_at: string
+          created_by: string | null
+          expense_date: string
+          id: string
+          memo_no: string
+          remarks: string
+          service_provider: string
+          service_provider_memo: string
+          tr_no: string
+        }
+        Insert: {
+          amount?: number
+          category_id?: string | null
+          category_name?: string
+          created_at?: string
+          created_by?: string | null
+          expense_date?: string
+          id?: string
+          memo_no?: string
+          remarks?: string
+          service_provider?: string
+          service_provider_memo?: string
+          tr_no?: string
+        }
+        Update: {
+          amount?: number
+          category_id?: string | null
+          category_name?: string
+          created_at?: string
+          created_by?: string | null
+          expense_date?: string
+          id?: string
+          memo_no?: string
+          remarks?: string
+          service_provider?: string
+          service_provider_memo?: string
+          tr_no?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expenses_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "expense_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      income_categories: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          remarks: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          remarks?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          remarks?: string
+        }
+        Relationships: []
+      }
+      incomes: {
+        Row: {
+          amount: number
+          category_id: string | null
+          category_name: string
+          created_at: string
+          created_by: string | null
+          id: string
+          income_date: string
+          remarks: string
+          tr_no: string
+        }
+        Insert: {
+          amount?: number
+          category_id?: string | null
+          category_name?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          income_date?: string
+          remarks?: string
+          tr_no?: string
+        }
+        Update: {
+          amount?: number
+          category_id?: string | null
+          category_name?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          income_date?: string
+          remarks?: string
+          tr_no?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incomes_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "income_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       jobs: {
         Row: {
           board_name: string
