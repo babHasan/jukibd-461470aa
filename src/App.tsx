@@ -36,6 +36,8 @@ import Income from "./pages/expense-income/Income";
 import CustomerLedger from "./pages/ledger/CustomerLedger";
 import ChartOfAccounts from "./pages/accounts/ChartOfAccounts";
 import TransactionReport from "./pages/reports/TransactionReport";
+import CollectionReport from "./pages/reports/CollectionReport";
+import ExpenseReport from "./pages/reports/ExpenseReport";
 
 const queryClient = new QueryClient();
 
