@@ -43,7 +43,8 @@ import {
   Palette,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { AddRepairDialog } from "@/components/AddRepairDialog";
 import { useRepairs } from "@/context/RepairContext";
 
