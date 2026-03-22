@@ -28,6 +28,10 @@ interface JobItem {
   board_serial: string;
   details_of_problem: string;
   status: string;
+  customer_name?: string;
+  customer_id?: string | null;
+  brand_name?: string;
+  factory_challan_number?: string;
 }
 
 interface CompletionWizardProps {
