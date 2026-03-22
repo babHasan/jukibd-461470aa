@@ -48,9 +48,16 @@ const Index = () => {
   useEffect(() => {
     supabase
       .from("jobs")
-      .select("*")
+      .select("*, clients(contact_number)")
       .order("created_at", { ascending: false })
-      .then(({ data }) => data && setJobs(data));
+      .then(({ data }) => {
+        if (data) {
+          setJobs(data.map((j: any) => ({
+            ...j,
+            customer_mobile: j.clients?.contact_number || "",
+          })));
+        }
+      });
   }, []);
 
   const filteredJobs = jobs.filter((j) => {
