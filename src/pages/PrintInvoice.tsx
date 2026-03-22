@@ -16,6 +16,12 @@ interface Job {
   factory_challan_number: string;
   job_date: string;
   status: string;
+  service_charge: number | null;
+  discount: number | null;
+  payable_amount: number | null;
+  receive_amount: number | null;
+  charge_type: string | null;
+  delivery_date: string | null;
 }
 
 interface CompanyInfo {
