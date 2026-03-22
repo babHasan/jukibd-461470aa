@@ -65,6 +65,7 @@ export default function PrintInvoice() {
   const [searchParams] = useSearchParams();
   const challan = searchParams.get("challan");
   const jobId = searchParams.get("job");
+  const idsParam = searchParams.get("ids");
   const copyType = searchParams.get("type"); // "office" or default "customer"
 
   const [jobs, setJobs] = useState<Job[]>([]);
