@@ -131,9 +131,7 @@ export default function AddUser() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>
-                      Employee Id <span className="text-destructive">*</span>
-                    </Label>
+                    <Label>Employee Id</Label>
                     <Input
                       value={form.employee_id}
                       onChange={(e) => setForm({ ...form, employee_id: e.target.value })}
