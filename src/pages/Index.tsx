@@ -129,12 +129,15 @@ const Index = () => {
   }
 
   const filteredJobs = jobs.filter((j) => {
+    const s = jobSearch.toLowerCase();
     const matchesSearch =
-      j.job_number.toLowerCase().includes(jobSearch.toLowerCase()) ||
-      j.customer_name.toLowerCase().includes(jobSearch.toLowerCase()) ||
-      j.company_name.toLowerCase().includes(jobSearch.toLowerCase()) ||
-      j.brand_name.toLowerCase().includes(jobSearch.toLowerCase()) ||
-      j.board_serial.toLowerCase().includes(jobSearch.toLowerCase());
+      j.job_number.toLowerCase().includes(s) ||
+      j.customer_name.toLowerCase().includes(s) ||
+      j.company_name.toLowerCase().includes(s) ||
+      j.customer_mobile.toLowerCase().includes(s) ||
+      j.factory_challan_number.toLowerCase().includes(s) ||
+      j.brand_name.toLowerCase().includes(s) ||
+      j.board_serial.toLowerCase().includes(s);
     const matchesStatus = jobFilter === "all" || j.status === jobFilter;
     const jobDateObj = new Date(j.job_date + "T00:00:00");
     const matchesFrom = !fromDate || jobDateObj >= new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
