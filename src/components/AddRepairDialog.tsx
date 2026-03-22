@@ -66,7 +66,7 @@ export function AddRepairDialog({ onAdd }: AddRepairDialogProps) {
       <DialogTrigger asChild>
         <Button className="gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
           <Plus className="h-4 w-4" />
-          New Repair
+          New Job
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[480px]">
