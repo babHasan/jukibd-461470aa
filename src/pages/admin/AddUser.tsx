@@ -57,16 +57,23 @@ export default function AddUser() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.name || !form.email || !form.password) {
-      toast.error("Name, Email, and Password are required");
+    if (!form.name || !form.password) {
+      toast.error("Name and Password are required");
+      return;
+    }
+    if (!form.email && !form.mobile) {
+      toast.error("Email or Mobile is required");
       return;
     }
 
     setLoading(true);
 
+    // If no email provided, generate one from mobile
+    const email = form.email || `${form.mobile}@repairdesk.local`;
+
     // Create auth user
     const { data: authData, error: authError } = await supabase.auth.signUp({
-      email: form.email,
+      email,
       password: form.password,
       options: {
         data: { name: form.name },
