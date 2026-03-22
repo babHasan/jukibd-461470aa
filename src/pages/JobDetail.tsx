@@ -7,6 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ArrowLeft, ChevronRight, Phone, Clock, MapPin } from "lucide-react";
 import { format } from "date-fns";
+import { CompletionWizard } from "@/components/CompletionWizard";
+import { format } from "date-fns";
 
 const jobStatusFlow = ["received", "diagnosing", "in-progress", "completed", "picked-up"];
 const jobStatusLabels: Record<string, string> = {
