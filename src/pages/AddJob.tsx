@@ -146,6 +146,8 @@ const AddJob = () => {
           .insert({
             client_name: manualCustomerName,
             contact_number: manualCustomerMobile,
+            company_name: manualCompanyName,
+            address: manualAddress,
           })
           .select()
           .single();
