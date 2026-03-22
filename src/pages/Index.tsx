@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useRepairs } from "@/context/RepairContext";
 import { KpiCards } from "@/components/KpiCards";
 import { RepairTable } from "@/components/RepairTable";
