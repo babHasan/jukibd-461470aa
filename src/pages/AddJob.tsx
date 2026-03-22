@@ -35,7 +35,6 @@ const AddJob = () => {
   const [brandName, setBrandName] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
   const [board, setBoard] = useState("");
-  const [machineSerial, setMachineSerial] = useState("");
   const [boardSerial, setBoardSerial] = useState("");
   const [detailsOfProblem, setDetailsOfProblem] = useState("");
   const [remarks, setRemarks] = useState("");
