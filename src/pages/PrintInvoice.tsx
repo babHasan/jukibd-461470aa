@@ -118,7 +118,7 @@ export default function PrintInvoice() {
     <>
       <style>{`
         @media print {
-          @page { size: A4; margin: 12mm 10mm; }
+          @page { size: A4; margin: 25.4mm 10mm 12mm 10mm; }
           body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
           .no-print { display: none !important; }
         }
