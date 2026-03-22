@@ -95,10 +95,6 @@ const navItems: NavItem[] = [
     to: "/customers",
     label: "CLIENT DATA",
     icon: UserCircle,
-    children: [
-      { to: "/customers", label: "All Clients", icon: Users },
-      { to: "/customers/add", label: "Add Client", icon: UserPlus },
-    ],
   },
   { to: "/add-job", label: "ADD JOB", icon: PlusCircle },
   { to: "/job-list", label: "JOB LIST", icon: ClipboardList },
