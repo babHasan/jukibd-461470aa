@@ -92,6 +92,47 @@ export type Database = {
         }
         Relationships: []
       }
+      chart_of_accounts: {
+        Row: {
+          account_code: string
+          account_name: string
+          account_type: string
+          created_at: string
+          description: string
+          id: string
+          is_active: boolean
+          parent_id: string | null
+        }
+        Insert: {
+          account_code?: string
+          account_name: string
+          account_type?: string
+          created_at?: string
+          description?: string
+          id?: string
+          is_active?: boolean
+          parent_id?: string | null
+        }
+        Update: {
+          account_code?: string
+          account_name?: string
+          account_type?: string
+          created_at?: string
+          description?: string
+          id?: string
+          is_active?: boolean
+          parent_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chart_of_accounts_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "chart_of_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clients: {
         Row: {
           address: string
