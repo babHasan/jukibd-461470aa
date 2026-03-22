@@ -8,6 +8,8 @@ interface UserPhotoUploadProps {
   photoUrl: string | null;
   onPhotoChange: (url: string | null) => void;
   userId?: string;
+  /** If true, uploads to a user-owned folder so RLS allows non-admins */
+  userFolder?: boolean;
 }
 
 export function UserPhotoUpload({ photoUrl, onPhotoChange, userId }: UserPhotoUploadProps) {
