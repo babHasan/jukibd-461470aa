@@ -26,6 +26,7 @@ interface JobItem {
 }
 
 const AddJob = () => {
+  const navigate = useNavigate();
   const [brands, setBrands] = useState<{ id: string; name: string }[]>([]);
   const [models, setModels] = useState<{ id: string; name: string }[]>([]);
   const [clients, setClients] = useState<{ id: string; client_name: string; company_name: string }[]>([]);
