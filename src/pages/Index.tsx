@@ -3,6 +3,7 @@ import { useRepairs } from "@/context/RepairContext";
 import { KpiCards } from "@/components/KpiCards";
 import { RepairTable } from "@/components/RepairTable";
 import { AppLayout } from "@/components/AppLayout";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
