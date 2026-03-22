@@ -354,11 +354,16 @@ const AddJob = () => {
         <Card>
           <CardContent className="p-4 space-y-3">
             <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
-              <Label className="text-right text-xs font-semibold">
-                Select Customer <span className="text-destructive">*</span>
-              </Label>
-              <Select value={selectedCustomer} onValueChange={setSelectedCustomer}>
-                <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Select Customer" /></SelectTrigger>
+              <Label className="text-right text-xs font-semibold">Select Customer</Label>
+              <Select value={selectedCustomer} onValueChange={(val) => {
+                setSelectedCustomer(val);
+                const c = clients.find((cl) => cl.id === val);
+                if (c) {
+                  setManualCustomerName(c.client_name);
+                  setManualCustomerMobile(c.contact_number || "");
+                }
+              }}>
+                <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Select or type below" /></SelectTrigger>
                 <SelectContent>
                   {clients.map((c) => (
                     <SelectItem key={c.id} value={c.id}>
@@ -370,14 +375,24 @@ const AddJob = () => {
             </div>
 
             <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
+              <Label className="text-right text-xs font-semibold">
+                Customer Name <span className="text-destructive">*</span>
+              </Label>
+              <Input value={manualCustomerName} onChange={(e) => { setManualCustomerName(e.target.value); setSelectedCustomer(""); }} placeholder="Enter customer name" className="h-8 text-sm" />
+            </div>
+
+            <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
+              <Label className="text-right text-xs font-semibold">Mobile Number</Label>
+              <Input value={manualCustomerMobile} onChange={(e) => { setManualCustomerMobile(e.target.value); setSelectedCustomer(""); }} placeholder="Enter mobile number" className="h-8 text-sm" />
+            </div>
+
+            <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
               <Label className="text-right text-xs font-semibold">Factory Challan Number</Label>
               <Input value={factoryChallanNumber} onChange={(e) => setFactoryChallanNumber(e.target.value)} className="h-8 text-sm" />
             </div>
 
             <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
-              <Label className="text-right text-xs font-semibold">
-                Select Branch <span className="text-destructive">*</span>
-              </Label>
+              <Label className="text-right text-xs font-semibold">Branch</Label>
               <Select value={selectedBranch} onValueChange={setSelectedBranch}>
                 <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Select Branch" /></SelectTrigger>
                 <SelectContent>
