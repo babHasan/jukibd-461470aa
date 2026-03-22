@@ -282,6 +282,27 @@ export type Database = {
           },
         ]
       }
+      footer_content: {
+        Row: {
+          content: string
+          id: string
+          is_active: boolean
+          updated_at: string
+        }
+        Insert: {
+          content?: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       income_categories: {
         Row: {
           created_at: string
