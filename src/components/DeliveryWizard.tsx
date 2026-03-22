@@ -17,9 +17,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { Upload, X, Image as ImageIcon } from "lucide-react";
 
 interface JobItem {
   id: string;
