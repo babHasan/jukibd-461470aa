@@ -154,10 +154,11 @@ const navItems: NavItem[] = [
   },
   { to: "/challan-verify", label: "CHALLAN VERIFY", icon: CheckCheck },
   {
-    to: "/sms-settings",
+    to: "/settings",
     label: "SETTING",
     icon: Settings,
     children: [
+      { to: "/settings/company-info", label: "Company Info", icon: Building },
       { to: "/sms-settings", label: "SMS Settings", icon: MessageSquare },
       { to: "/settings/notifications", label: "Notifications", icon: Bell },
       { to: "/settings/appearance", label: "Appearance", icon: Palette },
