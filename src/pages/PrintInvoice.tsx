@@ -101,12 +101,26 @@ export default function PrintInvoice() {
       setJobs(jobsData);
 
       // Fetch client info
-      if (jobsData.length > 0 && jobsData[0].customer_id) {
-        const { data: clientData } = await supabase
-          .from("clients")
-          .select("id, client_name, contact_number, address, company_name")
-          .eq("id", jobsData[0].customer_id)
-          .single();
+      if (jobsData.length > 0) {
+        const firstJ = jobsData[0];
+        let clientData = null;
+        if (firstJ.customer_id) {
+          const { data } = await supabase
+            .from("clients")
+            .select("id, client_name, contact_number, address, company_name")
+            .eq("id", firstJ.customer_id)
+            .single();
+          clientData = data;
+        }
+        if (!clientData && firstJ.customer_name) {
+          const { data } = await supabase
+            .from("clients")
+            .select("id, client_name, contact_number, address, company_name")
+            .eq("client_name", firstJ.customer_name)
+            .limit(1)
+            .maybeSingle();
+          clientData = data;
+        }
         if (clientData) setClient(clientData);
       }
 
