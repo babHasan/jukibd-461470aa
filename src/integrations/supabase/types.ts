@@ -47,6 +47,48 @@ export type Database = {
         }
         Relationships: []
       }
+      brands: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          remarks: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          remarks?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          remarks?: string
+        }
+        Relationships: []
+      }
+      models: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          remarks: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          remarks?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          remarks?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address: string
