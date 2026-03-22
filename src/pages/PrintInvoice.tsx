@@ -274,7 +274,15 @@ export default function PrintInvoice() {
               <th>Model</th>
               <th>Board</th>
               <th>Board Serial</th>
-              <th>Details of Problem</th>
+              {isDelivery ? (
+                <>
+                  <th style={{ textAlign: "right" }}>Charge</th>
+                  <th style={{ textAlign: "right" }}>Discount</th>
+                  <th style={{ textAlign: "right" }}>Payable</th>
+                </>
+              ) : (
+                <th>Details of Problem</th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -289,10 +297,36 @@ export default function PrintInvoice() {
                   <td>{job?.model_name || ""}</td>
                   <td>{job?.board_name || ""}</td>
                   <td>{job?.board_serial || ""}</td>
-                  <td>{job?.details_of_problem || ""}</td>
+                  {isDelivery ? (
+                    <>
+                      <td style={{ textAlign: "right" }}>{job ? (job.service_charge || 0).toLocaleString() : ""}</td>
+                      <td style={{ textAlign: "right" }}>{job ? (job.discount || 0).toLocaleString() : ""}</td>
+                      <td style={{ textAlign: "right" }}>{job ? (job.payable_amount || 0).toLocaleString() : ""}</td>
+                    </>
+                  ) : (
+                    <td>{job?.details_of_problem || ""}</td>
+                  )}
                 </tr>
               );
             })}
+            {isDelivery && (
+              <>
+                <tr style={{ fontWeight: 700, background: "#f0f0f0" }}>
+                  <td colSpan={7} style={{ textAlign: "right" }}>Total</td>
+                  <td style={{ textAlign: "right" }}>{totalServiceCharge.toLocaleString()}</td>
+                  <td style={{ textAlign: "right" }}>{totalDiscount.toLocaleString()}</td>
+                  <td style={{ textAlign: "right" }}>{totalPayable.toLocaleString()}</td>
+                </tr>
+                <tr style={{ fontWeight: 700 }}>
+                  <td colSpan={9} style={{ textAlign: "right" }}>Received Amount</td>
+                  <td style={{ textAlign: "right" }}>{totalReceived.toLocaleString()}</td>
+                </tr>
+                <tr style={{ fontWeight: 700 }}>
+                  <td colSpan={9} style={{ textAlign: "right" }}>Due Amount</td>
+                  <td style={{ textAlign: "right" }}>{totalDue.toLocaleString()}</td>
+                </tr>
+              </>
+            )}
           </tbody>
         </table>
 
