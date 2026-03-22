@@ -12,7 +12,7 @@ interface UserPhotoUploadProps {
   userFolder?: boolean;
 }
 
-export function UserPhotoUpload({ photoUrl, onPhotoChange, userId }: UserPhotoUploadProps) {
+export function UserPhotoUpload({ photoUrl, onPhotoChange, userId, userFolder }: UserPhotoUploadProps) {
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
