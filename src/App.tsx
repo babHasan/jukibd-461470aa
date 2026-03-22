@@ -23,6 +23,7 @@ import BrandList from "./pages/machine-data/BrandList";
 import ModelList from "./pages/machine-data/ModelList";
 import BoardList from "./pages/machine-data/BoardList";
 import AddJob from "./pages/AddJob";
+import JobList from "./pages/JobList";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -56,6 +57,7 @@ function AppRoutes() {
       <Route path="/machine-data/models" element={<ProtectedRoute><ModelList /></ProtectedRoute>} />
       <Route path="/machine-data/boards" element={<ProtectedRoute><BoardList /></ProtectedRoute>} />
       <Route path="/add-job" element={<ProtectedRoute><AddJob /></ProtectedRoute>} />
+      <Route path="/job-list" element={<ProtectedRoute><JobList /></ProtectedRoute>} />
       <Route path="/my-profile" element={<ProtectedRoute><MyProfile /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>

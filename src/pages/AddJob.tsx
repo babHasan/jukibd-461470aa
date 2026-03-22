@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +26,7 @@ interface JobItem {
 }
 
 const AddJob = () => {
+  const navigate = useNavigate();
   const [brands, setBrands] = useState<{ id: string; name: string }[]>([]);
   const [models, setModels] = useState<{ id: string; name: string }[]>([]);
   const [clients, setClients] = useState<{ id: string; client_name: string; company_name: string }[]>([]);
@@ -49,6 +51,7 @@ const AddJob = () => {
   const [selectedBranch, setSelectedBranch] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [challanFile, setChallanFile] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     supabase.from("brands").select("id, name").order("name").then(({ data }) => data && setBrands(data));
@@ -92,7 +95,7 @@ const AddJob = () => {
     setAddedJobs((prev) => prev.filter((j) => j.id !== id));
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (addedJobs.length === 0) {
       toast.error("Please add at least one job");
       return;
@@ -101,13 +104,47 @@ const AddJob = () => {
       toast.error("Please select Customer and Branch");
       return;
     }
-    // For now, just show success - DB table for jobs can be added later
-    toast.success(`${addedJobs.length} job(s) submitted successfully`);
-    setAddedJobs([]);
-    setSelectedCustomer("");
-    setFactoryChallanNumber("");
-    setSelectedBranch("");
-    setChallanFile(null);
+    setSubmitting(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      const customerObj = clients.find((c) => c.id === selectedCustomer);
+      const branchObj = branches.find((b) => b.id === selectedBranch);
+
+      const jobRows = addedJobs.map((job) => ({
+        job_number: job.jobNumber,
+        brand_name: job.brand,
+        model_name: job.model,
+        board_name: job.board,
+        board_serial: job.boardSerial,
+        details_of_problem: job.detailsOfProblem,
+        remarks: job.remarks,
+        customer_id: selectedCustomer,
+        customer_name: customerObj ? customerObj.client_name : "",
+        branch_id: selectedBranch,
+        branch_name: branchObj ? branchObj.name : "",
+        factory_challan_number: factoryChallanNumber,
+        job_date: date,
+        status: "received",
+        created_by: user?.id,
+      }));
+
+      const { error } = await supabase.from("jobs").insert(jobRows);
+      if (error) {
+        toast.error("Failed to submit: " + error.message);
+      } else {
+        toast.success(`${addedJobs.length} job(s) submitted successfully`);
+        setAddedJobs([]);
+        setSelectedCustomer("");
+        setFactoryChallanNumber("");
+        setSelectedBranch("");
+        setChallanFile(null);
+        navigate("/job-list");
+      }
+    } catch (err: any) {
+      toast.error("Submission error: " + err.message);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -305,8 +342,8 @@ const AddJob = () => {
         </Card>
 
         {/* Submit Button */}
-        <Button onClick={handleSubmit} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-sm py-5">
-          SUBMIT
+        <Button onClick={handleSubmit} disabled={submitting} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-sm py-5">
+          {submitting ? "SUBMITTING..." : "SUBMIT"}
         </Button>
       </div>
     </AppLayout>
