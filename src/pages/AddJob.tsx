@@ -67,6 +67,8 @@ const AddJob = () => {
   useEffect(() => { sessionStorage.setItem("addJob_customer", selectedCustomer); }, [selectedCustomer]);
   useEffect(() => { sessionStorage.setItem("addJob_manualName", manualCustomerName); }, [manualCustomerName]);
   useEffect(() => { sessionStorage.setItem("addJob_manualMobile", manualCustomerMobile); }, [manualCustomerMobile]);
+  useEffect(() => { sessionStorage.setItem("addJob_manualCompany", manualCompanyName); }, [manualCompanyName]);
+  useEffect(() => { sessionStorage.setItem("addJob_manualAddress", manualAddress); }, [manualAddress]);
   useEffect(() => { sessionStorage.setItem("addJob_challan", factoryChallanNumber); }, [factoryChallanNumber]);
   useEffect(() => { sessionStorage.setItem("addJob_branch", selectedBranch); }, [selectedBranch]);
   useEffect(() => { sessionStorage.setItem("addJob_date", date); }, [date]);
