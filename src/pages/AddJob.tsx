@@ -342,8 +342,8 @@ const AddJob = () => {
         </Card>
 
         {/* Submit Button */}
-        <Button onClick={handleSubmit} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-sm py-5">
-          SUBMIT
+        <Button onClick={handleSubmit} disabled={submitting} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-sm py-5">
+          {submitting ? "SUBMITTING..." : "SUBMIT"}
         </Button>
       </div>
     </AppLayout>
