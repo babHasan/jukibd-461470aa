@@ -644,6 +644,54 @@ export type Database = {
         }
         Relationships: []
       }
+      theme_settings: {
+        Row: {
+          id: string
+          menu_font_color: string
+          menu_font_size: number
+          page_bg_color: string
+          primary_color: string
+          sidebar_bg_color: string
+          submenu_font_color: string
+          submenu_font_size: number
+          table_font_color: string
+          table_font_size: number
+          table_header_bg_color: string
+          table_header_font_color: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          menu_font_color?: string
+          menu_font_size?: number
+          page_bg_color?: string
+          primary_color?: string
+          sidebar_bg_color?: string
+          submenu_font_color?: string
+          submenu_font_size?: number
+          table_font_color?: string
+          table_font_size?: number
+          table_header_bg_color?: string
+          table_header_font_color?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          menu_font_color?: string
+          menu_font_size?: number
+          page_bg_color?: string
+          primary_color?: string
+          sidebar_bg_color?: string
+          submenu_font_color?: string
+          submenu_font_size?: number
+          table_font_color?: string
+          table_font_size?: number
+          table_header_bg_color?: string
+          table_header_font_color?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_activity_logs: {
         Row: {
           action: string

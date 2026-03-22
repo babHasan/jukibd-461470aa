@@ -43,6 +43,8 @@ import CompanyInfo from "./pages/settings/CompanyInfo";
 import PrintInvoice from "./pages/PrintInvoice";
 import PortalScrollMessage from "./pages/settings/PortalScrollMessage";
 import FooterSettings from "./pages/settings/FooterSettings";
+import AppearanceSettings from "./pages/settings/AppearanceSettings";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 const queryClient = new QueryClient();
 
@@ -95,6 +97,7 @@ function AppRoutes() {
       <Route path="/settings/company-info" element={<ProtectedRoute><CompanyInfo /></ProtectedRoute>} />
       <Route path="/settings/portal-message" element={<ProtectedRoute><PortalScrollMessage /></ProtectedRoute>} />
       <Route path="/settings/footer" element={<ProtectedRoute><FooterSettings /></ProtectedRoute>} />
+      <Route path="/settings/appearance" element={<ProtectedRoute><AppearanceSettings /></ProtectedRoute>} />
       <Route path="/print-invoice" element={<ProtectedRoute><PrintInvoice /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
@@ -108,9 +111,11 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <RepairProvider>
-            <AppRoutes />
-          </RepairProvider>
+          <ThemeProvider>
+            <RepairProvider>
+              <AppRoutes />
+            </RepairProvider>
+          </ThemeProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
