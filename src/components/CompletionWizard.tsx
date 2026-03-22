@@ -28,6 +28,10 @@ interface JobItem {
   board_serial: string;
   details_of_problem: string;
   status: string;
+  customer_name?: string;
+  customer_id?: string | null;
+  brand_name?: string;
+  factory_challan_number?: string;
 }
 
 interface CompletionWizardProps {
@@ -64,6 +68,35 @@ export function CompletionWizard({ open, onOpenChange, jobs, onCompleted }: Comp
     }));
   }
 
+  async function sendCompletionSms(job: JobItem, serviceCharge: number) {
+    if (!job.customer_id) return;
+    try {
+      // Get customer phone
+      const { data: client } = await supabase
+        .from("clients")
+        .select("contact_number")
+        .eq("id", job.customer_id)
+        .single();
+
+      if (!client?.contact_number) return;
+
+      await supabase.functions.invoke("send-sms", {
+        body: {
+          repair_order_id: job.id,
+          customer_phone: client.contact_number,
+          customer_name: job.customer_name || "",
+          device_brand: job.brand_name || "",
+          ticket_number: job.factory_challan_number || job.job_number,
+          issue: job.details_of_problem || "",
+          estimated_cost: serviceCharge,
+          trigger_status: "completed",
+        },
+      });
+    } catch (err) {
+      console.error("SMS send failed for", job.job_number, err);
+    }
+  }
+
   async function handleSubmit() {
     const selected = eligibleJobs.filter((j) => entries[j.id]?.checked);
     if (selected.length === 0) {
@@ -90,6 +123,10 @@ export function CompletionWizard({ open, onOpenChange, jobs, onCompleted }: Comp
           setSubmitting(false);
           return;
         }
+
+        // Send SMS notification for completed job
+        const charge = entry.chargeType === "FOC" ? 0 : entry.amount;
+        await sendCompletionSms(job, charge);
       }
       toast.success("Jobs marked as completed");
       onOpenChange(false);
