@@ -36,6 +36,36 @@ export default function BrandList() {
   const [editing, setEditing] = useState<Brand | null>(null);
   const [form, setForm] = useState({ name: "", remarks: "" });
   const [saving, setSaving] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  async function handleImportExcel(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (evt) => {
+      try {
+        const wb = XLSX.read(evt.target?.result, { type: "binary" });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const rows: any[] = XLSX.utils.sheet_to_json(ws);
+        const toInsert = rows
+          .filter((r) => r["Brand Name"] || r["brand_name"] || r["name"] || r["Name"])
+          .map((r) => ({
+            name: (r["Brand Name"] || r["brand_name"] || r["name"] || r["Name"] || "").toString().trim(),
+            remarks: (r["Remarks"] || r["remarks"] || "").toString().trim(),
+          }))
+          .filter((r) => r.name);
+        if (toInsert.length === 0) {
+          toast.error("No valid rows found. Ensure column header is 'Brand Name' or 'Name'.");
+          return;
+        }
+        const { error } = await supabase.from("brands").insert(toInsert);
+        if (error) toast.error("Import failed: " + error.message);
+        else { toast.success(`${toInsert.length} brand(s) imported!`); fetchBrands(); }
+      } catch { toast.error("Failed to parse Excel file"); }
+    };
+    reader.readAsBinaryString(file);
+    e.target.value = "";
+  }
 
   async function fetchBrands() {
     setLoading(true);
