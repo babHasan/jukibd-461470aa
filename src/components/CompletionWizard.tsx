@@ -201,7 +201,7 @@ export function CompletionWizard({ open, onOpenChange, jobs, onCompleted }: Comp
                         onChange={(e) =>
                           updateEntry(job.id, { amount: parseFloat(e.target.value) || 0 })
                         }
-                        disabled={!entry?.checked || entry?.chargeType === "FOC"}
+                        disabled={!entry?.checked || entry?.chargeType === "FOC" || entry?.chargeType === "Damage"}
                         className="w-28"
                       />
                     </td>
