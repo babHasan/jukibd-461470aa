@@ -2,7 +2,6 @@ import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRepairs } from "@/context/RepairContext";
 import { KpiCards } from "@/components/KpiCards";
-import { RepairTable } from "@/components/RepairTable";
 import { AppLayout } from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -159,7 +158,6 @@ const Index = () => {
     <AppLayout>
       <div className="space-y-6">
         <KpiCards orders={orders} />
-        <RepairTable orders={orders} onUpdateStatus={updateStatus} />
 
         {/* Job Orders Section */}
         <div className="rounded-lg border bg-card shadow-sm">
