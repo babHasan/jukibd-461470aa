@@ -71,6 +71,7 @@ const navItems: NavItem[] = [
       { to: "/admin/users", label: "User List", icon: Users },
       { to: "/admin/add-user", label: "Add User", icon: UserPlus },
       { to: "/admin/roles", label: "Roles & Permissions", icon: Lock },
+      { to: "/admin/user-logs", label: "User Logs", icon: FileText },
     ],
   },
   {
