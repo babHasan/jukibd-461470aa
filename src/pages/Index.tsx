@@ -210,7 +210,7 @@ const Index = () => {
                   </TableRow>
                 ) : (
                   groups.map((group) => (
-                    <TableRow key={group.key} className="align-top border-b">
+                    <TableRow key={group.key} className={`align-top border-b ${rowBgColors[getGroupStatus(group.jobs)] || ""}`}>
                       <TableCell className="text-sm whitespace-nowrap">{group.job_date}</TableCell>
                       <TableCell>
                         <div className="space-y-0.5 text-sm">

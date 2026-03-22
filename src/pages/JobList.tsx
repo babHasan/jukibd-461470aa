@@ -231,7 +231,7 @@ export default function JobList() {
                 <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground py-8">No jobs found</TableCell></TableRow>
               ) : (
                 paginatedGroups.map((group, gIdx) => (
-                  <TableRow key={group.key} className="align-top border-b">
+                  <TableRow key={group.key} className={`align-top border-b ${rowBgColors[getGroupStatus(group.jobs)] || ""}`}>
                     <TableCell className="text-sm font-medium">
                       {perPage === "all" ? gIdx + 1 : (currentPage - 1) * parseInt(perPage) + gIdx + 1}
                     </TableCell>
