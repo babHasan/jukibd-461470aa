@@ -373,6 +373,12 @@ export default function JobList() {
           jobs={wizardJobs}
           onCompleted={fetchJobs}
         />
+        <DeliveryWizard
+          open={deliveryWizardOpen}
+          onOpenChange={setDeliveryWizardOpen}
+          jobs={deliveryWizardJobs}
+          onCompleted={fetchJobs}
+        />
       </div>
     </AppLayout>
   );
