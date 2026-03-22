@@ -13,6 +13,8 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CompletionWizard } from "@/components/CompletionWizard";
+import { DeliveryWizard } from "@/components/DeliveryWizard";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -89,6 +91,10 @@ const Index = () => {
   const [jobFilter, setJobFilter] = useState("all");
   const [fromDate, setFromDate] = useState<Date | undefined>(undefined);
   const [toDate, setToDate] = useState<Date | undefined>(undefined);
+  const [wizardOpen, setWizardOpen] = useState(false);
+  const [wizardJobs, setWizardJobs] = useState<Job[]>([]);
+  const [deliveryWizardOpen, setDeliveryWizardOpen] = useState(false);
+  const [deliveryWizardJobs, setDeliveryWizardJobs] = useState<Job[]>([]);
 
   function fetchJobs() {
     supabase
@@ -109,6 +115,21 @@ const Index = () => {
   useEffect(() => { fetchJobs(); }, []);
 
   async function handleGroupStatusUpdate(group: JobGroup) {
+    // Intercept in-progress → completed transition (open CompletionWizard)
+    const inProgressJobs = group.jobs.filter((j) => j.status === "in-progress");
+    if (inProgressJobs.length > 0) {
+      setWizardJobs(group.jobs);
+      setWizardOpen(true);
+      return;
+    }
+    // Intercept completed → picked-up transition (open DeliveryWizard)
+    const completedJobs = group.jobs.filter((j) => j.status === "completed");
+    if (completedJobs.length > 0) {
+      setDeliveryWizardJobs(group.jobs);
+      setDeliveryWizardOpen(true);
+      return;
+    }
+
     const jobsToUpdate = group.jobs.filter((j) => {
       const idx = jobStatusFlow.indexOf(j.status);
       return idx < jobStatusFlow.length - 1;
@@ -319,6 +340,18 @@ const Index = () => {
             </Table>
           </div>
         </div>
+        <CompletionWizard
+          open={wizardOpen}
+          onOpenChange={setWizardOpen}
+          jobs={wizardJobs}
+          onCompleted={fetchJobs}
+        />
+        <DeliveryWizard
+          open={deliveryWizardOpen}
+          onOpenChange={setDeliveryWizardOpen}
+          jobs={deliveryWizardJobs}
+          onCompleted={fetchJobs}
+        />
       </div>
     </AppLayout>
   );
