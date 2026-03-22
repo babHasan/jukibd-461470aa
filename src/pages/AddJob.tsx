@@ -33,25 +33,37 @@ const AddJob = () => {
   const [branches, setBranches] = useState<{ id: string; name: string }[]>([]);
   const [boardsList, setBoardsList] = useState<{ id: string; name: string }[]>([]);
 
-  // Job form
+  // Job form - persist selections in sessionStorage
   const [jobNumber, setJobNumber] = useState("");
-  const [brandName, setBrandName] = useState("");
-  const [selectedModel, setSelectedModel] = useState("");
-  const [board, setBoard] = useState("");
+  const [brandName, setBrandName] = useState(() => sessionStorage.getItem("addJob_brand") || "");
+  const [selectedModel, setSelectedModel] = useState(() => sessionStorage.getItem("addJob_model") || "");
+  const [board, setBoard] = useState(() => sessionStorage.getItem("addJob_board") || "");
   const [boardSerial, setBoardSerial] = useState("");
   const [detailsOfProblem, setDetailsOfProblem] = useState("");
   const [remarks, setRemarks] = useState("");
 
-  // Added jobs list
-  const [addedJobs, setAddedJobs] = useState<JobItem[]>([]);
+  // Added jobs list - persist in sessionStorage
+  const [addedJobs, setAddedJobs] = useState<JobItem[]>(() => {
+    try { return JSON.parse(sessionStorage.getItem("addJob_jobs") || "[]"); } catch { return []; }
+  });
 
-  // Bottom form
-  const [selectedCustomer, setSelectedCustomer] = useState("");
-  const [factoryChallanNumber, setFactoryChallanNumber] = useState("");
-  const [selectedBranch, setSelectedBranch] = useState("");
-  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+  // Bottom form - persist in sessionStorage
+  const [selectedCustomer, setSelectedCustomer] = useState(() => sessionStorage.getItem("addJob_customer") || "");
+  const [factoryChallanNumber, setFactoryChallanNumber] = useState(() => sessionStorage.getItem("addJob_challan") || "");
+  const [selectedBranch, setSelectedBranch] = useState(() => sessionStorage.getItem("addJob_branch") || "");
+  const [date, setDate] = useState(() => sessionStorage.getItem("addJob_date") || new Date().toISOString().split("T")[0]);
   const [challanFile, setChallanFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  // Sync to sessionStorage
+  useEffect(() => { sessionStorage.setItem("addJob_brand", brandName); }, [brandName]);
+  useEffect(() => { sessionStorage.setItem("addJob_model", selectedModel); }, [selectedModel]);
+  useEffect(() => { sessionStorage.setItem("addJob_board", board); }, [board]);
+  useEffect(() => { sessionStorage.setItem("addJob_jobs", JSON.stringify(addedJobs)); }, [addedJobs]);
+  useEffect(() => { sessionStorage.setItem("addJob_customer", selectedCustomer); }, [selectedCustomer]);
+  useEffect(() => { sessionStorage.setItem("addJob_challan", factoryChallanNumber); }, [factoryChallanNumber]);
+  useEffect(() => { sessionStorage.setItem("addJob_branch", selectedBranch); }, [selectedBranch]);
+  useEffect(() => { sessionStorage.setItem("addJob_date", date); }, [date]);
 
   useEffect(() => {
     supabase.from("brands").select("id, name").order("name").then(({ data }) => data && setBrands(data));
