@@ -75,6 +75,9 @@ export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: Delive
   const [receiveType, setReceiveType] = useState("Cash");
   const [deliveryDate, setDeliveryDate] = useState(format(new Date(), "dd-MM-yyyy"));
   const [submitting, setSubmitting] = useState(false);
+  const [chequeFile, setChequeFile] = useState<File | null>(null);
+  const [chequePreview, setChequePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const totalAmount = eligibleJobs
     .filter((j) => entries[j.id]?.checked)
