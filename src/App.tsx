@@ -19,6 +19,8 @@ import MyProfile from "./pages/MyProfile";
 import BranchList from "./pages/branch/BranchList";
 import AddBranch from "./pages/branch/AddBranch";
 import EditBranch from "./pages/branch/EditBranch";
+import BrandList from "./pages/machine-data/BrandList";
+import ModelList from "./pages/machine-data/ModelList";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
