@@ -14,6 +14,7 @@ import {
   Monitor,
   UserCircle,
   PlusCircle,
+  Plus,
   ClipboardList,
   Diamond,
   DollarSign,
