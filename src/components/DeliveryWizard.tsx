@@ -268,6 +268,7 @@ export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: Delive
                 <SelectItem value="Cheque">Cheque</SelectItem>
                 <SelectItem value="bKash">bKash</SelectItem>
                 <SelectItem value="Bank">Bank Transfer</SelectItem>
+                <SelectItem value="Due">Due</SelectItem>
               </SelectContent>
             </Select>
           </div>
