@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { syncJobsToMySQL } from "@/lib/sync-mysql";
 import {
   Dialog,
   DialogContent,
@@ -197,6 +198,7 @@ export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: Delive
         await sendDeliverySms(job, payableAmount);
       }
       toast.success("Jobs marked as Picked Up & SMS sent");
+      syncJobsToMySQL(selected.map((j) => j.id));
       onOpenChange(false);
       onCompleted();
     } catch {

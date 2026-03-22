@@ -4,7 +4,7 @@ import { Client } from "https://deno.land/x/mysql@v2.12.1/mod.ts";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 Deno.serve(async (req) => {
@@ -13,24 +13,16 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Verify caller
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) throw new Error("No authorization header");
 
-    // Verify caller
-    const supabaseAdmin = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
-
-    const token = authHeader.replace("Bearer ", "");
     const anonClient = createClient(
       Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_ANON_KEY")!
+      Deno.env.get("SUPABASE_ANON_KEY")!,
     );
-    const {
-      data: { user },
-      error: authError,
-    } = await anonClient.auth.getUser(token);
+    const token = authHeader.replace("Bearer ", "");
+    const { data: { user }, error: authError } = await anonClient.auth.getUser(token);
     if (authError || !user) throw new Error("Unauthorized");
 
     const { action, table, data, filters } = await req.json();
@@ -51,17 +43,13 @@ Deno.serve(async (req) => {
         if (!table) throw new Error("table is required");
         let query = `SELECT * FROM \`${table}\``;
         const params: any[] = [];
-
         if (filters && typeof filters === "object") {
           const conditions = Object.entries(filters).map(([key, value]) => {
             params.push(value);
             return `\`${key}\` = ?`;
           });
-          if (conditions.length > 0) {
-            query += ` WHERE ${conditions.join(" AND ")}`;
-          }
+          if (conditions.length > 0) query += ` WHERE ${conditions.join(" AND ")}`;
         }
-
         query += " LIMIT 100";
         const rows = await mysqlClient.execute(query, params);
         result = rows.rows || [];
@@ -76,6 +64,18 @@ Deno.serve(async (req) => {
         const query = `INSERT INTO \`${table}\` (${keys.map((k) => `\`${k}\``).join(", ")}) VALUES (${placeholders})`;
         const res = await mysqlClient.execute(query, values);
         result = { affectedRows: res.affectedRows, lastInsertId: res.lastInsertId };
+        break;
+      }
+
+      case "upsert": {
+        if (!table || !data) throw new Error("table and data required");
+        const keys = Object.keys(data);
+        const placeholders = keys.map(() => "?").join(", ");
+        const values = keys.map((k) => data[k]);
+        const updateClauses = keys.map((k) => `\`${k}\` = VALUES(\`${k}\`)`).join(", ");
+        const query = `INSERT INTO \`${table}\` (${keys.map((k) => `\`${k}\``).join(", ")}) VALUES (${placeholders}) ON DUPLICATE KEY UPDATE ${updateClauses}`;
+        const res = await mysqlClient.execute(query, values);
+        result = { affectedRows: res.affectedRows };
         break;
       }
 
@@ -96,8 +96,40 @@ Deno.serve(async (req) => {
         break;
       }
 
+      case "create_jobs_table": {
+        await mysqlClient.execute(`
+          CREATE TABLE IF NOT EXISTS \`jobs\` (
+            \`id\` VARCHAR(36) PRIMARY KEY,
+            \`job_number\` VARCHAR(100) NOT NULL,
+            \`brand_name\` VARCHAR(255) DEFAULT '',
+            \`model_name\` VARCHAR(255) DEFAULT '',
+            \`board_name\` VARCHAR(255) DEFAULT '',
+            \`board_serial\` VARCHAR(255) DEFAULT '',
+            \`details_of_problem\` TEXT,
+            \`remarks\` TEXT,
+            \`customer_name\` VARCHAR(255) DEFAULT '',
+            \`customer_mobile\` VARCHAR(50) DEFAULT '',
+            \`branch_name\` VARCHAR(255) DEFAULT '',
+            \`factory_challan_number\` VARCHAR(255) DEFAULT '',
+            \`job_date\` DATE NULL,
+            \`status\` VARCHAR(50) DEFAULT 'received',
+            \`service_charge\` DECIMAL(10,2) DEFAULT 0,
+            \`charge_type\` VARCHAR(50) DEFAULT 'Normal',
+            \`discount\` DECIMAL(10,2) DEFAULT 0,
+            \`payable_amount\` DECIMAL(10,2) DEFAULT 0,
+            \`receive_amount\` DECIMAL(10,2) DEFAULT 0,
+            \`receive_type\` VARCHAR(50) DEFAULT 'Cash',
+            \`completed_date\` VARCHAR(50) NULL,
+            \`delivery_date\` VARCHAR(50) NULL,
+            \`created_at\` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        `);
+        result = { message: "jobs table created or already exists" };
+        break;
+      }
+
       default:
-        throw new Error("Invalid action. Use: select, insert, update, tables");
+        throw new Error("Invalid action. Use: select, insert, upsert, update, tables, create_jobs_table");
     }
 
     await mysqlClient.close();

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { syncJobsToMySQL } from "@/lib/sync-mysql";
 import {
   Dialog,
   DialogContent,
@@ -131,6 +132,7 @@ export function CompletionWizard({ open, onOpenChange, jobs, onCompleted }: Comp
         await sendCompletionSms(job, charge);
       }
       toast.success("Jobs marked as completed");
+      syncJobsToMySQL(selected.map((j) => j.id));
       onOpenChange(false);
       onCompleted();
     } catch {

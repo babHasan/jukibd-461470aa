@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/AppLayout";
+import { syncJobsToMySQL } from "@/lib/sync-mysql";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -181,6 +182,11 @@ const AddJob = () => {
         toast.error("Failed to submit: " + error.message);
       } else {
         toast.success(`${addedJobs.length} job(s) submitted successfully`);
+
+        // Sync to MySQL
+        if (insertedJobs?.length) {
+          syncJobsToMySQL(insertedJobs.map((j) => j.id));
+        }
 
         // Send SMS for each job (trigger_status = "received")
         if (customerMobile) {
