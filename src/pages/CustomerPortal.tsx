@@ -97,6 +97,15 @@ export default function CustomerPortal() {
         </div>
       </div>
 
+      {/* Scroll Message */}
+      {scrollMessage && (
+        <div className="overflow-hidden bg-primary text-primary-foreground py-2">
+          <div className="animate-marquee whitespace-nowrap text-sm font-medium">
+            {scrollMessage} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {scrollMessage} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {scrollMessage}
+          </div>
+        </div>
+      )}
+
       {/* Search */}
       <div className="mx-auto max-w-3xl px-4 py-8">
         <form onSubmit={handleSearch} className="flex gap-2">
