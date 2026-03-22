@@ -26,6 +26,7 @@ import AddJob from "./pages/AddJob";
 import JobList from "./pages/JobList";
 import JobDetail from "./pages/JobDetail";
 import CustomerPortal from "./pages/CustomerPortal";
+import ChallanVerify from "./pages/ChallanVerify";
 import NotFound from "./pages/NotFound";
 import BackupDatabase from "./pages/BackupDatabase";
 import DueBill from "./pages/collection/DueBill";
