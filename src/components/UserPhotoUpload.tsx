@@ -31,7 +31,8 @@ export function UserPhotoUpload({ photoUrl, onPhotoChange, userId, userFolder }:
 
     setUploading(true);
     const ext = file.name.split(".").pop();
-    const fileName = `${userId || crypto.randomUUID()}.${ext}`;
+    const id = userId || crypto.randomUUID();
+    const fileName = userFolder ? `${id}/avatar.${ext}` : `${id}.${ext}`;
 
     const { error } = await supabase.storage
       .from("avatars")
