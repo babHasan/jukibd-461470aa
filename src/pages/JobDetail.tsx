@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ArrowLeft, ChevronRight, Phone, Clock, MapPin } from "lucide-react";
 import { format } from "date-fns";
+import { CompletionWizard } from "@/components/CompletionWizard";
 
 const jobStatusFlow = ["received", "diagnosing", "in-progress", "completed", "picked-up"];
 const jobStatusLabels: Record<string, string> = {
@@ -49,6 +50,7 @@ export default function JobDetailPage() {
   const [job, setJob] = useState<JobDetail | null>(null);
   const [customerMobile, setCustomerMobile] = useState("");
   const [loading, setLoading] = useState(true);
+  const [wizardOpen, setWizardOpen] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -70,6 +72,11 @@ export default function JobDetailPage() {
 
   async function handleUpdateStatus(newStatus: string) {
     if (!job) return;
+    // Intercept in-progress → completed transition
+    if (job.status === "in-progress" && newStatus === "completed") {
+      setWizardOpen(true);
+      return;
+    }
     const { error } = await supabase.from("jobs").update({ status: newStatus }).eq("id", job.id);
     if (error) {
       toast.error("Failed to update status");
@@ -77,6 +84,21 @@ export default function JobDetailPage() {
       toast.success(`Status updated to ${jobStatusLabels[newStatus]}`);
       setJob({ ...job, status: newStatus });
     }
+  }
+
+  function reloadJob() {
+    if (!id) return;
+    supabase
+      .from("jobs")
+      .select("*, clients(contact_number)")
+      .eq("id", id)
+      .single()
+      .then(({ data, error }: any) => {
+        if (!error && data) {
+          setCustomerMobile(data.clients?.contact_number || "");
+          setJob(data);
+        }
+      });
   }
 
   if (loading) {
@@ -239,6 +261,14 @@ export default function JobDetailPage() {
             </div>
           </div>
         </div>
+        {job && (
+          <CompletionWizard
+            open={wizardOpen}
+            onOpenChange={setWizardOpen}
+            jobs={[job]}
+            onCompleted={reloadJob}
+          />
+        )}
       </div>
     </AppLayout>
   );

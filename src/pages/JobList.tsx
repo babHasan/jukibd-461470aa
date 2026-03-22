@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, ClipboardList, Phone, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
+import { CompletionWizard } from "@/components/CompletionWizard";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -86,6 +87,9 @@ export default function JobList() {
   const [perPage, setPerPage] = useState("10");
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [wizardOpen, setWizardOpen] = useState(false);
+  const [wizardJobs, setWizardJobs] = useState<Job[]>([]);
+
   function fetchJobs() {
     setLoading(true);
     supabase
@@ -107,6 +111,15 @@ export default function JobList() {
   useEffect(() => { fetchJobs(); }, []);
 
   async function handleGroupStatusUpdate(group: JobGroup) {
+    // Check if any job is transitioning from in-progress to completed
+    const inProgressJobs = group.jobs.filter((j) => j.status === "in-progress");
+    if (inProgressJobs.length > 0) {
+      // Show completion wizard
+      setWizardJobs(group.jobs);
+      setWizardOpen(true);
+      return;
+    }
+
     const jobsToUpdate = group.jobs.filter((j) => {
       const idx = jobStatusFlow.indexOf(j.status);
       return idx < jobStatusFlow.length - 1;
@@ -344,6 +357,12 @@ export default function JobList() {
             </div>
           )}
         </div>
+        <CompletionWizard
+          open={wizardOpen}
+          onOpenChange={setWizardOpen}
+          jobs={wizardJobs}
+          onCompleted={fetchJobs}
+        />
       </div>
     </AppLayout>
   );

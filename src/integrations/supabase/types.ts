@@ -139,6 +139,8 @@ export type Database = {
           branch_name: string
           brand_name: string
           challan_url: string | null
+          charge_type: string | null
+          completed_date: string | null
           created_at: string
           created_by: string | null
           customer_id: string | null
@@ -150,6 +152,7 @@ export type Database = {
           job_number: string
           model_name: string
           remarks: string
+          service_charge: number | null
           status: string
         }
         Insert: {
@@ -159,6 +162,8 @@ export type Database = {
           branch_name?: string
           brand_name?: string
           challan_url?: string | null
+          charge_type?: string | null
+          completed_date?: string | null
           created_at?: string
           created_by?: string | null
           customer_id?: string | null
@@ -170,6 +175,7 @@ export type Database = {
           job_number: string
           model_name?: string
           remarks?: string
+          service_charge?: number | null
           status?: string
         }
         Update: {
@@ -179,6 +185,8 @@ export type Database = {
           branch_name?: string
           brand_name?: string
           challan_url?: string | null
+          charge_type?: string | null
+          completed_date?: string | null
           created_at?: string
           created_by?: string | null
           customer_id?: string | null
@@ -190,6 +198,7 @@ export type Database = {
           job_number?: string
           model_name?: string
           remarks?: string
+          service_charge?: number | null
           status?: string
         }
         Relationships: [
