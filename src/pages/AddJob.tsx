@@ -126,20 +126,6 @@ const AddJob = () => {
 
               <div className="grid grid-cols-[140px_1fr] items-center gap-2">
                 <Label className="text-right text-xs font-semibold">
-                  Select Machine Type <span className="text-destructive">*</span>
-                </Label>
-                <Select value={machineType} onValueChange={setMachineType}>
-                  <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Select Machine Type" /></SelectTrigger>
-                  <SelectContent>
-                    {machineTypes.map((t) => (
-                      <SelectItem key={t} value={t}>{t}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="grid grid-cols-[140px_1fr] items-center gap-2">
-                <Label className="text-right text-xs font-semibold">
                   Brand Name <span className="text-destructive">*</span>
                 </Label>
                 <Select value={brandName} onValueChange={setBrandName}>
