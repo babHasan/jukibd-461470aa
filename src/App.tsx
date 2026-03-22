@@ -43,6 +43,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={user && !loading ? <Navigate to="/" replace /> : <Login />} />
+      <Route path="/track" element={<CustomerPortal />} />
       <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
       <Route path="/repair/:id" element={<ProtectedRoute><RepairDetail /></ProtectedRoute>} />
       <Route path="/customers" element={<ProtectedRoute><Customers /></ProtectedRoute>} />
