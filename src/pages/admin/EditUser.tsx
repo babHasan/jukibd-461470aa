@@ -107,7 +107,7 @@ export default function EditUser() {
 
     // Update role: delete existing, insert new
     await supabase.from("user_roles").delete().eq("user_id", id);
-    await supabase.from("user_roles").insert({ user_id: id, role: currentRole });
+    await supabase.from("user_roles").insert({ user_id: id, role: currentRole as "admin" | "user" });
 
     // Update permissions: delete existing, insert new
     await supabase.from("user_permissions").delete().eq("user_id", id);
