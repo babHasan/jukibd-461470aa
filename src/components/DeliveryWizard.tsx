@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -52,17 +52,21 @@ interface JobDeliveryEntry {
 export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: DeliveryWizardProps) {
   const eligibleJobs = jobs.filter((j) => j.status === "completed");
 
-  const [entries, setEntries] = useState<Record<string, JobDeliveryEntry>>(() => {
+  const [entries, setEntries] = useState<Record<string, JobDeliveryEntry>>({});
+
+  // Re-initialize entries whenever jobs prop changes
+  useEffect(() => {
     const init: Record<string, JobDeliveryEntry> = {};
-    for (const job of eligibleJobs) {
+    const eligible = jobs.filter((j) => j.status === "completed");
+    for (const job of eligible) {
       init[job.id] = {
         checked: true,
         amount: job.service_charge ?? 0,
         chargeType: job.charge_type || "Normal",
       };
     }
-    return init;
-  });
+    setEntries(init);
+  }, [jobs]);
 
   const [discount, setDiscount] = useState(0);
   const [receiveAmount, setReceiveAmount] = useState(0);
