@@ -76,7 +76,7 @@ const AddJob = () => {
   useEffect(() => {
     supabase.from("brands").select("id, name").order("name").then(({ data }) => data && setBrands(data));
     supabase.from("models").select("id, name").order("name").then(({ data }) => data && setModels(data));
-    supabase.from("clients").select("id, client_name, company_name, contact_number").order("client_name").then(({ data }) => data && setClients(data));
+    supabase.from("clients").select("id, client_name, company_name, contact_number, address").order("client_name").then(({ data }) => data && setClients(data));
     supabase.from("branches").select("id, name").eq("status", "active").order("name").then(({ data }) => {
       if (data) {
         setBranches(data);
