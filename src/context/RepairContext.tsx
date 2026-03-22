@@ -6,6 +6,7 @@ import {
   RepairPart,
   sampleOrders,
 } from "@/lib/repair-data";
+import { supabase } from "@/integrations/supabase/client";
 
 interface RepairContextValue {
   orders: RepairOrder[];
@@ -19,19 +20,59 @@ interface RepairContextValue {
 
 const RepairContext = createContext<RepairContextValue | null>(null);
 
+const SMS_TRIGGER_STATUSES = ["received", "completed", "picked-up"];
+
+async function sendSmsNotification(order: RepairOrder, status: RepairStatus) {
+  if (!SMS_TRIGGER_STATUSES.includes(status)) return;
+
+  try {
+    const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+    const anonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+    await fetch(
+      `https://${projectId}.supabase.co/functions/v1/send-sms`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${anonKey}`,
+        },
+        body: JSON.stringify({
+          repair_order_id: order.id,
+          customer_phone: order.customerPhone,
+          customer_name: order.customerName,
+          device_brand: order.deviceBrand,
+          ticket_number: order.ticketNumber,
+          issue: order.issue,
+          estimated_cost: order.estimatedCost,
+          trigger_status: status,
+        }),
+      }
+    );
+  } catch (err) {
+    console.error("SMS notification failed:", err);
+  }
+}
+
 export function RepairProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<RepairOrder[]>(sampleOrders);
 
   function updateStatus(id: string, status: RepairStatus) {
     setOrders((prev) =>
-      prev.map((o) =>
-        o.id === id ? { ...o, status, updatedAt: new Date().toISOString() } : o
-      )
+      prev.map((o) => {
+        if (o.id === id) {
+          const updated = { ...o, status, updatedAt: new Date().toISOString() };
+          sendSmsNotification(updated, status);
+          return updated;
+        }
+        return o;
+      })
     );
   }
 
   function addOrder(order: RepairOrder) {
     setOrders((prev) => [order, ...prev]);
+    sendSmsNotification(order, order.status);
   }
 
   function addNote(orderId: string, note: RepairNote) {

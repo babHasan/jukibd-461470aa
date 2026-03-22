@@ -8,6 +8,7 @@ import Index from "./pages/Index.tsx";
 import RepairDetail from "./pages/RepairDetail.tsx";
 import Customers from "./pages/Customers.tsx";
 import CalendarView from "./pages/CalendarView.tsx";
+import SmsSettings from "./pages/SmsSettings.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
             <Route path="/repair/:id" element={<RepairDetail />} />
             <Route path="/customers" element={<Customers />} />
             <Route path="/calendar" element={<CalendarView />} />
+            <Route path="/sms-settings" element={<SmsSettings />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </RepairProvider>
