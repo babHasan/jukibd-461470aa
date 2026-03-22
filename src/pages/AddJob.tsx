@@ -68,7 +68,7 @@ const AddJob = () => {
       service: "",
       brand: brands.find((b) => b.id === brandName)?.name || brandName,
       model: models.find((m) => m.id === selectedModel)?.name || selectedModel,
-      board,
+      board: boardsList.find((b) => b.id === board)?.name || board,
       machineSerial: "",
       boardSerial,
       detailsOfProblem,
