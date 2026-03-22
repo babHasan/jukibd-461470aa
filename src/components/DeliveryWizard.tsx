@@ -156,17 +156,36 @@ export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: Delive
 
     setSubmitting(true);
     try {
+      // Upload cheque photo if Cheque type selected
+      let chequeUrl: string | null = null;
+      if (receiveType === "Cheque") {
+        if (!chequeFile) {
+          toast.error("Please upload cheque photo");
+          setSubmitting(false);
+          return;
+        }
+        chequeUrl = await uploadChequePhoto();
+        if (!chequeUrl) {
+          setSubmitting(false);
+          return;
+        }
+      }
+
       for (const job of selected) {
+        const updateData: any = {
+          status: "picked-up",
+          discount,
+          payable_amount: payableAmount,
+          receive_amount: receiveAmount,
+          receive_type: receiveType,
+          delivery_date: deliveryDate,
+        };
+        if (chequeUrl) {
+          updateData.cheque_url = chequeUrl;
+        }
         const { error } = await supabase
           .from("jobs")
-          .update({
-            status: "picked-up",
-            discount,
-            payable_amount: payableAmount,
-            receive_amount: receiveAmount,
-            receive_type: receiveType,
-            delivery_date: deliveryDate,
-          } as any)
+          .update(updateData)
           .eq("id", job.id);
 
         if (error) {
