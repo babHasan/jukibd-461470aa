@@ -117,10 +117,17 @@ export default function JobList() {
     // Check if any job is transitioning from in-progress to completed
     const inProgressJobs = group.jobs.filter((j) => j.status === "in-progress");
     if (inProgressJobs.length > 0) {
-      // Show completion wizard
       setWizardJobs(group.jobs);
       setWizardOpen(true);
       return;
+    }
+    // Check if any job is transitioning from completed to picked-up
+    const completedJobs = group.jobs.filter((j) => j.status === "completed");
+    if (completedJobs.length > 0) {
+      setDeliveryWizardJobs(group.jobs);
+      setDeliveryWizardOpen(true);
+      return;
+    }
     }
 
     const jobsToUpdate = group.jobs.filter((j) => {
