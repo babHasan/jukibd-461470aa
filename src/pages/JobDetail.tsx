@@ -55,7 +55,9 @@ export default function JobDetailPage() {
   const [customerMobile, setCustomerMobile] = useState("");
   const [loading, setLoading] = useState(true);
   const [wizardOpen, setWizardOpen] = useState(false);
+  const [wizardJobs, setWizardJobs] = useState<any[]>([]);
   const [deliveryWizardOpen, setDeliveryWizardOpen] = useState(false);
+  const [deliveryWizardJobs, setDeliveryWizardJobs] = useState<any[]>([]);
 
   useEffect(() => {
     if (!id) return;
@@ -75,16 +77,36 @@ export default function JobDetailPage() {
       });
   }, [id]);
 
+  async function loadChallanJobs(
+    currentJob: JobDetail,
+    statusFilter: string,
+    setJobs: (jobs: any[]) => void,
+    setOpen: (open: boolean) => void
+  ) {
+    if (currentJob.factory_challan_number) {
+      const { data } = await supabase
+        .from("jobs")
+        .select("*")
+        .eq("factory_challan_number", currentJob.factory_challan_number)
+        .eq("customer_name", currentJob.customer_name)
+        .eq("status", statusFilter);
+      setJobs(data || [currentJob]);
+    } else {
+      setJobs([currentJob]);
+    }
+    setOpen(true);
+  }
+
   async function handleUpdateStatus(newStatus: string) {
     if (!job) return;
     // Intercept in-progress → completed transition
     if (job.status === "in-progress" && newStatus === "completed") {
-      setWizardOpen(true);
+      await loadChallanJobs(job, "in-progress", setWizardJobs, setWizardOpen);
       return;
     }
     // Intercept completed → picked-up transition
     if (job.status === "completed" && newStatus === "picked-up") {
-      setDeliveryWizardOpen(true);
+      await loadChallanJobs(job, "completed", setDeliveryWizardJobs, setDeliveryWizardOpen);
       return;
     }
     const { error } = await supabase.from("jobs").update({ status: newStatus }).eq("id", job.id);
@@ -335,13 +357,13 @@ export default function JobDetailPage() {
             <CompletionWizard
               open={wizardOpen}
               onOpenChange={setWizardOpen}
-              jobs={[job]}
+              jobs={wizardJobs}
               onCompleted={reloadJob}
             />
             <DeliveryWizard
               open={deliveryWizardOpen}
               onOpenChange={setDeliveryWizardOpen}
-              jobs={[job]}
+              jobs={deliveryWizardJobs}
               onCompleted={reloadJob}
             />
           </>
