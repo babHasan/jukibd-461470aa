@@ -323,6 +323,47 @@ export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: Delive
               </SelectContent>
             </Select>
           </div>
+          {receiveType === "Cheque" && (
+            <div className="flex items-start gap-3 sm:col-span-2">
+              <label className="text-sm font-medium w-32 text-right pt-2">Cheque Photo</label>
+              <div className="flex-1">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleChequeFile}
+                  className="hidden"
+                />
+                {!chequePreview ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="gap-2"
+                  >
+                    <Upload className="h-4 w-4" />
+                    Upload Cheque Photo
+                  </Button>
+                ) : (
+                  <div className="relative inline-block">
+                    <img
+                      src={chequePreview}
+                      alt="Cheque"
+                      className="h-24 rounded border object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={removeChequeFile}
+                      className="absolute -top-2 -right-2 rounded-full bg-destructive p-0.5 text-destructive-foreground"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
           <div className="flex items-center gap-3 sm:col-span-2">
             <label className="text-sm font-medium w-32 text-right">Date</label>
             <Input
