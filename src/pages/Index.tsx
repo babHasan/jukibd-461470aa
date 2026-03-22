@@ -194,61 +194,65 @@ const Index = () => {
 
         {/* Job Orders Section */}
         <div className="rounded-lg border bg-card shadow-sm">
-          <div className="flex flex-col gap-3 border-b p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 border-b p-4">
             <h2 className="text-lg font-semibold text-foreground">Job Orders</h2>
-            <div className="flex flex-wrap gap-2 items-center">
-              <div className="relative">
+            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+              <div className="relative w-full sm:w-auto">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder="Search jobs..."
                   value={jobSearch}
                   onChange={(e) => setJobSearch(e.target.value)}
-                  className="pl-9 sm:w-56"
+                  className="pl-9 w-full sm:w-56"
                 />
               </div>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className={cn("w-[140px] justify-start text-left text-sm font-normal", !fromDate && "text-muted-foreground")}>
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {fromDate ? format(fromDate, "dd/MM/yyyy") : "From Date"}
+              <div className="flex flex-wrap gap-2 items-center">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className={cn("w-full sm:w-[140px] justify-start text-left text-sm font-normal", !fromDate && "text-muted-foreground")}>
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {fromDate ? format(fromDate, "dd/MM/yyyy") : "From Date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar mode="single" selected={fromDate} onSelect={setFromDate} initialFocus className={cn("p-3 pointer-events-auto")} />
+                  </PopoverContent>
+                </Popover>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className={cn("w-full sm:w-[140px] justify-start text-left text-sm font-normal", !toDate && "text-muted-foreground")}>
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {toDate ? format(toDate, "dd/MM/yyyy") : "To Date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar mode="single" selected={toDate} onSelect={setToDate} initialFocus className={cn("p-3 pointer-events-auto")} />
+                  </PopoverContent>
+                </Popover>
+                {(fromDate || toDate) && (
+                  <Button variant="ghost" size="sm" onClick={() => { setFromDate(undefined); setToDate(undefined); }}>
+                    Clear
                   </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar mode="single" selected={fromDate} onSelect={setFromDate} initialFocus className={cn("p-3 pointer-events-auto")} />
-                </PopoverContent>
-              </Popover>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className={cn("w-[140px] justify-start text-left text-sm font-normal", !toDate && "text-muted-foreground")}>
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {toDate ? format(toDate, "dd/MM/yyyy") : "To Date"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar mode="single" selected={toDate} onSelect={setToDate} initialFocus className={cn("p-3 pointer-events-auto")} />
-                </PopoverContent>
-              </Popover>
-              {(fromDate || toDate) && (
-                <Button variant="ghost" size="sm" onClick={() => { setFromDate(undefined); setToDate(undefined); }}>
-                  Clear
-                </Button>
-              )}
-              <Select value={jobFilter} onValueChange={setJobFilter}>
-                <SelectTrigger className="sm:w-40">
-                  <SelectValue placeholder="All Statuses" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Statuses</SelectItem>
-                  <SelectItem value="received">Received</SelectItem>
-                  <SelectItem value="diagnosing">Diagnosing</SelectItem>
-                  <SelectItem value="in-progress">In Progress</SelectItem>
-                  <SelectItem value="completed">Completed</SelectItem>
-                  <SelectItem value="picked-up">Picked Up</SelectItem>
-                </SelectContent>
-              </Select>
+                )}
+                <Select value={jobFilter} onValueChange={setJobFilter}>
+                  <SelectTrigger className="w-full sm:w-40">
+                    <SelectValue placeholder="All Statuses" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Statuses</SelectItem>
+                    <SelectItem value="received">Received</SelectItem>
+                    <SelectItem value="diagnosing">Diagnosing</SelectItem>
+                    <SelectItem value="in-progress">In Progress</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                    <SelectItem value="picked-up">Picked Up</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
-          <div className="overflow-x-auto">
+
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
@@ -338,6 +342,69 @@ const Index = () => {
                 )}
               </TableBody>
             </Table>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="md:hidden divide-y">
+            {groups.length === 0 ? (
+              <div className="py-8 text-center text-muted-foreground">No jobs found.</div>
+            ) : (
+              groups.map((group) => (
+                <div key={group.key} className={`p-4 space-y-3 ${rowBgColors[getGroupStatus(group.jobs)] || ""}`}>
+                  {/* Header row */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="space-y-0.5 text-sm min-w-0">
+                      <p className="font-semibold text-foreground truncate">{group.customer_name}</p>
+                      {group.company_name && <p className="text-xs text-muted-foreground">{group.company_name}</p>}
+                      {group.customer_mobile && (
+                        <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Phone className="h-3 w-3" /> {group.customer_mobile}
+                        </p>
+                      )}
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-xs text-muted-foreground">{group.job_date}</p>
+                      {group.factory_challan_number && (
+                        <p className="text-xs font-mono font-medium mt-0.5">{group.factory_challan_number}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Jobs list */}
+                  <div className="space-y-2">
+                    {group.jobs.map((job) => (
+                      <div
+                        key={job.id}
+                        className="rounded-md border bg-card/80 p-3 space-y-1.5 cursor-pointer active:scale-[0.98] transition-transform"
+                        onClick={() => navigate(`/job/${job.id}`)}
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-xs font-mono font-semibold">{job.job_number}</span>
+                          <Badge variant="secondary" className={`text-[10px] ${statusColors[job.status] || ""}`}>
+                            {jobStatusLabels[job.status] || job.status}
+                          </Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground"><span className="font-medium text-foreground">Board:</span> {job.board_name}</p>
+                        {job.details_of_problem && (
+                          <p className="text-xs text-muted-foreground line-clamp-2">{job.details_of_problem}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Action */}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full gap-1 text-xs"
+                    onClick={() => handleGroupStatusUpdate(group)}
+                  >
+                    Change Status
+                    <ChevronRight className="h-3 w-3" />
+                  </Button>
+                </div>
+              ))
+            )}
           </div>
         </div>
         <CompletionWizard
