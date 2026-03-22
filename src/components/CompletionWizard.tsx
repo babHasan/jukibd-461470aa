@@ -210,8 +210,8 @@ export function CompletionWizard({ open, onOpenChange, jobs, onCompleted }: Comp
                         value={entry?.chargeType}
                         onValueChange={(val) =>
                           updateEntry(job.id, {
-                            chargeType: val as "Normal" | "FOC",
-                            amount: val === "FOC" ? 0 : entry?.amount ?? 0,
+                            chargeType: val as ChargeType,
+                            amount: val === "FOC" || val === "Damage" ? 0 : entry?.amount ?? 0,
                           })
                         }
                         disabled={!entry?.checked}
@@ -222,6 +222,7 @@ export function CompletionWizard({ open, onOpenChange, jobs, onCompleted }: Comp
                         <SelectContent>
                           <SelectItem value="Normal">Normal</SelectItem>
                           <SelectItem value="FOC">FOC</SelectItem>
+                          <SelectItem value="Damage">Damage</SelectItem>
                         </SelectContent>
                       </Select>
                     </td>
