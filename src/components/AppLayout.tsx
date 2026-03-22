@@ -194,11 +194,12 @@ function SidebarItem({
       <Link
         to={item.children ? item.children[0].to : item.to}
         onClick={onNavigate}
-        className={`flex items-center gap-3 rounded-md px-3 py-2 text-[13px] font-medium transition-colors ${
+        className={`flex items-center gap-3 rounded-md px-3 py-2 font-medium transition-colors ${
           isActive
             ? "bg-sidebar-accent text-white"
-            : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-white"
+            : "hover:bg-sidebar-accent/50 hover:text-white"
         }`}
+        style={{ fontSize: "var(--menu-font-size, 13px)", color: isActive ? "#fff" : "var(--menu-font-color, #94a3b8)" }}
         title={collapsed ? item.label : undefined}
       >
         <item.icon className="h-4 w-4 shrink-0" />
