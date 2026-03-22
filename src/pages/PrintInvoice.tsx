@@ -175,7 +175,7 @@ export default function PrintInvoice() {
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 4 }}>
           <h1 style={{ fontSize: 18, fontWeight: 800, letterSpacing: 2, margin: 0 }}>
-            CUSTOMER COPY
+            {copyType === "office" ? "OFFICE COPY" : "CUSTOMER COPY"}
           </h1>
         </div>
 
