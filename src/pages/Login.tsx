@@ -76,6 +76,11 @@ export default function Login() {
               {loading ? "Logging in..." : "LOGIN"}
             </Button>
           </form>
+          <div className="mt-4 text-center">
+            <Link to="/track" className="text-sm text-accent hover:underline">
+              🔍 Track your Job Status
+            </Link>
+          </div>
         </CardContent>
       </Card>
     </div>
