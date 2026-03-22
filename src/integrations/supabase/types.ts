@@ -473,6 +473,27 @@ export type Database = {
         }
         Relationships: []
       }
+      portal_scroll_messages: {
+        Row: {
+          id: string
+          is_active: boolean
+          message_text: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          is_active?: boolean
+          message_text?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          is_active?: boolean
+          message_text?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address: string
