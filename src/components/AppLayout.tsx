@@ -129,9 +129,7 @@ const navItems: NavItem[] = [
     label: "REPORTS",
     icon: FileText,
     children: [
-      { to: "/reports/daily", label: "Daily Report", icon: BarChart3 },
-      { to: "/reports/monthly", label: "Monthly Report", icon: PieChart },
-      { to: "/reports/revenue", label: "Revenue Report", icon: TrendingUp },
+      { to: "/reports/transaction", label: "Transaction Report", icon: Receipt },
     ],
   },
   {

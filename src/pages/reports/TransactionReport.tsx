@@ -114,6 +114,8 @@ export default function TransactionReport() {
     });
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   const groups = useMemo(() => {
     const map = new Map<string, ReportGroup>();
     let invoiceCounter = 0;
