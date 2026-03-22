@@ -4,10 +4,24 @@ import {
   Users,
   CalendarDays,
   MessageSquare,
-  Briefcase,
   ChevronLeft,
   ChevronRight,
   Menu,
+  Shield,
+  GitBranch,
+  Monitor,
+  UserCircle,
+  PlusCircle,
+  ClipboardList,
+  Diamond,
+  DollarSign,
+  BookOpen,
+  FileText,
+  Wallet,
+  CheckCheck,
+  Settings,
+  Database,
+  LogOut,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { ReactNode, useState } from "react";
@@ -15,10 +29,22 @@ import { AddRepairDialog } from "@/components/AddRepairDialog";
 import { useRepairs } from "@/context/RepairContext";
 
 const navItems = [
-  { to: "/", label: "ড্যাশবোর্ড", labelEn: "Dashboard", icon: LayoutDashboard },
-  { to: "/customers", label: "কাস্টমার", labelEn: "Customers", icon: Users },
-  { to: "/calendar", label: "ক্যালেন্ডার", labelEn: "Calendar", icon: CalendarDays },
-  { to: "/sms-settings", label: "SMS সেটিংস", labelEn: "SMS", icon: MessageSquare },
+  { to: "/", label: "DASHBOARD", icon: LayoutDashboard },
+  { to: "/admin", label: "ADMIN", icon: Shield, hasSubmenu: true },
+  { to: "/branch", label: "BRANCH", icon: GitBranch, hasSubmenu: true },
+  { to: "/machine-data", label: "MACHINE DATA", icon: Monitor, hasSubmenu: true },
+  { to: "/customers", label: "CLIENT DATA", icon: UserCircle, hasSubmenu: true },
+  { to: "/add-job", label: "ADD JOB", icon: PlusCircle },
+  { to: "/job-list", label: "JOB LIST", icon: ClipboardList },
+  { to: "/collection", label: "COLLECTION", icon: Diamond, hasSubmenu: true },
+  { to: "/expense-income", label: "EXPENSE / INCOME", icon: DollarSign, hasSubmenu: true },
+  { to: "/ledger", label: "LEDGER", icon: BookOpen, hasSubmenu: true },
+  { to: "/reports", label: "REPORTS", icon: FileText, hasSubmenu: true },
+  { to: "/cashbook", label: "CASHBOOK", icon: Wallet, hasSubmenu: true },
+  { to: "/challan-verify", label: "CHALLAN VERIFY", icon: CheckCheck },
+  { to: "/sms-settings", label: "SETTING", icon: Settings, hasSubmenu: true },
+  { to: "/backup", label: "BACKUP DATABASE", icon: Database },
+  { to: "/calendar", label: "SMS", icon: MessageSquare },
 ];
 
 export function AppLayout({ children }: { children: ReactNode }) {
@@ -56,7 +82,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 space-y-1 px-2 py-4">
+        <nav className="flex-1 overflow-y-auto space-y-0.5 px-2 py-3">
           {navItems.map((item) => {
             const isActive = location.pathname === item.to;
             return (
@@ -64,15 +90,20 @@ export function AppLayout({ children }: { children: ReactNode }) {
                 key={item.to}
                 to={item.to}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
+                className={`flex items-center justify-between rounded-md px-3 py-2 text-[13px] font-medium transition-colors ${
                   isActive
                     ? "bg-sidebar-accent text-white"
                     : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-white"
                 }`}
-                title={collapsed ? item.labelEn : undefined}
+                title={collapsed ? item.label : undefined}
               >
-                <item.icon className="h-4.5 w-4.5 shrink-0" />
-                {!collapsed && <span>{item.label}</span>}
+                <div className="flex items-center gap-3">
+                  <item.icon className="h-4 w-4 shrink-0" />
+                  {!collapsed && <span>{item.label}</span>}
+                </div>
+                {!collapsed && item.hasSubmenu && (
+                  <ChevronRight className="h-3 w-3 opacity-50" />
+                )}
               </Link>
             );
           })}
