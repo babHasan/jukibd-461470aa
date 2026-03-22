@@ -292,6 +292,35 @@ export default function JobDetailPage() {
                 })}
               </div>
             </div>
+
+            {/* Cost Summary - show when completed or picked-up */}
+            {(job.status === "completed" || job.status === "picked-up") && (
+              <div className="rounded-lg border bg-card p-5">
+                <h3 className="mb-4 text-sm font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                  <DollarSign className="h-4 w-4" /> Cost Summary
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Charge Type</span>
+                    <Badge variant={job.charge_type === "FOC" ? "secondary" : "default"}>
+                      {job.charge_type || "Normal"}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Service Charge</span>
+                    <span className="text-lg font-bold text-foreground">
+                      ৳{job.service_charge ?? 0}
+                    </span>
+                  </div>
+                  {job.completed_date && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Completed Date</span>
+                      <span className="text-sm font-medium text-foreground">{job.completed_date}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
         {job && (
