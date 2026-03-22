@@ -39,6 +39,8 @@ interface JobResult {
   job_date: string;
   status: string;
   created_at: string;
+  service_charge: number | null;
+  charge_type: string | null;
 }
 
 export default function CustomerPortal() {
@@ -185,6 +187,23 @@ export default function CustomerPortal() {
                     <div className="text-sm">
                       <p className="text-muted-foreground text-xs mb-1">Problem Details</p>
                       <p className="text-foreground">{job.details_of_problem}</p>
+                    </div>
+                  )}
+
+                  {/* Bill Amount - show when completed or picked-up */}
+                  {(job.status === "completed" || job.status === "picked-up") && (
+                    <div className="rounded-md border bg-muted/30 p-3">
+                      <p className="text-muted-foreground text-xs mb-1 font-semibold uppercase">Bill Amount</p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Badge variant="secondary" className="text-xs">
+                            {job.charge_type || "Normal"}
+                          </Badge>
+                        </div>
+                        <span className="text-lg font-bold text-foreground">
+                          ৳{job.service_charge ?? 0}
+                        </span>
+                      </div>
                     </div>
                   )}
                 </CardContent>
