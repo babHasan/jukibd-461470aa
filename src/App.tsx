@@ -64,6 +64,7 @@ function AppRoutes() {
       <Route path="/job-list" element={<ProtectedRoute><JobList /></ProtectedRoute>} />
       <Route path="/job/:id" element={<ProtectedRoute><JobDetail /></ProtectedRoute>} />
       <Route path="/my-profile" element={<ProtectedRoute><MyProfile /></ProtectedRoute>} />
+      <Route path="/backup" element={<ProtectedRoute><BackupDatabase /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
