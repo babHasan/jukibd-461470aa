@@ -55,6 +55,7 @@ const AddJob = () => {
     supabase.from("models").select("id, name").order("name").then(({ data }) => data && setModels(data));
     supabase.from("clients").select("id, client_name, company_name").order("client_name").then(({ data }) => data && setClients(data));
     supabase.from("branches").select("id, name").eq("status", "active").order("name").then(({ data }) => data && setBranches(data));
+    supabase.from("boards").select("id, name").order("name").then(({ data }) => data && setBoardsList(data));
   }, []);
 
   function handleAddJob() {
