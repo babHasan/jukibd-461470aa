@@ -183,8 +183,14 @@ const AddJob = () => {
       } else {
         toast.success(`${addedJobs.length} job(s) submitted successfully`);
 
-        // Sync to MySQL
+        // Open print invoice in new tab
         if (insertedJobs?.length) {
+          const challanNo = insertedJobs[0].factory_challan_number;
+          const printUrl = challanNo
+            ? `/print-invoice?challan=${encodeURIComponent(challanNo)}`
+            : `/print-invoice?job=${insertedJobs[0].id}`;
+          window.open(printUrl, "_blank");
+
           syncJobsToMySQL(insertedJobs.map((j) => j.id));
         }
 
