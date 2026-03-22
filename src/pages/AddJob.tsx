@@ -29,7 +29,7 @@ const AddJob = () => {
   const navigate = useNavigate();
   const [brands, setBrands] = useState<{ id: string; name: string }[]>([]);
   const [models, setModels] = useState<{ id: string; name: string }[]>([]);
-  const [clients, setClients] = useState<{ id: string; client_name: string; company_name: string }[]>([]);
+  const [clients, setClients] = useState<{ id: string; client_name: string; company_name: string; contact_number?: string }[]>([]);
   const [branches, setBranches] = useState<{ id: string; name: string }[]>([]);
   const [boardsList, setBoardsList] = useState<{ id: string; name: string }[]>([]);
 
@@ -49,6 +49,8 @@ const AddJob = () => {
 
   // Bottom form - persist in sessionStorage
   const [selectedCustomer, setSelectedCustomer] = useState(() => sessionStorage.getItem("addJob_customer") || "");
+  const [manualCustomerName, setManualCustomerName] = useState(() => sessionStorage.getItem("addJob_manualName") || "");
+  const [manualCustomerMobile, setManualCustomerMobile] = useState(() => sessionStorage.getItem("addJob_manualMobile") || "");
   const [factoryChallanNumber, setFactoryChallanNumber] = useState(() => sessionStorage.getItem("addJob_challan") || "");
   const [selectedBranch, setSelectedBranch] = useState(() => sessionStorage.getItem("addJob_branch") || "");
   const [date, setDate] = useState(() => sessionStorage.getItem("addJob_date") || new Date().toISOString().split("T")[0]);
@@ -61,6 +63,8 @@ const AddJob = () => {
   useEffect(() => { sessionStorage.setItem("addJob_board", board); }, [board]);
   useEffect(() => { sessionStorage.setItem("addJob_jobs", JSON.stringify(addedJobs)); }, [addedJobs]);
   useEffect(() => { sessionStorage.setItem("addJob_customer", selectedCustomer); }, [selectedCustomer]);
+  useEffect(() => { sessionStorage.setItem("addJob_manualName", manualCustomerName); }, [manualCustomerName]);
+  useEffect(() => { sessionStorage.setItem("addJob_manualMobile", manualCustomerMobile); }, [manualCustomerMobile]);
   useEffect(() => { sessionStorage.setItem("addJob_challan", factoryChallanNumber); }, [factoryChallanNumber]);
   useEffect(() => { sessionStorage.setItem("addJob_branch", selectedBranch); }, [selectedBranch]);
   useEffect(() => { sessionStorage.setItem("addJob_date", date); }, [date]);
@@ -68,8 +72,16 @@ const AddJob = () => {
   useEffect(() => {
     supabase.from("brands").select("id, name").order("name").then(({ data }) => data && setBrands(data));
     supabase.from("models").select("id, name").order("name").then(({ data }) => data && setModels(data));
-    supabase.from("clients").select("id, client_name, company_name").order("client_name").then(({ data }) => data && setClients(data));
-    supabase.from("branches").select("id, name").eq("status", "active").order("name").then(({ data }) => data && setBranches(data));
+    supabase.from("clients").select("id, client_name, company_name, contact_number").order("client_name").then(({ data }) => data && setClients(data));
+    supabase.from("branches").select("id, name").eq("status", "active").order("name").then(({ data }) => {
+      if (data) {
+        setBranches(data);
+        // Auto-select first branch if none selected
+        if (!selectedBranch && data.length > 0) {
+          setSelectedBranch(data[0].id);
+        }
+      }
+    });
     supabase.from("boards").select("id, name").order("name").then(({ data }) => data && setBoardsList(data));
   }, []);
 
@@ -108,8 +120,9 @@ const AddJob = () => {
       toast.error("Please add at least one job");
       return;
     }
-    if (!selectedCustomer || !selectedBranch) {
-      toast.error("Please select Customer and Branch");
+    const hasCustomer = selectedCustomer || manualCustomerName;
+    if (!hasCustomer) {
+      toast.error("Please select or enter a Customer");
       return;
     }
     setSubmitting(true);
@@ -118,12 +131,8 @@ const AddJob = () => {
       const customerObj = clients.find((c) => c.id === selectedCustomer);
       const branchObj = branches.find((b) => b.id === selectedBranch);
 
-      // Fetch customer contact number for SMS
-      const { data: customerData } = await supabase
-        .from("clients")
-        .select("contact_number")
-        .eq("id", selectedCustomer)
-        .maybeSingle();
+      const customerName = customerObj ? customerObj.client_name : manualCustomerName;
+      const customerMobile = customerObj ? (customerObj.contact_number || "") : manualCustomerMobile;
 
       const jobRows = addedJobs.map((job) => ({
         job_number: job.jobNumber,
@@ -133,9 +142,9 @@ const AddJob = () => {
         board_serial: job.boardSerial,
         details_of_problem: job.detailsOfProblem,
         remarks: job.remarks,
-        customer_id: selectedCustomer,
-        customer_name: customerObj ? customerObj.client_name : "",
-        branch_id: selectedBranch,
+        customer_id: selectedCustomer || null,
+        customer_name: customerName,
+        branch_id: selectedBranch || null,
         branch_name: branchObj ? branchObj.name : "",
         factory_challan_number: factoryChallanNumber,
         job_date: date,
@@ -150,13 +159,13 @@ const AddJob = () => {
         toast.success(`${addedJobs.length} job(s) submitted successfully`);
 
         // Send SMS for each job (trigger_status = "received")
-        if (customerData?.contact_number) {
+        if (customerMobile) {
           for (const job of insertedJobs || []) {
             try {
               await supabase.functions.invoke("send-sms", {
                 body: {
                   repair_order_id: job.id,
-                  customer_phone: customerData.contact_number,
+                  customer_phone: customerMobile,
                   customer_name: job.customer_name,
                   device_brand: job.brand_name,
                   ticket_number: job.job_number,
@@ -177,11 +186,15 @@ const AddJob = () => {
         sessionStorage.removeItem("addJob_board");
         sessionStorage.removeItem("addJob_jobs");
         sessionStorage.removeItem("addJob_customer");
+        sessionStorage.removeItem("addJob_manualName");
+        sessionStorage.removeItem("addJob_manualMobile");
         sessionStorage.removeItem("addJob_challan");
         sessionStorage.removeItem("addJob_branch");
         sessionStorage.removeItem("addJob_date");
         setAddedJobs([]);
         setSelectedCustomer("");
+        setManualCustomerName("");
+        setManualCustomerMobile("");
         setFactoryChallanNumber("");
         setSelectedBranch("");
         setBrandName("");
@@ -341,11 +354,16 @@ const AddJob = () => {
         <Card>
           <CardContent className="p-4 space-y-3">
             <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
-              <Label className="text-right text-xs font-semibold">
-                Select Customer <span className="text-destructive">*</span>
-              </Label>
-              <Select value={selectedCustomer} onValueChange={setSelectedCustomer}>
-                <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Select Customer" /></SelectTrigger>
+              <Label className="text-right text-xs font-semibold">Select Customer</Label>
+              <Select value={selectedCustomer} onValueChange={(val) => {
+                setSelectedCustomer(val);
+                const c = clients.find((cl) => cl.id === val);
+                if (c) {
+                  setManualCustomerName(c.client_name);
+                  setManualCustomerMobile(c.contact_number || "");
+                }
+              }}>
+                <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Select or type below" /></SelectTrigger>
                 <SelectContent>
                   {clients.map((c) => (
                     <SelectItem key={c.id} value={c.id}>
@@ -357,14 +375,24 @@ const AddJob = () => {
             </div>
 
             <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
+              <Label className="text-right text-xs font-semibold">
+                Customer Name <span className="text-destructive">*</span>
+              </Label>
+              <Input value={manualCustomerName} onChange={(e) => { setManualCustomerName(e.target.value); setSelectedCustomer(""); }} placeholder="Enter customer name" className="h-8 text-sm" />
+            </div>
+
+            <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
+              <Label className="text-right text-xs font-semibold">Mobile Number</Label>
+              <Input value={manualCustomerMobile} onChange={(e) => { setManualCustomerMobile(e.target.value); setSelectedCustomer(""); }} placeholder="Enter mobile number" className="h-8 text-sm" />
+            </div>
+
+            <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
               <Label className="text-right text-xs font-semibold">Factory Challan Number</Label>
               <Input value={factoryChallanNumber} onChange={(e) => setFactoryChallanNumber(e.target.value)} className="h-8 text-sm" />
             </div>
 
             <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
-              <Label className="text-right text-xs font-semibold">
-                Select Branch <span className="text-destructive">*</span>
-              </Label>
+              <Label className="text-right text-xs font-semibold">Branch</Label>
               <Select value={selectedBranch} onValueChange={setSelectedBranch}>
                 <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Select Branch" /></SelectTrigger>
                 <SelectContent>
