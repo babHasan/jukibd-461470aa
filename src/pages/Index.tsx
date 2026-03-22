@@ -8,7 +8,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Search, Phone, ChevronRight } from "lucide-react";
+import { Search, Phone, ChevronRight, CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -83,6 +87,8 @@ const Index = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [jobSearch, setJobSearch] = useState("");
   const [jobFilter, setJobFilter] = useState("all");
+  const [fromDate, setFromDate] = useState<Date | undefined>(undefined);
+  const [toDate, setToDate] = useState<Date | undefined>(undefined);
 
   function fetchJobs() {
     supabase
@@ -130,7 +136,10 @@ const Index = () => {
       j.brand_name.toLowerCase().includes(jobSearch.toLowerCase()) ||
       j.board_serial.toLowerCase().includes(jobSearch.toLowerCase());
     const matchesStatus = jobFilter === "all" || j.status === jobFilter;
-    return matchesSearch && matchesStatus;
+    const jobDateObj = new Date(j.job_date + "T00:00:00");
+    const matchesFrom = !fromDate || jobDateObj >= new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
+    const matchesTo = !toDate || jobDateObj <= new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate());
+    return matchesSearch && matchesStatus && matchesFrom && matchesTo;
   });
 
   const groups = useMemo(() => {
@@ -163,7 +172,7 @@ const Index = () => {
         <div className="rounded-lg border bg-card shadow-sm">
           <div className="flex flex-col gap-3 border-b p-4 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="text-lg font-semibold text-foreground">Job Orders</h2>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <div className="flex flex-wrap gap-2 items-center">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
@@ -173,6 +182,33 @@ const Index = () => {
                   className="pl-9 sm:w-56"
                 />
               </div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className={cn("w-[140px] justify-start text-left text-sm font-normal", !fromDate && "text-muted-foreground")}>
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {fromDate ? format(fromDate, "dd/MM/yyyy") : "From Date"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar mode="single" selected={fromDate} onSelect={setFromDate} initialFocus className={cn("p-3 pointer-events-auto")} />
+                </PopoverContent>
+              </Popover>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className={cn("w-[140px] justify-start text-left text-sm font-normal", !toDate && "text-muted-foreground")}>
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {toDate ? format(toDate, "dd/MM/yyyy") : "To Date"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar mode="single" selected={toDate} onSelect={setToDate} initialFocus className={cn("p-3 pointer-events-auto")} />
+                </PopoverContent>
+              </Popover>
+              {(fromDate || toDate) && (
+                <Button variant="ghost" size="sm" onClick={() => { setFromDate(undefined); setToDate(undefined); }}>
+                  Clear
+                </Button>
+              )}
               <Select value={jobFilter} onValueChange={setJobFilter}>
                 <SelectTrigger className="sm:w-40">
                   <SelectValue placeholder="All Statuses" />
