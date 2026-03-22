@@ -27,6 +27,7 @@ interface Job {
   details_of_problem: string;
   customer_name: string;
   customer_mobile: string;
+  company_name: string;
   branch_name: string;
   factory_challan_number: string;
   job_date: string;
