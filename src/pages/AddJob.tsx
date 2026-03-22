@@ -63,7 +63,7 @@ const AddJob = () => {
     }
     const newJob: JobItem = {
       id: crypto.randomUUID(),
-      service: machineType,
+      service: "",
       brand: brands.find((b) => b.id === brandName)?.name || brandName,
       model: models.find((m) => m.id === selectedModel)?.name || selectedModel,
       board,
