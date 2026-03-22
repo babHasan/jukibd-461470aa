@@ -117,9 +117,17 @@ export default function PrintInvoice() {
 
   const firstJob = jobs[0];
   const printDate = format(new Date(), "dd-MM-yyyy hh:mm:ss a");
+  const isDelivery = copyType === "delivery" || firstJob.status === "picked-up";
 
   // Generate 15 empty rows to fill the table
-  const totalRows = Math.max(15, jobs.length);
+  const totalRows = Math.max(isDelivery ? jobs.length : 15, jobs.length);
+
+  // Calculate totals for delivery invoice
+  const totalServiceCharge = jobs.reduce((sum, j) => sum + (j.service_charge || 0), 0);
+  const totalDiscount = jobs.reduce((sum, j) => sum + (j.discount || 0), 0);
+  const totalPayable = jobs.reduce((sum, j) => sum + (j.payable_amount || 0), 0);
+  const totalReceived = jobs.reduce((sum, j) => sum + (j.receive_amount || 0), 0);
+  const totalDue = totalPayable - totalReceived;
 
   return (
     <>
