@@ -377,6 +377,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
 
         <main className="flex-1 overflow-y-auto p-4 sm:p-6">{children}</main>
       </div>
+      <SearchJobWizard />
     </div>
   );
 }
