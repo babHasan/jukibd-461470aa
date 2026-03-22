@@ -229,6 +229,7 @@ export default function CustomerPortal() {
                         Print Delivery Copy
                       </Button>
                     )}
+                  </div>
                 </CardContent>
               </Card>
             );
