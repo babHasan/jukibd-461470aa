@@ -26,6 +26,7 @@ import AddJob from "./pages/AddJob";
 import JobList from "./pages/JobList";
 import JobDetail from "./pages/JobDetail";
 import CustomerPortal from "./pages/CustomerPortal";
+import ChallanVerify from "./pages/ChallanVerify";
 import NotFound from "./pages/NotFound";
 import BackupDatabase from "./pages/BackupDatabase";
 import DueBill from "./pages/collection/DueBill";
@@ -85,6 +86,7 @@ function AppRoutes() {
       <Route path="/reports/transaction" element={<ProtectedRoute><TransactionReport /></ProtectedRoute>} />
       <Route path="/reports/collection" element={<ProtectedRoute><CollectionReport /></ProtectedRoute>} />
       <Route path="/reports/expense" element={<ProtectedRoute><ExpenseReport /></ProtectedRoute>} />
+      <Route path="/challan-verify" element={<ProtectedRoute><ChallanVerify /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
