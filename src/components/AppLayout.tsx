@@ -101,14 +101,9 @@ const navItems: NavItem[] = [
   { to: "/add-job", label: "ADD JOB", icon: PlusCircle },
   { to: "/job-list", label: "JOB LIST", icon: ClipboardList },
   {
-    to: "/collection",
+    to: "/collection/due-bill",
     label: "COLLECTION",
     icon: Diamond,
-    children: [
-      { to: "/collection/pending", label: "Pending", icon: Receipt },
-      { to: "/collection/received", label: "Received", icon: CreditCard },
-      { to: "/collection/due-bill", label: "Due Bill", icon: Banknote },
-    ],
   },
   {
     to: "/expense-income",
