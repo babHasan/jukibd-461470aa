@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ArrowLeft, ChevronRight, Phone, Clock, MapPin } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Phone, Clock, MapPin, DollarSign } from "lucide-react";
 import { format } from "date-fns";
 import { CompletionWizard } from "@/components/CompletionWizard";
 
