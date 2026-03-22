@@ -232,7 +232,7 @@ const AddJob = () => {
                           <TableCell className="text-xs">{job.brand}</TableCell>
                           <TableCell className="text-xs">{job.model}</TableCell>
                           <TableCell className="text-xs">{job.board}</TableCell>
-                          <TableCell className="text-xs">{job.machineSerial}</TableCell>
+                          
                           <TableCell className="text-xs">{job.boardSerial}</TableCell>
                           <TableCell className="text-xs max-w-[120px] truncate">{job.detailsOfProblem}</TableCell>
                           <TableCell className="text-xs max-w-[100px] truncate">{job.remarks}</TableCell>
