@@ -149,15 +149,18 @@ export default function JobList() {
   }
 
   const filtered = jobs.filter((j) => {
+    const s = search.toLowerCase();
     const matchesSearch =
-      j.job_number.toLowerCase().includes(search.toLowerCase()) ||
-      j.brand_name.toLowerCase().includes(search.toLowerCase()) ||
-      j.model_name.toLowerCase().includes(search.toLowerCase()) ||
-      j.board_name.toLowerCase().includes(search.toLowerCase()) ||
-      j.board_serial.toLowerCase().includes(search.toLowerCase()) ||
-      j.customer_name.toLowerCase().includes(search.toLowerCase()) ||
-      j.company_name.toLowerCase().includes(search.toLowerCase()) ||
-      j.branch_name.toLowerCase().includes(search.toLowerCase());
+      j.company_name.toLowerCase().includes(s) ||
+      j.customer_mobile.toLowerCase().includes(s) ||
+      j.job_number.toLowerCase().includes(s) ||
+      j.factory_challan_number.toLowerCase().includes(s) ||
+      j.customer_name.toLowerCase().includes(s) ||
+      j.brand_name.toLowerCase().includes(s) ||
+      j.model_name.toLowerCase().includes(s) ||
+      j.board_name.toLowerCase().includes(s) ||
+      j.board_serial.toLowerCase().includes(s) ||
+      j.branch_name.toLowerCase().includes(s);
     const matchesStatus = statusFilter === "all" || j.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
