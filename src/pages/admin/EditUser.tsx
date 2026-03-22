@@ -35,6 +35,7 @@ export default function EditUser() {
   });
   const [selectedModules, setSelectedModules] = useState<string[]>([]);
   const [currentRole, setCurrentRole] = useState<string>("user");
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) fetchUser(id);
