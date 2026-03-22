@@ -81,12 +81,12 @@ export default function JobDetailPage() {
     if (!job) return;
     // Intercept in-progress → completed transition
     if (job.status === "in-progress" && newStatus === "completed") {
-      setWizardOpen(true);
+      await loadChallanJobs(job, "in-progress", setWizardJobs, setWizardOpen);
       return;
     }
     // Intercept completed → picked-up transition
     if (job.status === "completed" && newStatus === "picked-up") {
-      setDeliveryWizardOpen(true);
+      await loadChallanJobs(job, "completed", setDeliveryWizardJobs, setDeliveryWizardOpen);
       return;
     }
     const { error } = await supabase.from("jobs").update({ status: newStatus }).eq("id", job.id);
