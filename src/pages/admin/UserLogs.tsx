@@ -9,7 +9,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
-import { CalendarIcon, LogIn, LogOut } from "lucide-react";
+import { CalendarIcon, LogIn, LogOut, Wrench, PackageCheck } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
