@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -54,16 +54,19 @@ export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: Delive
 
   const [entries, setEntries] = useState<Record<string, JobDeliveryEntry>>({});
 
-  // Re-initialize entries whenever jobs change
-  useState(() => {});
-  const jobIds = eligibleJobs.map((j) => j.id).join(",");
-  useState(() => {});
-
-  // Use useEffect to sync entries with jobs
-  const { useEffect } = require("react");
-
-  // Actually, let's just do it properly:
-  // We need to reinitialize when jobs change
+  // Re-initialize entries whenever jobs prop changes
+  useEffect(() => {
+    const init: Record<string, JobDeliveryEntry> = {};
+    const eligible = jobs.filter((j) => j.status === "completed");
+    for (const job of eligible) {
+      init[job.id] = {
+        checked: true,
+        amount: job.service_charge ?? 0,
+        chargeType: job.charge_type || "Normal",
+      };
+    }
+    setEntries(init);
+  }, [jobs]);
 
   const [discount, setDiscount] = useState(0);
   const [receiveAmount, setReceiveAmount] = useState(0);
