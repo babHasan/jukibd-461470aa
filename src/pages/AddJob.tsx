@@ -220,7 +220,7 @@ const AddJob = () => {
                   <TableBody>
                     {addedJobs.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={11} className="text-center text-muted-foreground text-xs py-8">
+                        <TableCell colSpan={9} className="text-center text-muted-foreground text-xs py-8">
                           No jobs added yet
                         </TableCell>
                       </TableRow>
