@@ -351,9 +351,9 @@ export function AppLayout({ children }: { children: ReactNode }) {
             <AddRepairDialog onAdd={addOrder} />
             <div className="hidden sm:flex items-center gap-2 rounded-full bg-primary px-3 py-1.5">
               <div className="h-6 w-6 rounded-full bg-accent flex items-center justify-center text-xs font-bold text-accent-foreground">
-                A
+                {isAdmin ? "A" : "U"}
               </div>
-              <span className="text-xs font-medium text-primary-foreground">ADMIN</span>
+              <span className="text-xs font-medium text-primary-foreground">{isAdmin ? "ADMIN" : "USER"}</span>
             </div>
           </div>
         </header>
