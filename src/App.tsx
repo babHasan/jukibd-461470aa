@@ -14,6 +14,7 @@ import Login from "./pages/Login";
 import UserList from "./pages/admin/UserList";
 import AddUser from "./pages/admin/AddUser";
 import EditUser from "./pages/admin/EditUser";
+import UserLogs from "./pages/admin/UserLogs";
 import MyProfile from "./pages/MyProfile";
 import NotFound from "./pages/NotFound";
 
