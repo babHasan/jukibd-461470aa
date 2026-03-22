@@ -50,6 +50,8 @@ function AppRoutes() {
       <Route path="/branch/list" element={<ProtectedRoute><BranchList /></ProtectedRoute>} />
       <Route path="/branch/add" element={<ProtectedRoute><AddBranch /></ProtectedRoute>} />
       <Route path="/branch/edit/:id" element={<ProtectedRoute><EditBranch /></ProtectedRoute>} />
+      <Route path="/machine-data/brands" element={<ProtectedRoute><BrandList /></ProtectedRoute>} />
+      <Route path="/machine-data/models" element={<ProtectedRoute><ModelList /></ProtectedRoute>} />
       <Route path="/my-profile" element={<ProtectedRoute><MyProfile /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
