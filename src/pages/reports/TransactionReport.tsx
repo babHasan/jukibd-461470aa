@@ -108,13 +108,11 @@ export default function TransactionReport() {
   }
 
   // Fetch customers for dropdown
-  useState(() => {
+  useEffect(() => {
     supabase.from("clients").select("id, client_name").order("client_name").then(({ data }) => {
       if (data) setCustomers(data);
     });
-  });
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const groups = useMemo(() => {
     const map = new Map<string, ReportGroup>();
