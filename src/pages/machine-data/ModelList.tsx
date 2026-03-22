@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AppLayout } from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Smartphone, PlusCircle, Edit, Search } from "lucide-react";
+import { Smartphone, PlusCircle, Edit, Search, FileUp } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
+import * as XLSX from "xlsx";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -34,6 +35,36 @@ export default function ModelList() {
   const [editing, setEditing] = useState<Model | null>(null);
   const [form, setForm] = useState({ name: "", remarks: "" });
   const [saving, setSaving] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  async function handleImportExcel(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (evt) => {
+      try {
+        const wb = XLSX.read(evt.target?.result, { type: "binary" });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const rows: any[] = XLSX.utils.sheet_to_json(ws);
+        const toInsert = rows
+          .filter((r) => r["Model Name"] || r["model_name"] || r["name"] || r["Name"])
+          .map((r) => ({
+            name: (r["Model Name"] || r["model_name"] || r["name"] || r["Name"] || "").toString().trim(),
+            remarks: (r["Remarks"] || r["remarks"] || "").toString().trim(),
+          }))
+          .filter((r) => r.name);
+        if (toInsert.length === 0) {
+          toast.error("No valid rows found. Ensure column header is 'Model Name' or 'Name'.");
+          return;
+        }
+        const { error } = await supabase.from("models").insert(toInsert);
+        if (error) toast.error("Import failed: " + error.message);
+        else { toast.success(`${toInsert.length} model(s) imported!`); fetchModels(); }
+      } catch { toast.error("Failed to parse Excel file"); }
+    };
+    reader.readAsBinaryString(file);
+    e.target.value = "";
+  }
 
   async function fetchModels() {
     setLoading(true);
@@ -85,33 +116,40 @@ export default function ModelList() {
             <h2 className="text-xl font-bold text-foreground">MODEL LIST</h2>
           </div>
           {isAdmin && (
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button onClick={openAdd}>
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  ADD NEW MODEL
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>{editing ? "Edit Model" : "Add New Model"}</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 py-2">
-                  <div className="space-y-2">
-                    <Label>Model Name *</Label>
-                    <Input value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="e.g. DDL-8000A" />
+            <div className="flex items-center gap-2">
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button onClick={openAdd}>
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    ADD NEW MODEL
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>{editing ? "Edit Model" : "Add New Model"}</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 py-2">
+                    <div className="space-y-2">
+                      <Label>Model Name *</Label>
+                      <Input value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="e.g. DDL-8000A" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Remarks</Label>
+                      <Input value={form.remarks} onChange={(e) => setForm((f) => ({ ...f, remarks: e.target.value }))} placeholder="Optional remarks" />
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label>Remarks</Label>
-                    <Input value={form.remarks} onChange={(e) => setForm((f) => ({ ...f, remarks: e.target.value }))} placeholder="Optional remarks" />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
-                  <Button onClick={handleSave} disabled={saving}>{saving ? "Saving..." : editing ? "Update" : "Add"}</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+                  <DialogFooter>
+                    <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
+                    <Button onClick={handleSave} disabled={saving}>{saving ? "Saving..." : editing ? "Update" : "Add"}</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+              <input type="file" accept=".xlsx,.xls,.csv" ref={fileInputRef} className="hidden" onChange={handleImportExcel} />
+              <Button variant="secondary" onClick={() => fileInputRef.current?.click()}>
+                <FileUp className="mr-2 h-4 w-4" />
+                IMPORT EXCEL
+              </Button>
+            </div>
           )}
         </div>
 
