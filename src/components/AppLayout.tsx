@@ -244,6 +244,7 @@ function SidebarItem({
 export function AppLayout({ children }: { children: ReactNode }) {
   const location = useLocation();
   const { addOrder } = useRepairs();
+  const { signOut, user } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
