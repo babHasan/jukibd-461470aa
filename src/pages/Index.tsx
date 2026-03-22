@@ -60,13 +60,14 @@ const Index = () => {
   function fetchJobs() {
     supabase
       .from("jobs")
-      .select("*, clients(contact_number)")
+      .select("*, clients(contact_number, company_name)")
       .order("created_at", { ascending: false })
       .then(({ data }) => {
         if (data) {
           setJobs(data.map((j: any) => ({
             ...j,
             customer_mobile: j.clients?.contact_number || "",
+            company_name: j.clients?.company_name || "",
           })));
         }
       });
