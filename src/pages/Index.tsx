@@ -115,6 +115,21 @@ const Index = () => {
   useEffect(() => { fetchJobs(); }, []);
 
   async function handleGroupStatusUpdate(group: JobGroup) {
+    // Intercept in-progress → completed transition (open CompletionWizard)
+    const inProgressJobs = group.jobs.filter((j) => j.status === "in-progress");
+    if (inProgressJobs.length > 0) {
+      setWizardJobs(group.jobs);
+      setWizardOpen(true);
+      return;
+    }
+    // Intercept completed → picked-up transition (open DeliveryWizard)
+    const completedJobs = group.jobs.filter((j) => j.status === "completed");
+    if (completedJobs.length > 0) {
+      setDeliveryWizardJobs(group.jobs);
+      setDeliveryWizardOpen(true);
+      return;
+    }
+
     const jobsToUpdate = group.jobs.filter((j) => {
       const idx = jobStatusFlow.indexOf(j.status);
       return idx < jobStatusFlow.length - 1;
