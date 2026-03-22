@@ -71,7 +71,7 @@ export function AddRepairDialog({ onAdd }: AddRepairDialogProps) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
-          <DialogTitle>Create Repair Order</DialogTitle>
+          <DialogTitle>Create Job Order</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="mt-2 space-y-4">
           <div className="grid grid-cols-2 gap-4">
