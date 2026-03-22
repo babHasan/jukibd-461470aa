@@ -92,6 +92,33 @@ export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: Delive
     }));
   }
 
+  function handleChequeFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      setChequeFile(file);
+      setChequePreview(URL.createObjectURL(file));
+    }
+  }
+
+  function removeChequeFile() {
+    setChequeFile(null);
+    setChequePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  async function uploadChequePhoto(): Promise<string | null> {
+    if (!chequeFile) return null;
+    const ext = chequeFile.name.split(".").pop();
+    const path = `cheque-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("cheques").upload(path, chequeFile);
+    if (error) {
+      toast.error("Failed to upload cheque photo");
+      return null;
+    }
+    const { data: urlData } = supabase.storage.from("cheques").getPublicUrl(path);
+    return urlData.publicUrl;
+  }
+
   async function sendDeliverySms(job: JobItem, totalCharge: number) {
     if (!job.customer_id) return;
     try {
