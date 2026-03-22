@@ -23,19 +23,24 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const BULKSMSBD_API_KEY = Deno.env.get("BULKSMSBD_API_KEY");
-    if (!BULKSMSBD_API_KEY) {
-      throw new Error("BULKSMSBD_API_KEY is not configured");
-    }
-
-    const BULKSMSBD_SENDER_ID = Deno.env.get("BULKSMSBD_SENDER_ID");
-    if (!BULKSMSBD_SENDER_ID) {
-      throw new Error("BULKSMSBD_SENDER_ID is not configured");
-    }
-
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Fetch SMS config from database
+    const { data: smsConfig, error: cfgErr } = await supabase
+      .from("sms_config")
+      .select("api_key, sender_id")
+      .limit(1)
+      .maybeSingle();
+
+    if (cfgErr) throw cfgErr;
+    if (!smsConfig || !smsConfig.api_key || !smsConfig.sender_id) {
+      throw new Error("SMS API Key বা Sender ID কনফিগার করা হয়নি। SMS Settings থেকে সেট করুন।");
+    }
+
+    const BULKSMSBD_API_KEY = smsConfig.api_key;
+    const BULKSMSBD_SENDER_ID = smsConfig.sender_id;
 
     const body: SmsRequest = await req.json();
     const {
