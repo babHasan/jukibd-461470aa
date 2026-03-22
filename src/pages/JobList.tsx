@@ -206,7 +206,7 @@ export default function JobList() {
     : groups.slice((currentPage - 1) * parseInt(perPage), currentPage * parseInt(perPage));
   const totalPages = perPage === "all" ? 1 : Math.ceil(totalGroups / parseInt(perPage));
 
-  useEffect(() => { setCurrentPage(1); }, [search, statusFilter, perPage]);
+  useEffect(() => { setCurrentPage(1); }, [search, statusFilter, companyFilter, mobileFilter, perPage]);
 
   return (
     <AppLayout>
