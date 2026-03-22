@@ -85,6 +85,8 @@ export default function JobList() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [companyFilter, setCompanyFilter] = useState("all");
+  const [mobileFilter, setMobileFilter] = useState("all");
   const [perPage, setPerPage] = useState("10");
   const [currentPage, setCurrentPage] = useState(1);
 
