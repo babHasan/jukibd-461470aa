@@ -114,7 +114,7 @@ export function CompletionWizard({ open, onOpenChange, jobs, onCompleted }: Comp
           .from("jobs")
           .update({
             status: "completed",
-            service_charge: entry.chargeType === "FOC" ? 0 : entry.amount,
+            service_charge: entry.chargeType === "FOC" || entry.chargeType === "Damage" ? 0 : entry.amount,
             charge_type: entry.chargeType,
             completed_date: completedDate,
           })
