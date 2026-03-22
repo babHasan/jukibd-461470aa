@@ -25,11 +25,11 @@ Deno.serve(async (req) => {
 
     const trimmed = query.trim();
 
-    // Search by job_number or factory_challan_number
+    // Search by factory_challan_number only
     const { data, error } = await supabase
       .from("jobs")
       .select("id, job_number, brand_name, model_name, board_name, board_serial, details_of_problem, customer_name, branch_name, factory_challan_number, job_date, status, created_at")
-      .or(`job_number.ilike.%${trimmed}%,factory_challan_number.ilike.%${trimmed}%`)
+      .ilike("factory_challan_number", `%${trimmed}%`)
       .order("created_at", { ascending: false })
       .limit(20);
 
