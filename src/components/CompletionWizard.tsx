@@ -41,10 +41,12 @@ interface CompletionWizardProps {
   onCompleted: () => void;
 }
 
+type ChargeType = "Normal" | "FOC" | "Damage";
+
 interface JobCostEntry {
   checked: boolean;
   amount: number;
-  chargeType: "Normal" | "FOC";
+  chargeType: ChargeType;
 }
 
 export function CompletionWizard({ open, onOpenChange, jobs, onCompleted }: CompletionWizardProps) {
