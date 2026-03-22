@@ -159,8 +159,8 @@ export default function AddUser() {
                       type="email"
                       value={form.email}
                       onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      required
                     />
+                    <p className="text-xs text-muted-foreground">Optional — auto-generated from mobile if empty</p>
                   </div>
                   <div className="space-y-2">
                     <Label>Password <span className="text-destructive">*</span></Label>
