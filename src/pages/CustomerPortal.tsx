@@ -166,32 +166,33 @@ export default function CustomerPortal() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {/* Status Flow */}
-                  <div className="flex items-center gap-1 overflow-x-auto pb-1">
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-1 pb-1">
                     {jobStatusFlow.map((s, i) => {
                       const isPast = i <= currentIdx;
                       const isCurrent = i === currentIdx;
                       const isPickedUp = job.status === "picked-up";
                       return (
                         <div key={s} className="flex items-center gap-1 shrink-0">
-                          <div className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium border ${
+                          <div className={`flex items-center gap-1 sm:gap-1.5 rounded-full px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-medium border ${
                             isPast ? statusColors[s] : "bg-muted/50 text-muted-foreground border-border"
                           } ${isCurrent && !isPickedUp ? "animate-status-blink" : ""}`}>
                             {isPast && !isCurrent ? (
-                              <CheckCircle className="h-3 w-3" />
+                              <CheckCircle className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                             ) : isCurrent ? (
-                              <Clock className="h-3 w-3" />
+                              <Clock className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                             ) : null}
-                            {jobStatusLabels[s]}
+                            <span className="hidden xs:inline">{jobStatusLabels[s]}</span>
+                            <span className="xs:hidden">{jobStatusLabels[s].slice(0, 3)}</span>
                           </div>
                           {i < jobStatusFlow.length - 1 && (
-                            <span className="text-muted-foreground/40">→</span>
+                            <span className="text-muted-foreground/40 text-xs">→</span>
                           )}
                         </div>
                       );
                     })}
                     {job.status === "picked-up" && (
-                      <div className="flex items-center gap-1.5 ml-2 rounded-full bg-green-100 text-green-800 border border-green-300 px-3 py-1 text-xs font-bold">
-                        <PartyPopper className="h-3.5 w-3.5" />
+                      <div className="flex items-center gap-1 sm:gap-1.5 ml-1 sm:ml-2 rounded-full bg-green-100 text-green-800 border border-green-300 px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-bold">
+                        <PartyPopper className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                         Job Done
                       </div>
                     )}
