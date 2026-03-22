@@ -42,6 +42,9 @@ interface JobDetail {
   status: string;
   created_at: string;
   challan_url: string | null;
+  service_charge: number | null;
+  charge_type: string | null;
+  completed_date: string | null;
 }
 
 export default function JobDetailPage() {
