@@ -172,6 +172,42 @@ export type Database = {
         }
         Relationships: []
       }
+      company_info: {
+        Row: {
+          address: string
+          company_name: string
+          email: string
+          id: string
+          logo_url: string | null
+          mobile: string
+          phone: string
+          updated_at: string
+          website: string
+        }
+        Insert: {
+          address?: string
+          company_name?: string
+          email?: string
+          id?: string
+          logo_url?: string | null
+          mobile?: string
+          phone?: string
+          updated_at?: string
+          website?: string
+        }
+        Update: {
+          address?: string
+          company_name?: string
+          email?: string
+          id?: string
+          logo_url?: string | null
+          mobile?: string
+          phone?: string
+          updated_at?: string
+          website?: string
+        }
+        Relationships: []
+      }
       expense_categories: {
         Row: {
           created_at: string
