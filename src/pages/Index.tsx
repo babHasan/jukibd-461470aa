@@ -87,6 +87,8 @@ const Index = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [jobSearch, setJobSearch] = useState("");
   const [jobFilter, setJobFilter] = useState("all");
+  const [fromDate, setFromDate] = useState<Date | undefined>(undefined);
+  const [toDate, setToDate] = useState<Date | undefined>(undefined);
 
   function fetchJobs() {
     supabase
