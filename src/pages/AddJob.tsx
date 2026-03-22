@@ -209,7 +209,7 @@ const AddJob = () => {
                       <TableHead className="text-xs font-bold">BRAND</TableHead>
                       <TableHead className="text-xs font-bold">MODEL</TableHead>
                       <TableHead className="text-xs font-bold">BOARD</TableHead>
-                      <TableHead className="text-xs font-bold">MACHINE SERIAL</TableHead>
+                      
                       <TableHead className="text-xs font-bold">BOARD SERIAL</TableHead>
                       <TableHead className="text-xs font-bold">DETAILS OF PROBLEM</TableHead>
                       <TableHead className="text-xs font-bold">REMARKS</TableHead>
