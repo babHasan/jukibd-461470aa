@@ -99,6 +99,7 @@ export default function AddUser() {
         mobile: form.mobile,
         nid: form.nid,
         address: form.address,
+        photo_url: photoUrl,
       })
       .eq("id", userId);
 
