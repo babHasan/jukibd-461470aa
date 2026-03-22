@@ -43,6 +43,7 @@ export default function AddUser() {
     password: "",
   });
   const [selectedModules, setSelectedModules] = useState<string[]>([]);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
 
   function toggleModule(mod: string) {
     setSelectedModules((prev) =>
