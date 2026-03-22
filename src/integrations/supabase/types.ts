@@ -68,6 +68,45 @@ export type Database = {
         }
         Relationships: []
       }
+      clients: {
+        Row: {
+          address: string
+          client_name: string
+          company_name: string
+          contact_number: string
+          created_at: string
+          email: string
+          id: string
+          image_url: string | null
+          remarks: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string
+          client_name: string
+          company_name?: string
+          contact_number?: string
+          created_at?: string
+          email?: string
+          id?: string
+          image_url?: string | null
+          remarks?: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          client_name?: string
+          company_name?: string
+          contact_number?: string
+          created_at?: string
+          email?: string
+          id?: string
+          image_url?: string | null
+          remarks?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       models: {
         Row: {
           created_at: string
