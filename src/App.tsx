@@ -14,6 +14,7 @@ import Login from "./pages/Login";
 import UserList from "./pages/admin/UserList";
 import AddUser from "./pages/admin/AddUser";
 import EditUser from "./pages/admin/EditUser";
+import UserLogs from "./pages/admin/UserLogs";
 import MyProfile from "./pages/MyProfile";
 import NotFound from "./pages/NotFound";
 
@@ -40,6 +41,7 @@ function AppRoutes() {
       <Route path="/admin/users" element={<ProtectedRoute><UserList /></ProtectedRoute>} />
       <Route path="/admin/add-user" element={<ProtectedRoute><AddUser /></ProtectedRoute>} />
       <Route path="/admin/edit-user/:id" element={<ProtectedRoute><EditUser /></ProtectedRoute>} />
+      <Route path="/admin/user-logs" element={<ProtectedRoute><UserLogs /></ProtectedRoute>} />
       <Route path="/my-profile" element={<ProtectedRoute><MyProfile /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>

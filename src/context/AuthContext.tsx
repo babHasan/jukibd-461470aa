@@ -32,11 +32,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
         setTimeout(() => fetchRoleAndPermissions(session.user.id), 0);
+        // Log sign-in event
+        if (event === "SIGNED_IN") {
+          supabase.from("profiles").select("name").eq("id", session.user.id).single().then(({ data }) => {
+            supabase.from("user_activity_logs").insert({
+              user_id: session.user.id,
+              user_name: data?.name || "",
+              action: "login",
+            }).then(() => {});
+          });
+        }
       } else {
         setIsAdmin(false);
         setPermissions([]);
@@ -71,6 +81,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function signOut() {
+    // Log sign-out before signing out
+    if (user) {
+      const { data } = await supabase.from("profiles").select("name").eq("id", user.id).single();
+      await supabase.from("user_activity_logs").insert({
+        user_id: user.id,
+        user_name: data?.name || "",
+        action: "logout",
+      });
+    }
     await supabase.auth.signOut();
   }
 
