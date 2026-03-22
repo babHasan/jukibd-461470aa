@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -17,9 +17,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { Upload, X, Image as ImageIcon } from "lucide-react";
 
 interface JobItem {
   id: string;
@@ -73,6 +75,9 @@ export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: Delive
   const [receiveType, setReceiveType] = useState("Cash");
   const [deliveryDate, setDeliveryDate] = useState(format(new Date(), "dd-MM-yyyy"));
   const [submitting, setSubmitting] = useState(false);
+  const [chequeFile, setChequeFile] = useState<File | null>(null);
+  const [chequePreview, setChequePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const totalAmount = eligibleJobs
     .filter((j) => entries[j.id]?.checked)
@@ -85,6 +90,33 @@ export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: Delive
       ...prev,
       [id]: { ...prev[id], ...updates },
     }));
+  }
+
+  function handleChequeFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      setChequeFile(file);
+      setChequePreview(URL.createObjectURL(file));
+    }
+  }
+
+  function removeChequeFile() {
+    setChequeFile(null);
+    setChequePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  async function uploadChequePhoto(): Promise<string | null> {
+    if (!chequeFile) return null;
+    const ext = chequeFile.name.split(".").pop();
+    const path = `cheque-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("cheques").upload(path, chequeFile);
+    if (error) {
+      toast.error("Failed to upload cheque photo");
+      return null;
+    }
+    const { data: urlData } = supabase.storage.from("cheques").getPublicUrl(path);
+    return urlData.publicUrl;
   }
 
   async function sendDeliverySms(job: JobItem, totalCharge: number) {
@@ -124,17 +156,36 @@ export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: Delive
 
     setSubmitting(true);
     try {
+      // Upload cheque photo if Cheque type selected
+      let chequeUrl: string | null = null;
+      if (receiveType === "Cheque") {
+        if (!chequeFile) {
+          toast.error("Please upload cheque photo");
+          setSubmitting(false);
+          return;
+        }
+        chequeUrl = await uploadChequePhoto();
+        if (!chequeUrl) {
+          setSubmitting(false);
+          return;
+        }
+      }
+
       for (const job of selected) {
+        const updateData: any = {
+          status: "picked-up",
+          discount,
+          payable_amount: payableAmount,
+          receive_amount: receiveAmount,
+          receive_type: receiveType,
+          delivery_date: deliveryDate,
+        };
+        if (chequeUrl) {
+          updateData.cheque_url = chequeUrl;
+        }
         const { error } = await supabase
           .from("jobs")
-          .update({
-            status: "picked-up",
-            discount,
-            payable_amount: payableAmount,
-            receive_amount: receiveAmount,
-            receive_type: receiveType,
-            delivery_date: deliveryDate,
-          } as any)
+          .update(updateData)
           .eq("id", job.id);
 
         if (error) {
@@ -272,6 +323,47 @@ export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: Delive
               </SelectContent>
             </Select>
           </div>
+          {receiveType === "Cheque" && (
+            <div className="flex items-start gap-3 sm:col-span-2">
+              <label className="text-sm font-medium w-32 text-right pt-2">Cheque Photo</label>
+              <div className="flex-1">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleChequeFile}
+                  className="hidden"
+                />
+                {!chequePreview ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="gap-2"
+                  >
+                    <Upload className="h-4 w-4" />
+                    Upload Cheque Photo
+                  </Button>
+                ) : (
+                  <div className="relative inline-block">
+                    <img
+                      src={chequePreview}
+                      alt="Cheque"
+                      className="h-24 rounded border object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={removeChequeFile}
+                      className="absolute -top-2 -right-2 rounded-full bg-destructive p-0.5 text-destructive-foreground"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
           <div className="flex items-center gap-3 sm:col-span-2">
             <label className="text-sm font-medium w-32 text-right">Date</label>
             <Input
