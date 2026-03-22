@@ -223,7 +223,7 @@ export default function PrintInvoice() {
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 4 }}>
           <h1 style={{ fontSize: 18, fontWeight: 800, letterSpacing: 2, margin: 0 }}>
-            {copyType === "office" ? "OFFICE COPY" : isDelivery ? "DELIVERY INVOICE" : "CUSTOMER COPY"}
+            {copyType === "office" ? "OFFICE COPY" : isDueCollection ? "DUE COLLECTION INVOICE" : isDelivery ? "DELIVERY INVOICE" : "CUSTOMER COPY"}
           </h1>
         </div>
 
