@@ -112,6 +112,7 @@ const Index = () => {
                   <TableHead className="font-semibold">Job No</TableHead>
                   <TableHead className="font-semibold">Date</TableHead>
                   <TableHead className="font-semibold">Customer</TableHead>
+                  <TableHead className="font-semibold">Mobile</TableHead>
                   <TableHead className="font-semibold">Branch</TableHead>
                   <TableHead className="font-semibold">Brand</TableHead>
                   <TableHead className="font-semibold">Model</TableHead>
@@ -120,6 +121,7 @@ const Index = () => {
                   <TableHead className="font-semibold">Problem</TableHead>
                   <TableHead className="font-semibold">Challan</TableHead>
                   <TableHead className="font-semibold">Status</TableHead>
+                  <TableHead className="font-semibold text-right">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
