@@ -137,6 +137,11 @@ const Index = () => {
                       <TableCell className="font-mono text-sm font-medium">{job.job_number}</TableCell>
                       <TableCell className="text-sm">{job.job_date}</TableCell>
                       <TableCell className="text-sm">{job.customer_name}</TableCell>
+                      <TableCell className="text-sm">
+                        {job.customer_mobile ? (
+                          <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{job.customer_mobile}</span>
+                        ) : "—"}
+                      </TableCell>
                       <TableCell className="text-sm">{job.branch_name}</TableCell>
                       <TableCell className="text-sm">{job.brand_name}</TableCell>
                       <TableCell className="text-sm">{job.model_name}</TableCell>
@@ -148,6 +153,11 @@ const Index = () => {
                         <Badge variant="secondary" className={`text-[10px] ${statusColors[job.status] || ""}`}>
                           {job.status.toUpperCase()}
                         </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button size="sm" variant="outline" className="gap-1 text-xs">
+                          <Eye className="h-3 w-3" /> View
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))
