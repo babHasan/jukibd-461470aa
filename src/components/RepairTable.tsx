@@ -32,6 +32,7 @@ interface RepairTableProps {
 }
 
 export function RepairTable({ orders, onUpdateStatus }: RepairTableProps) {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
 
