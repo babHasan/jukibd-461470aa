@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/AppLayout";
 import { supabase } from "@/integrations/supabase/client";
@@ -31,6 +31,18 @@ interface Job {
   job_date: string;
   status: string;
   created_at: string;
+  customer_id: string | null;
+}
+
+interface JobGroup {
+  key: string;
+  customer_name: string;
+  company_name: string;
+  customer_mobile: string;
+  branch_name: string;
+  factory_challan_number: string;
+  job_date: string;
+  jobs: Job[];
 }
 
 const jobStatusFlow = ["received", "diagnosing", "in-progress", "completed", "picked-up"];
@@ -56,6 +68,7 @@ export default function JobList() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [perPage, setPerPage] = useState("10");
+  const [currentPage, setCurrentPage] = useState(1);
 
   function fetchJobs() {
     setLoading(true);
@@ -77,17 +90,24 @@ export default function JobList() {
 
   useEffect(() => { fetchJobs(); }, []);
 
-  async function handleJobStatusUpdate(jobId: string, currentStatus: string) {
-    const idx = jobStatusFlow.indexOf(currentStatus);
-    if (idx >= jobStatusFlow.length - 1) return;
-    const next = jobStatusFlow[idx + 1];
-    const { error } = await supabase.from("jobs").update({ status: next }).eq("id", jobId);
-    if (error) {
-      toast.error("Failed to update status");
-    } else {
-      toast.success(`Status updated to ${jobStatusLabels[next]}`);
-      fetchJobs();
+  async function handleGroupStatusUpdate(group: JobGroup) {
+    const jobsToUpdate = group.jobs.filter((j) => {
+      const idx = jobStatusFlow.indexOf(j.status);
+      return idx < jobStatusFlow.length - 1;
+    });
+    if (jobsToUpdate.length === 0) return;
+
+    for (const job of jobsToUpdate) {
+      const idx = jobStatusFlow.indexOf(job.status);
+      const next = jobStatusFlow[idx + 1];
+      const { error } = await supabase.from("jobs").update({ status: next }).eq("id", job.id);
+      if (error) {
+        toast.error(`Failed to update ${job.job_number}`);
+        return;
+      }
     }
+    toast.success("Status updated for all jobs in this group");
+    fetchJobs();
   }
 
   const filtered = jobs.filter((j) => {
@@ -98,11 +118,40 @@ export default function JobList() {
       j.board_name.toLowerCase().includes(search.toLowerCase()) ||
       j.board_serial.toLowerCase().includes(search.toLowerCase()) ||
       j.customer_name.toLowerCase().includes(search.toLowerCase()) ||
+      j.company_name.toLowerCase().includes(search.toLowerCase()) ||
       j.branch_name.toLowerCase().includes(search.toLowerCase());
     const matchesStatus = statusFilter === "all" || j.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
-  const displayed = perPage === "all" ? filtered : filtered.slice(0, parseInt(perPage));
+
+  const groups = useMemo(() => {
+    const map = new Map<string, JobGroup>();
+    for (const job of filtered) {
+      const key = `${job.customer_id || job.customer_name}_${job.job_date}_${job.factory_challan_number}`;
+      if (!map.has(key)) {
+        map.set(key, {
+          key,
+          customer_name: job.customer_name,
+          company_name: job.company_name,
+          customer_mobile: job.customer_mobile,
+          branch_name: job.branch_name,
+          factory_challan_number: job.factory_challan_number,
+          job_date: job.job_date,
+          jobs: [],
+        });
+      }
+      map.get(key)!.jobs.push(job);
+    }
+    return Array.from(map.values());
+  }, [filtered]);
+
+  const totalGroups = groups.length;
+  const paginatedGroups = perPage === "all"
+    ? groups
+    : groups.slice((currentPage - 1) * parseInt(perPage), currentPage * parseInt(perPage));
+  const totalPages = perPage === "all" ? 1 : Math.ceil(totalGroups / parseInt(perPage));
+
+  useEffect(() => { setCurrentPage(1); }, [search, statusFilter, perPage]);
 
   return (
     <AppLayout>
@@ -152,84 +201,133 @@ export default function JobList() {
             <TableHeader>
               <TableRow className="hover:bg-transparent">
                 <TableHead className="w-12 font-semibold">SL</TableHead>
-                <TableHead className="font-semibold">Job No</TableHead>
                 <TableHead className="font-semibold">Date</TableHead>
-                <TableHead className="font-semibold">Customer</TableHead>
-                <TableHead className="font-semibold">Branch</TableHead>
-                <TableHead className="font-semibold">Device</TableHead>
-                <TableHead className="font-semibold">Board</TableHead>
-                <TableHead className="font-semibold">Problem</TableHead>
-                <TableHead className="font-semibold">Challan</TableHead>
-                <TableHead className="font-semibold">Status</TableHead>
-                <TableHead className="font-semibold text-right">Action</TableHead>
+                <TableHead className="font-semibold">Customer & Info</TableHead>
+                <TableHead className="font-semibold">Service</TableHead>
+                <TableHead className="font-semibold">Challan Number</TableHead>
+                <TableHead className="font-semibold text-right">Change Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
-                <TableRow><TableCell colSpan={11} className="text-center text-muted-foreground">Loading...</TableCell></TableRow>
-              ) : displayed.length === 0 ? (
-                <TableRow><TableCell colSpan={11} className="text-center text-muted-foreground">No jobs found</TableCell></TableRow>
+                <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground py-8">Loading...</TableCell></TableRow>
+              ) : paginatedGroups.length === 0 ? (
+                <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground py-8">No jobs found</TableCell></TableRow>
               ) : (
-                displayed.map((job, idx) => {
-                  const sIdx = jobStatusFlow.indexOf(job.status);
-                  const next = sIdx < jobStatusFlow.length - 1 ? jobStatusFlow[sIdx + 1] : null;
-                  return (
-                    <TableRow key={job.id} className="group cursor-pointer" onClick={() => navigate(`/job/${job.id}`)}>
-                      <TableCell className="text-xs">{idx + 1}</TableCell>
-                      <TableCell className="font-mono text-sm font-medium">{job.job_number}</TableCell>
-                      <TableCell className="text-sm">{job.job_date}</TableCell>
-                      <TableCell>
-                        <div>
-                          <p className="font-medium text-sm">{job.customer_name}</p>
-                          {job.company_name && <p className="text-xs text-muted-foreground">{job.company_name}</p>}
-                          {job.customer_mobile && (
-                            <p className="flex items-center gap-1 text-xs text-muted-foreground">
-                              <Phone className="h-3 w-3" />{job.customer_mobile}
-                            </p>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-sm">{job.branch_name}</TableCell>
-                      <TableCell>
-                        <div>
-                          <p className="font-medium text-sm">{job.brand_name}</p>
-                          <p className="text-xs text-muted-foreground">{job.model_name}</p>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div>
-                          <p className="text-sm">{job.board_name}</p>
-                          <p className="text-xs text-muted-foreground">{job.board_serial}</p>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-sm max-w-[200px] truncate">{job.details_of_problem}</TableCell>
-                      <TableCell className="text-sm">{job.factory_challan_number || "—"}</TableCell>
-                      <TableCell>
-                        <Badge variant="secondary" className={`text-[10px] ${statusColors[job.status] || ""}`}>
-                          {job.status.toUpperCase()}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {next && (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="gap-1 text-xs text-accent hover:text-accent"
-                            onClick={(e) => { e.stopPropagation(); handleJobStatusUpdate(job.id, job.status); }}
-                          >
-                            {jobStatusLabels[next]}
-                            <ChevronRight className="h-3 w-3" />
-                          </Button>
+                paginatedGroups.map((group, gIdx) => (
+                  <TableRow key={group.key} className="align-top border-b">
+                    <TableCell className="text-sm font-medium">
+                      {perPage === "all" ? gIdx + 1 : (currentPage - 1) * parseInt(perPage) + gIdx + 1}
+                    </TableCell>
+                    <TableCell className="text-sm whitespace-nowrap">{group.job_date}</TableCell>
+                    <TableCell>
+                      <div className="space-y-0.5 text-sm">
+                        <p><span className="font-semibold">Name:</span> {group.customer_name}</p>
+                        {group.company_name && (
+                          <p><span className="font-semibold">Company:</span> {group.company_name}</p>
                         )}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
+                        {group.customer_mobile && (
+                          <p className="flex items-center gap-1">
+                            <Phone className="h-3 w-3" />
+                            {group.customer_mobile}
+                          </p>
+                        )}
+                        {group.branch_name && (
+                          <p><span className="font-semibold">Branch:</span> {group.branch_name}</p>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="rounded border overflow-hidden">
+                        <table className="w-full text-sm">
+                          <thead>
+                            <tr className="bg-muted/60">
+                              <th className="px-3 py-1.5 text-left font-semibold text-xs">Board</th>
+                              <th className="px-3 py-1.5 text-left font-semibold text-xs">Details Of Problem</th>
+                              <th className="px-3 py-1.5 text-left font-semibold text-xs">Job Number</th>
+                              <th className="px-3 py-1.5 text-left font-semibold text-xs">Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {group.jobs.map((job) => (
+                              <tr
+                                key={job.id}
+                                className="border-t cursor-pointer hover:bg-accent/10 transition-colors"
+                                onClick={() => navigate(`/job/${job.id}`)}
+                              >
+                                <td className="px-3 py-1.5 text-xs">
+                                  <div>
+                                    <span>{job.board_name}</span>
+                                    {job.board_serial && (
+                                      <span className="text-muted-foreground ml-1">({job.board_serial})</span>
+                                    )}
+                                  </div>
+                                </td>
+                                <td className="px-3 py-1.5 text-xs max-w-[180px] truncate">
+                                  {job.details_of_problem || "—"}
+                                </td>
+                                <td className="px-3 py-1.5 text-xs font-mono font-medium">{job.job_number}</td>
+                                <td className="px-3 py-1.5">
+                                  <Badge variant="secondary" className={`text-[10px] ${statusColors[job.status] || ""}`}>
+                                    {jobStatusLabels[job.status] || job.status}
+                                  </Badge>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-sm">{group.factory_challan_number || "—"}</TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="gap-1 text-xs"
+                        onClick={() => handleGroupStatusUpdate(group)}
+                      >
+                        Change Status
+                        <ChevronRight className="h-3 w-3" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
               )}
             </TableBody>
           </Table>
         </div>
-        <p className="text-xs text-muted-foreground">{filtered.length} record(s) total</p>
+
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-muted-foreground">
+            Showing {paginatedGroups.length > 0 ? (perPage === "all" ? 1 : (currentPage - 1) * parseInt(perPage) + 1) : 0} to{" "}
+            {perPage === "all" ? totalGroups : Math.min(currentPage * parseInt(perPage), totalGroups)} of {totalGroups} entries
+          </p>
+          {totalPages > 1 && (
+            <div className="flex items-center gap-1">
+              <Button variant="outline" size="sm" disabled={currentPage <= 1} onClick={() => setCurrentPage((p) => p - 1)}>
+                &lt;
+              </Button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter((p) => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 2)
+                .map((p, i, arr) => (
+                  <span key={p}>
+                    {i > 0 && arr[i - 1] !== p - 1 && <span className="px-1 text-muted-foreground">…</span>}
+                    <Button
+                      variant={p === currentPage ? "default" : "outline"}
+                      size="sm"
+                      className="min-w-[32px]"
+                      onClick={() => setCurrentPage(p)}
+                    >
+                      {p}
+                    </Button>
+                  </span>
+                ))}
+              <Button variant="outline" size="sm" disabled={currentPage >= totalPages} onClick={() => setCurrentPage((p) => p + 1)}>
+                &gt;
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </AppLayout>
   );
