@@ -55,6 +55,7 @@ export default function JobDetailPage() {
   const [customerMobile, setCustomerMobile] = useState("");
   const [loading, setLoading] = useState(true);
   const [wizardOpen, setWizardOpen] = useState(false);
+  const [deliveryWizardOpen, setDeliveryWizardOpen] = useState(false);
 
   useEffect(() => {
     if (!id) return;
