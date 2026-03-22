@@ -75,6 +75,9 @@ export function RepairProvider({ children }: { children: ReactNode }) {
         if (o.id === id) {
           const updated = { ...o, status, updatedAt: new Date().toISOString() };
           sendSmsNotification(updated, status);
+          if (status === "picked-up") {
+            logActivity("delivery", `${o.ticketNumber} - ${o.customerName}`);
+          }
           return updated;
         }
         return o;
@@ -85,6 +88,7 @@ export function RepairProvider({ children }: { children: ReactNode }) {
   function addOrder(order: RepairOrder) {
     setOrders((prev) => [order, ...prev]);
     sendSmsNotification(order, order.status);
+    logActivity("new_repair", `${order.ticketNumber} - ${order.customerName}`);
   }
 
   function addNote(orderId: string, note: RepairNote) {
