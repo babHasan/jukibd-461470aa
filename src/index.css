@@ -63,3 +63,19 @@
     @apply bg-background text-foreground font-sans antialiased;
   }
 }
+
+/* Dynamic theme: table styles */
+table thead th,
+table thead td,
+[data-table-header] {
+  background-color: var(--table-header-bg, #f1f5f9) !important;
+  color: var(--table-header-color, #334155) !important;
+  font-size: var(--table-font-size, 14px) !important;
+}
+
+table tbody td,
+table tbody th,
+[data-table-cell] {
+  color: var(--table-font-color, #1e293b) !important;
+  font-size: var(--table-font-size, 14px) !important;
+}
