@@ -40,6 +40,7 @@ export default function PrintInvoice() {
   const [searchParams] = useSearchParams();
   const challan = searchParams.get("challan");
   const jobId = searchParams.get("job");
+  const copyType = searchParams.get("type"); // "office" or default "customer"
 
   const [jobs, setJobs] = useState<Job[]>([]);
   const [company, setCompany] = useState<CompanyInfo | null>(null);
@@ -174,7 +175,7 @@ export default function PrintInvoice() {
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 4 }}>
           <h1 style={{ fontSize: 18, fontWeight: 800, letterSpacing: 2, margin: 0 }}>
-            CUSTOMER COPY
+            {copyType === "office" ? "OFFICE COPY" : "CUSTOMER COPY"}
           </h1>
         </div>
 
