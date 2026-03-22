@@ -158,35 +158,47 @@ const Index = () => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredJobs.map((job) => (
-                    <TableRow key={job.id}>
-                      <TableCell className="font-mono text-sm font-medium">{job.job_number}</TableCell>
-                      <TableCell className="text-sm">{job.job_date}</TableCell>
-                      <TableCell className="text-sm">{job.customer_name}</TableCell>
-                      <TableCell className="text-sm">
-                        {job.customer_mobile ? (
-                          <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{job.customer_mobile}</span>
-                        ) : "—"}
-                      </TableCell>
-                      <TableCell className="text-sm">{job.branch_name}</TableCell>
-                      <TableCell className="text-sm">{job.brand_name}</TableCell>
-                      <TableCell className="text-sm">{job.model_name}</TableCell>
-                      <TableCell className="text-sm">{job.board_name}</TableCell>
-                      <TableCell className="text-sm">{job.board_serial}</TableCell>
-                      <TableCell className="text-sm max-w-[150px] truncate">{job.details_of_problem}</TableCell>
-                      <TableCell className="text-sm">{job.factory_challan_number || "—"}</TableCell>
-                      <TableCell>
-                        <Badge variant="secondary" className={`text-[10px] ${statusColors[job.status] || ""}`}>
-                          {job.status.toUpperCase()}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button size="sm" variant="outline" className="gap-1 text-xs">
-                          <Eye className="h-3 w-3" /> View
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
+                  filteredJobs.map((job) => {
+                    const idx = jobStatusFlow.indexOf(job.status);
+                    const next = idx < jobStatusFlow.length - 1 ? jobStatusFlow[idx + 1] : null;
+                    return (
+                      <TableRow key={job.id} className="group cursor-pointer" onClick={() => navigate(`/job/${job.id}`)}>
+                        <TableCell className="font-mono text-sm font-medium">{job.job_number}</TableCell>
+                        <TableCell className="text-sm">{job.job_date}</TableCell>
+                        <TableCell className="text-sm">{job.customer_name}</TableCell>
+                        <TableCell className="text-sm">
+                          {job.customer_mobile ? (
+                            <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{job.customer_mobile}</span>
+                          ) : "—"}
+                        </TableCell>
+                        <TableCell className="text-sm">{job.branch_name}</TableCell>
+                        <TableCell className="text-sm">{job.brand_name}</TableCell>
+                        <TableCell className="text-sm">{job.model_name}</TableCell>
+                        <TableCell className="text-sm">{job.board_name}</TableCell>
+                        <TableCell className="text-sm">{job.board_serial}</TableCell>
+                        <TableCell className="text-sm max-w-[150px] truncate">{job.details_of_problem}</TableCell>
+                        <TableCell className="text-sm">{job.factory_challan_number || "—"}</TableCell>
+                        <TableCell>
+                          <Badge variant="secondary" className={`text-[10px] ${statusColors[job.status] || ""}`}>
+                            {job.status.toUpperCase()}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {next && (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="gap-1 text-xs text-accent hover:text-accent"
+                              onClick={(e) => { e.stopPropagation(); handleJobStatusUpdate(job.id, job.status); }}
+                            >
+                              {jobStatusLabels[next]}
+                              <ChevronRight className="h-3 w-3" />
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
                 )}
               </TableBody>
             </Table>
