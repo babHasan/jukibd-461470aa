@@ -79,12 +79,8 @@ const AddJob = () => {
       jobNumber: jobNumber || `JOB-${Date.now().toString(36).toUpperCase()}`,
     };
     setAddedJobs((prev) => [...prev, newJob]);
-    // Reset job fields
+    // Only reset per-job unique fields, keep brand/model/board selection
     setJobNumber("");
-    setBrandName("");
-    setSelectedModel("");
-    setBoard("");
-    
     setBoardSerial("");
     setDetailsOfProblem("");
     setRemarks("");
