@@ -87,6 +87,9 @@ export default function JobList() {
   const [perPage, setPerPage] = useState("10");
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [wizardOpen, setWizardOpen] = useState(false);
+  const [wizardJobs, setWizardJobs] = useState<Job[]>([]);
+
   function fetchJobs() {
     setLoading(true);
     supabase
