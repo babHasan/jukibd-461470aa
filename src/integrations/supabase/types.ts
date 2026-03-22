@@ -475,18 +475,24 @@ export type Database = {
       }
       portal_scroll_messages: {
         Row: {
+          font_color: string
+          font_size: number
           id: string
           is_active: boolean
           message_text: string
           updated_at: string
         }
         Insert: {
+          font_color?: string
+          font_size?: number
           id?: string
           is_active?: boolean
           message_text?: string
           updated_at?: string
         }
         Update: {
+          font_color?: string
+          font_size?: number
           id?: string
           is_active?: boolean
           message_text?: string
