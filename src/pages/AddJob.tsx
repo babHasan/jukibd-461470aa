@@ -183,6 +183,11 @@ const AddJob = () => {
       } else {
         toast.success(`${addedJobs.length} job(s) submitted successfully`);
 
+        // Sync to MySQL
+        if (insertedJobs?.length) {
+          syncJobsToMySQL(insertedJobs.map((j) => j.id));
+        }
+
         // Send SMS for each job (trigger_status = "received")
         if (customerMobile) {
           for (const job of insertedJobs || []) {
