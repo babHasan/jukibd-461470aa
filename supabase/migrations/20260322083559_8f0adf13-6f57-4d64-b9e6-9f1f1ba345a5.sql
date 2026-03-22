@@ -1,0 +1,1 @@
+CREATE POLICY "Authenticated can update jobs" ON public.jobs FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
