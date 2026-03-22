@@ -3,10 +3,11 @@ import { useRepairs } from "@/context/RepairContext";
 import { KpiCards } from "@/components/KpiCards";
 import { RepairTable } from "@/components/RepairTable";
 import { AppLayout } from "@/components/AppLayout";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, Phone, ChevronRight, Eye } from "lucide-react";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -23,6 +24,7 @@ interface Job {
   board_serial: string;
   details_of_problem: string;
   customer_name: string;
+  customer_mobile: string;
   branch_name: string;
   factory_challan_number: string;
   job_date: string;
@@ -46,9 +48,16 @@ const Index = () => {
   useEffect(() => {
     supabase
       .from("jobs")
-      .select("*")
+      .select("*, clients(contact_number)")
       .order("created_at", { ascending: false })
-      .then(({ data }) => data && setJobs(data));
+      .then(({ data }) => {
+        if (data) {
+          setJobs(data.map((j: any) => ({
+            ...j,
+            customer_mobile: j.clients?.contact_number || "",
+          })));
+        }
+      });
   }, []);
 
   const filteredJobs = jobs.filter((j) => {
@@ -103,6 +112,7 @@ const Index = () => {
                   <TableHead className="font-semibold">Job No</TableHead>
                   <TableHead className="font-semibold">Date</TableHead>
                   <TableHead className="font-semibold">Customer</TableHead>
+                  <TableHead className="font-semibold">Mobile</TableHead>
                   <TableHead className="font-semibold">Branch</TableHead>
                   <TableHead className="font-semibold">Brand</TableHead>
                   <TableHead className="font-semibold">Model</TableHead>
@@ -111,12 +121,13 @@ const Index = () => {
                   <TableHead className="font-semibold">Problem</TableHead>
                   <TableHead className="font-semibold">Challan</TableHead>
                   <TableHead className="font-semibold">Status</TableHead>
+                  <TableHead className="font-semibold text-right">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredJobs.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={11} className="py-8 text-center text-muted-foreground">
+                    <TableCell colSpan={13} className="py-8 text-center text-muted-foreground">
                       No jobs found.
                     </TableCell>
                   </TableRow>
@@ -126,6 +137,11 @@ const Index = () => {
                       <TableCell className="font-mono text-sm font-medium">{job.job_number}</TableCell>
                       <TableCell className="text-sm">{job.job_date}</TableCell>
                       <TableCell className="text-sm">{job.customer_name}</TableCell>
+                      <TableCell className="text-sm">
+                        {job.customer_mobile ? (
+                          <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{job.customer_mobile}</span>
+                        ) : "—"}
+                      </TableCell>
                       <TableCell className="text-sm">{job.branch_name}</TableCell>
                       <TableCell className="text-sm">{job.brand_name}</TableCell>
                       <TableCell className="text-sm">{job.model_name}</TableCell>
@@ -137,6 +153,11 @@ const Index = () => {
                         <Badge variant="secondary" className={`text-[10px] ${statusColors[job.status] || ""}`}>
                           {job.status.toUpperCase()}
                         </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button size="sm" variant="outline" className="gap-1 text-xs">
+                          <Eye className="h-3 w-3" /> View
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))
