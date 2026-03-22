@@ -65,6 +65,7 @@ export default function EditUser() {
       address: p.address || "",
       status: p.status || "active",
     });
+    setPhotoUrl(p.photo_url || null);
     setSelectedModules((permsRes.data || []).map((r: any) => r.module));
     setCurrentRole((rolesRes.data || [])[0]?.role || "user");
     setLoading(false);
