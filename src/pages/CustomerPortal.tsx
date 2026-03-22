@@ -276,6 +276,7 @@ export default function CustomerPortal() {
           })}
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
