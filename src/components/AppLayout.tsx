@@ -297,15 +297,26 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </div>
 
         <nav className="flex-1 overflow-y-auto space-y-0.5 px-2 py-3 scrollbar-thin">
-          {navItems.map((item) => (
-            <SidebarItem
-              key={item.label}
-              item={item}
-              collapsed={collapsed}
-              currentPath={location.pathname}
-              onNavigate={() => setMobileOpen(false)}
-            />
-          ))}
+          {navItems
+            .filter((item) => {
+              // Admins see everything
+              if (isAdmin) return true;
+              // ADMIN menu is admin-only
+              if (item.label === "ADMIN") return false;
+              // Check if user has permission for this module
+              const requiredModule = navPermissionMap[item.label];
+              if (!requiredModule) return true;
+              return permissions.includes(requiredModule);
+            })
+            .map((item) => (
+              <SidebarItem
+                key={item.label}
+                item={item}
+                collapsed={collapsed}
+                currentPath={location.pathname}
+                onNavigate={() => setMobileOpen(false)}
+              />
+            ))}
         </nav>
 
         {/* Logout */}
