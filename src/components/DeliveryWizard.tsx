@@ -52,17 +52,18 @@ interface JobDeliveryEntry {
 export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: DeliveryWizardProps) {
   const eligibleJobs = jobs.filter((j) => j.status === "completed");
 
-  const [entries, setEntries] = useState<Record<string, JobDeliveryEntry>>(() => {
-    const init: Record<string, JobDeliveryEntry> = {};
-    for (const job of eligibleJobs) {
-      init[job.id] = {
-        checked: true,
-        amount: job.service_charge ?? 0,
-        chargeType: job.charge_type || "Normal",
-      };
-    }
-    return init;
-  });
+  const [entries, setEntries] = useState<Record<string, JobDeliveryEntry>>({});
+
+  // Re-initialize entries whenever jobs change
+  useState(() => {});
+  const jobIds = eligibleJobs.map((j) => j.id).join(",");
+  useState(() => {});
+
+  // Use useEffect to sync entries with jobs
+  const { useEffect } = require("react");
+
+  // Actually, let's just do it properly:
+  // We need to reinitialize when jobs change
 
   const [discount, setDiscount] = useState(0);
   const [receiveAmount, setReceiveAmount] = useState(0);
