@@ -24,6 +24,7 @@ import ModelList from "./pages/machine-data/ModelList";
 import BoardList from "./pages/machine-data/BoardList";
 import AddJob from "./pages/AddJob";
 import JobList from "./pages/JobList";
+import JobDetail from "./pages/JobDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
