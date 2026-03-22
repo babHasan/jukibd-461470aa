@@ -10,6 +10,7 @@ import RepairDetail from "./pages/RepairDetail";
 import Customers from "./pages/Customers";
 import CalendarView from "./pages/CalendarView";
 import SmsSettings from "./pages/SmsSettings";
+import BulkSms from "./pages/BulkSms";
 import Login from "./pages/Login";
 import UserList from "./pages/admin/UserList";
 import AddUser from "./pages/admin/AddUser";
