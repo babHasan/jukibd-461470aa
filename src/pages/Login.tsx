@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -76,6 +76,11 @@ export default function Login() {
               {loading ? "Logging in..." : "LOGIN"}
             </Button>
           </form>
+          <div className="mt-4 text-center">
+            <Link to="/track" className="text-sm text-accent hover:underline">
+              🔍 Track your Job Status
+            </Link>
+          </div>
         </CardContent>
       </Card>
     </div>
