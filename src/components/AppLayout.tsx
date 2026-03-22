@@ -80,7 +80,6 @@ const navItems: NavItem[] = [
     children: [
       { to: "/branch/list", label: "Branch List", icon: Building },
       { to: "/branch/add", label: "Add Branch", icon: PlusCircle },
-      { to: "/branch/areas", label: "Service Areas", icon: MapPin },
     ],
   },
   {
