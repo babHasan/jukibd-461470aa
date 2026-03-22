@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, ClipboardList, Phone, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
+import { CompletionWizard } from "@/components/CompletionWizard";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
