@@ -13,6 +13,7 @@ import SmsSettings from "./pages/SmsSettings";
 import Login from "./pages/Login";
 import UserList from "./pages/admin/UserList";
 import AddUser from "./pages/admin/AddUser";
+import EditUser from "./pages/admin/EditUser";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
