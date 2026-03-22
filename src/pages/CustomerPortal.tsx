@@ -86,7 +86,7 @@ export default function CustomerPortal() {
       <div className="mx-auto max-w-3xl px-4 py-8">
         <form onSubmit={handleSearch} className="flex gap-2">
           <Input
-            placeholder="Enter Challan Number or Job Number..."
+            placeholder="Enter Challan Number..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="text-base"
