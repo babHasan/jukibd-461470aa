@@ -136,7 +136,10 @@ const Index = () => {
       j.brand_name.toLowerCase().includes(jobSearch.toLowerCase()) ||
       j.board_serial.toLowerCase().includes(jobSearch.toLowerCase());
     const matchesStatus = jobFilter === "all" || j.status === jobFilter;
-    return matchesSearch && matchesStatus;
+    const jobDateObj = new Date(j.job_date + "T00:00:00");
+    const matchesFrom = !fromDate || jobDateObj >= new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
+    const matchesTo = !toDate || jobDateObj <= new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate());
+    return matchesSearch && matchesStatus && matchesFrom && matchesTo;
   });
 
   const groups = useMemo(() => {
