@@ -77,7 +77,7 @@ export default function CustomerPortal() {
             <h1 className="text-2xl font-bold text-foreground">Job Status Tracker</h1>
           </div>
           <p className="text-muted-foreground text-sm">
-            Enter your Challan Number or Job Number to check the current status of your repair.
+            Enter your Challan Number to check the current status of your repair.
           </p>
         </div>
       </div>
@@ -86,7 +86,7 @@ export default function CustomerPortal() {
       <div className="mx-auto max-w-3xl px-4 py-8">
         <form onSubmit={handleSearch} className="flex gap-2">
           <Input
-            placeholder="Enter Challan Number or Job Number..."
+            placeholder="Enter Challan Number..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="text-base"
@@ -110,7 +110,7 @@ export default function CustomerPortal() {
             <div className="text-center text-muted-foreground py-12">
               <Search className="h-10 w-10 mx-auto mb-3 opacity-40" />
               <p className="text-lg font-medium">No jobs found</p>
-              <p className="text-sm mt-1">Please check your Challan Number or Job Number and try again.</p>
+              <p className="text-sm mt-1">Please check your Challan Number and try again.</p>
             </div>
           )}
 
