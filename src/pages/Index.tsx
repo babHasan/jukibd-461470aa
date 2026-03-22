@@ -340,6 +340,18 @@ const Index = () => {
             </Table>
           </div>
         </div>
+        <CompletionWizard
+          open={wizardOpen}
+          onOpenChange={setWizardOpen}
+          jobs={wizardJobs}
+          onCompleted={fetchJobs}
+        />
+        <DeliveryWizard
+          open={deliveryWizardOpen}
+          onOpenChange={setDeliveryWizardOpen}
+          jobs={deliveryWizardJobs}
+          onCompleted={fetchJobs}
+        />
       </div>
     </AppLayout>
   );
