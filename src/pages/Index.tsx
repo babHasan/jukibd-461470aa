@@ -127,7 +127,7 @@ const Index = () => {
               <TableBody>
                 {filteredJobs.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={11} className="py-8 text-center text-muted-foreground">
+                    <TableCell colSpan={13} className="py-8 text-center text-muted-foreground">
                       No jobs found.
                     </TableCell>
                   </TableRow>
