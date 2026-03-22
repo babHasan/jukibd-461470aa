@@ -171,10 +171,22 @@ const AddJob = () => {
           }
         }
 
+        // Clear all persisted state
+        sessionStorage.removeItem("addJob_brand");
+        sessionStorage.removeItem("addJob_model");
+        sessionStorage.removeItem("addJob_board");
+        sessionStorage.removeItem("addJob_jobs");
+        sessionStorage.removeItem("addJob_customer");
+        sessionStorage.removeItem("addJob_challan");
+        sessionStorage.removeItem("addJob_branch");
+        sessionStorage.removeItem("addJob_date");
         setAddedJobs([]);
         setSelectedCustomer("");
         setFactoryChallanNumber("");
         setSelectedBranch("");
+        setBrandName("");
+        setSelectedModel("");
+        setBoard("");
         setChallanFile(null);
         navigate("/job-list");
       }
