@@ -65,6 +65,7 @@ export default function PrintInvoice() {
   const [searchParams] = useSearchParams();
   const challan = searchParams.get("challan");
   const jobId = searchParams.get("job");
+  const idsParam = searchParams.get("ids");
   const copyType = searchParams.get("type"); // "office" or default "customer"
 
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -96,6 +97,14 @@ export default function PrintInvoice() {
           .from("jobs")
           .select("*")
           .eq("id", jobId);
+        jobsData = data || [];
+      } else if (idsParam) {
+        const idList = idsParam.split(",").filter(Boolean);
+        const { data } = await supabase
+          .from("jobs")
+          .select("*")
+          .in("id", idList)
+          .order("created_at", { ascending: true });
         jobsData = data || [];
       }
       setJobs(jobsData);
