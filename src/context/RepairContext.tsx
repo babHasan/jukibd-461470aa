@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useCallback } from "react";
+import { useAuth } from "@/context/AuthContext";
 import {
   RepairOrder,
   RepairStatus,
@@ -56,6 +57,17 @@ async function sendSmsNotification(order: RepairOrder, status: RepairStatus) {
 
 export function RepairProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<RepairOrder[]>(sampleOrders);
+  const { user } = useAuth();
+
+  async function logActivity(action: string, detail?: string) {
+    if (!user) return;
+    const { data } = await supabase.from("profiles").select("name").eq("id", user.id).single();
+    await supabase.from("user_activity_logs").insert({
+      user_id: user.id,
+      user_name: data?.name || "",
+      action: detail ? `${action}: ${detail}` : action,
+    });
+  }
 
   function updateStatus(id: string, status: RepairStatus) {
     setOrders((prev) =>
@@ -63,6 +75,9 @@ export function RepairProvider({ children }: { children: ReactNode }) {
         if (o.id === id) {
           const updated = { ...o, status, updatedAt: new Date().toISOString() };
           sendSmsNotification(updated, status);
+          if (status === "picked-up") {
+            logActivity("delivery", `${o.ticketNumber} - ${o.customerName}`);
+          }
           return updated;
         }
         return o;
@@ -73,6 +88,7 @@ export function RepairProvider({ children }: { children: ReactNode }) {
   function addOrder(order: RepairOrder) {
     setOrders((prev) => [order, ...prev]);
     sendSmsNotification(order, order.status);
+    logActivity("new_repair", `${order.ticketNumber} - ${order.customerName}`);
   }
 
   function addNote(orderId: string, note: RepairNote) {

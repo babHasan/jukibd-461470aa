@@ -9,7 +9,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
-import { CalendarIcon, LogIn, LogOut } from "lucide-react";
+import { CalendarIcon, LogIn, LogOut, Wrench, PackageCheck } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -90,19 +90,20 @@ export default function UserLogs() {
                 <TableHead className="text-primary-foreground font-semibold">SL</TableHead>
                 <TableHead className="text-primary-foreground font-semibold">User Name</TableHead>
                 <TableHead className="text-primary-foreground font-semibold">Action</TableHead>
+                <TableHead className="text-primary-foreground font-semibold">Details</TableHead>
                 <TableHead className="text-primary-foreground font-semibold">Time</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                     Loading...
                   </TableCell>
                 </TableRow>
               ) : logs.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                     No activity logs for this date
                   </TableCell>
                 </TableRow>
@@ -112,18 +113,28 @@ export default function UserLogs() {
                     <TableCell>{i + 1}</TableCell>
                     <TableCell className="font-medium">{log.user_name || "Unknown"}</TableCell>
                     <TableCell>
-                      <Badge
-                        variant={log.action === "login" ? "default" : "secondary"}
-                        className="gap-1"
-                      >
-                        {log.action === "login" ? (
-                          <LogIn className="h-3 w-3" />
-                        ) : (
-                          <LogOut className="h-3 w-3" />
-                        )}
-                        {log.action.toUpperCase()}
-                      </Badge>
+                      {(() => {
+                        const actionKey = log.action.split(":")[0].trim();
+                        const detail = log.action.includes(":") ? log.action.split(":").slice(1).join(":").trim() : "";
+                        const config: Record<string, { icon: any; label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
+                          login: { icon: LogIn, label: "LOGIN", variant: "default" },
+                          logout: { icon: LogOut, label: "LOGOUT", variant: "secondary" },
+                          new_repair: { icon: Wrench, label: "NEW REPAIR", variant: "outline" },
+                          delivery: { icon: PackageCheck, label: "DELIVERY", variant: "default" },
+                        };
+                        const c = config[actionKey] || { icon: LogIn, label: actionKey.toUpperCase(), variant: "secondary" as const };
+                        const Icon = c.icon;
+                        return (
+                          <Badge variant={c.variant} className="gap-1">
+                            <Icon className="h-3 w-3" />
+                            {c.label}
+                          </Badge>
+                        );
+                      })()}
                     </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">{
+                      log.action.includes(":") ? log.action.split(":").slice(1).join(":").trim() : "—"
+                    }</TableCell>
                     <TableCell className="font-mono text-sm">
                       {format(new Date(log.created_at), "hh:mm:ss a")}
                     </TableCell>
