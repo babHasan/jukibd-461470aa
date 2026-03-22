@@ -76,7 +76,6 @@ const AddJob = () => {
     setAddedJobs((prev) => [...prev, newJob]);
     // Reset job fields
     setJobNumber("");
-    setMachineType("");
     setBrandName("");
     setSelectedModel("");
     setBoard("");
