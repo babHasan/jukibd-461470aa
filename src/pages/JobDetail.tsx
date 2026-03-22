@@ -77,6 +77,26 @@ export default function JobDetailPage() {
       });
   }, [id]);
 
+  async function loadChallanJobs(
+    currentJob: JobDetail,
+    statusFilter: string,
+    setJobs: (jobs: any[]) => void,
+    setOpen: (open: boolean) => void
+  ) {
+    if (currentJob.factory_challan_number) {
+      const { data } = await supabase
+        .from("jobs")
+        .select("*")
+        .eq("factory_challan_number", currentJob.factory_challan_number)
+        .eq("customer_name", currentJob.customer_name)
+        .eq("status", statusFilter);
+      setJobs(data || [currentJob]);
+    } else {
+      setJobs([currentJob]);
+    }
+    setOpen(true);
+  }
+
   async function handleUpdateStatus(newStatus: string) {
     if (!job) return;
     // Intercept in-progress → completed transition
