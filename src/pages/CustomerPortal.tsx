@@ -206,6 +206,29 @@ export default function CustomerPortal() {
                       </div>
                     </div>
                   )}
+
+                  {/* Print Buttons */}
+                  <div className="flex flex-wrap gap-2 pt-2 border-t">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-1.5 text-xs"
+                      onClick={() => window.open(`/print-invoice?challan=${encodeURIComponent(job.factory_challan_number)}&type=customer-portal`, "_blank")}
+                    >
+                      <Printer className="h-3.5 w-3.5" />
+                      Print Receive Copy
+                    </Button>
+                    {(job.status === "completed" || job.status === "picked-up") && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-1.5 text-xs"
+                        onClick={() => window.open(`/print-invoice?challan=${encodeURIComponent(job.factory_challan_number)}&type=customer-portal-delivery`, "_blank")}
+                      >
+                        <Printer className="h-3.5 w-3.5" />
+                        Print Delivery Copy
+                      </Button>
+                    )}
                 </CardContent>
               </Card>
             );
