@@ -98,6 +98,7 @@ export default function EditUser() {
         nid: form.nid,
         address: form.address,
         status: form.status,
+        photo_url: photoUrl,
         updated_at: new Date().toISOString(),
       })
       .eq("id", id);
