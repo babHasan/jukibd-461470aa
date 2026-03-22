@@ -191,7 +191,7 @@ export default function PrintInvoice() {
           >
             {client ? (
               <>
-                <div><strong>C Code :</strong> {client.id.slice(0, 8)}</div>
+                <div><strong>C Code :</strong> {client.company_name || "—"}</div>
                 <div><strong>C Name :</strong> {client.client_name}</div>
                 <div><strong>Mobile :</strong> {client.contact_number}</div>
                 <div><strong>Address :</strong> {client.address}</div>
