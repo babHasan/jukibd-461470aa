@@ -78,6 +78,7 @@ function AppRoutes() {
       <Route path="/expense-income/income-category" element={<ProtectedRoute><IncomeCategory /></ProtectedRoute>} />
       <Route path="/expense-income/income" element={<ProtectedRoute><Income /></ProtectedRoute>} />
       <Route path="/ledger/customer" element={<ProtectedRoute><CustomerLedger /></ProtectedRoute>} />
+      <Route path="/accounts/chart" element={<ProtectedRoute><ChartOfAccounts /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

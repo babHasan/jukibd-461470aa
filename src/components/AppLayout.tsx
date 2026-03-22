@@ -144,6 +144,14 @@ const navItems: NavItem[] = [
       { to: "/cashbook/balance", label: "Balance Sheet", icon: Banknote },
     ],
   },
+  {
+    to: "/accounts",
+    label: "ACCOUNTS",
+    icon: BookOpen,
+    children: [
+      { to: "/accounts/chart", label: "Chart of Accounts", icon: FileText },
+    ],
+  },
   { to: "/challan-verify", label: "CHALLAN VERIFY", icon: CheckCheck },
   {
     to: "/sms-settings",
