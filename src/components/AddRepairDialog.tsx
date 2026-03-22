@@ -22,6 +22,7 @@ export function AddRepairDialog({ onAdd }: AddRepairDialogProps) {
   const [form, setForm] = useState({
     customerName: "",
     customerPhone: "",
+    customerEmail: "",
     deviceType: "",
     deviceBrand: "",
     issue: "",
@@ -36,11 +37,14 @@ export function AddRepairDialog({ onAdd }: AddRepairDialogProps) {
       ticketNumber: generateTicket(),
       customerName: form.customerName,
       customerPhone: form.customerPhone,
+      customerEmail: form.customerEmail,
       deviceType: form.deviceType,
       deviceBrand: form.deviceBrand,
       issue: form.issue,
       status: "received",
       estimatedCost: Number(form.estimatedCost) || 0,
+      notes: [],
+      parts: [],
       createdAt: now,
       updatedAt: now,
     };
@@ -48,6 +52,7 @@ export function AddRepairDialog({ onAdd }: AddRepairDialogProps) {
     setForm({
       customerName: "",
       customerPhone: "",
+      customerEmail: "",
       deviceType: "",
       deviceBrand: "",
       issue: "",

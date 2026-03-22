@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   RepairOrder,
   RepairStatus,
@@ -31,6 +32,7 @@ interface RepairTableProps {
 }
 
 export function RepairTable({ orders, onUpdateStatus }: RepairTableProps) {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
 
@@ -102,7 +104,7 @@ export function RepairTable({ orders, onUpdateStatus }: RepairTableProps) {
               filtered.map((order) => {
                 const next = getNextStatus(order.status);
                 return (
-                  <TableRow key={order.id} className="group">
+                  <TableRow key={order.id} className="group cursor-pointer" onClick={() => navigate(`/repair/${order.id}`)}>
                     <TableCell className="font-mono text-sm font-medium">
                       {order.ticketNumber}
                     </TableCell>
@@ -134,7 +136,7 @@ export function RepairTable({ orders, onUpdateStatus }: RepairTableProps) {
                           size="sm"
                           variant="ghost"
                           className="gap-1 text-xs text-accent hover:text-accent"
-                          onClick={() => onUpdateStatus(order.id, next)}
+                          onClick={(e) => { e.stopPropagation(); onUpdateStatus(order.id, next); }}
                         >
                           {statusLabels[next]}
                           <ChevronRight className="h-3 w-3" />
