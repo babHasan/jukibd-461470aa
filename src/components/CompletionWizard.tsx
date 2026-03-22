@@ -41,10 +41,12 @@ interface CompletionWizardProps {
   onCompleted: () => void;
 }
 
+type ChargeType = "Normal" | "FOC" | "Damage";
+
 interface JobCostEntry {
   checked: boolean;
   amount: number;
-  chargeType: "Normal" | "FOC";
+  chargeType: ChargeType;
 }
 
 export function CompletionWizard({ open, onOpenChange, jobs, onCompleted }: CompletionWizardProps) {
@@ -112,7 +114,7 @@ export function CompletionWizard({ open, onOpenChange, jobs, onCompleted }: Comp
           .from("jobs")
           .update({
             status: "completed",
-            service_charge: entry.chargeType === "FOC" ? 0 : entry.amount,
+            service_charge: entry.chargeType === "FOC" || entry.chargeType === "Damage" ? 0 : entry.amount,
             charge_type: entry.chargeType,
             completed_date: completedDate,
           })
@@ -199,7 +201,7 @@ export function CompletionWizard({ open, onOpenChange, jobs, onCompleted }: Comp
                         onChange={(e) =>
                           updateEntry(job.id, { amount: parseFloat(e.target.value) || 0 })
                         }
-                        disabled={!entry?.checked || entry?.chargeType === "FOC"}
+                        disabled={!entry?.checked || entry?.chargeType === "FOC" || entry?.chargeType === "Damage"}
                         className="w-28"
                       />
                     </td>
@@ -208,8 +210,8 @@ export function CompletionWizard({ open, onOpenChange, jobs, onCompleted }: Comp
                         value={entry?.chargeType}
                         onValueChange={(val) =>
                           updateEntry(job.id, {
-                            chargeType: val as "Normal" | "FOC",
-                            amount: val === "FOC" ? 0 : entry?.amount ?? 0,
+                            chargeType: val as ChargeType,
+                            amount: val === "FOC" || val === "Damage" ? 0 : entry?.amount ?? 0,
                           })
                         }
                         disabled={!entry?.checked}
@@ -220,6 +222,7 @@ export function CompletionWizard({ open, onOpenChange, jobs, onCompleted }: Comp
                         <SelectContent>
                           <SelectItem value="Normal">Normal</SelectItem>
                           <SelectItem value="FOC">FOC</SelectItem>
+                          <SelectItem value="Damage">Damage</SelectItem>
                         </SelectContent>
                       </Select>
                     </td>
