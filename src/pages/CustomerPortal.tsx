@@ -93,12 +93,12 @@ export default function CustomerPortal() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b bg-card">
-        <div className="mx-auto max-w-3xl px-4 py-6 text-center">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <Package className="h-7 w-7 text-accent" />
-            <h1 className="text-2xl font-bold text-foreground">Job Status Tracker</h1>
+        <div className="mx-auto max-w-3xl px-4 py-4 sm:py-6 text-center">
+          <div className="flex items-center justify-center gap-2 mb-1 sm:mb-2">
+            <Package className="h-5 w-5 sm:h-7 sm:w-7 text-accent" />
+            <h1 className="text-lg sm:text-2xl font-bold text-foreground">Job Status Tracker</h1>
           </div>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-xs sm:text-sm">
             Enter your Challan Number to check the current status of your repair.
           </p>
         </div>
