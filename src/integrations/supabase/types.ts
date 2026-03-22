@@ -145,12 +145,17 @@ export type Database = {
           created_by: string | null
           customer_id: string | null
           customer_name: string
+          delivery_date: string | null
           details_of_problem: string
+          discount: number | null
           factory_challan_number: string
           id: string
           job_date: string
           job_number: string
           model_name: string
+          payable_amount: number | null
+          receive_amount: number | null
+          receive_type: string | null
           remarks: string
           service_charge: number | null
           status: string
@@ -168,12 +173,17 @@ export type Database = {
           created_by?: string | null
           customer_id?: string | null
           customer_name?: string
+          delivery_date?: string | null
           details_of_problem?: string
+          discount?: number | null
           factory_challan_number?: string
           id?: string
           job_date?: string
           job_number: string
           model_name?: string
+          payable_amount?: number | null
+          receive_amount?: number | null
+          receive_type?: string | null
           remarks?: string
           service_charge?: number | null
           status?: string
@@ -191,12 +201,17 @@ export type Database = {
           created_by?: string | null
           customer_id?: string | null
           customer_name?: string
+          delivery_date?: string | null
           details_of_problem?: string
+          discount?: number | null
           factory_challan_number?: string
           id?: string
           job_date?: string
           job_number?: string
           model_name?: string
+          payable_amount?: number | null
+          receive_amount?: number | null
+          receive_type?: string | null
           remarks?: string
           service_charge?: number | null
           status?: string
