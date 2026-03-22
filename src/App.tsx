@@ -16,6 +16,9 @@ import AddUser from "./pages/admin/AddUser";
 import EditUser from "./pages/admin/EditUser";
 import UserLogs from "./pages/admin/UserLogs";
 import MyProfile from "./pages/MyProfile";
+import BranchList from "./pages/branch/BranchList";
+import AddBranch from "./pages/branch/AddBranch";
+import EditBranch from "./pages/branch/EditBranch";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
