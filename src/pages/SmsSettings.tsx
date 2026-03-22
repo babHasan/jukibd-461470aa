@@ -52,6 +52,7 @@ export default function SmsSettings() {
   useEffect(() => {
     fetchTemplates();
     fetchLogs();
+    fetchSmsConfig();
   }, []);
 
   async function fetchTemplates() {
