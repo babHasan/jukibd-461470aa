@@ -236,11 +236,12 @@ function SidebarItem({
                 key={child.to}
                 to={child.to}
                 onClick={onNavigate}
-                className={`flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors ${
+                className={`flex items-center gap-2.5 rounded-md px-2.5 py-1.5 font-medium transition-colors ${
                   childActive
-                    ? "text-white bg-sidebar-accent/70"
-                    : "text-sidebar-foreground/70 hover:text-white hover:bg-sidebar-accent/30"
+                    ? "bg-sidebar-accent/70"
+                    : "hover:text-white hover:bg-sidebar-accent/30"
                 }`}
+                style={{ fontSize: "var(--submenu-font-size, 12px)", color: childActive ? "#fff" : "var(--submenu-font-color, #94a3b8)" }}
               >
                 <child.icon className="h-3.5 w-3.5 shrink-0" />
                 <span>{child.label}</span>
