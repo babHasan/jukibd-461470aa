@@ -22,6 +22,7 @@ export function AddRepairDialog({ onAdd }: AddRepairDialogProps) {
   const [form, setForm] = useState({
     customerName: "",
     customerPhone: "",
+    customerEmail: "",
     deviceType: "",
     deviceBrand: "",
     issue: "",
