@@ -107,6 +107,7 @@ const navItems: NavItem[] = [
     children: [
       { to: "/collection/pending", label: "Pending", icon: Receipt },
       { to: "/collection/received", label: "Received", icon: CreditCard },
+      { to: "/collection/due-bill", label: "Due Bill", icon: Banknote },
     ],
   },
   {
