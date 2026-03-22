@@ -39,6 +39,8 @@ interface JobResult {
   job_date: string;
   status: string;
   created_at: string;
+  service_charge: number | null;
+  charge_type: string | null;
 }
 
 export default function CustomerPortal() {
