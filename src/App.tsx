@@ -25,6 +25,7 @@ const App = () => (
             <Route path="/repair/:id" element={<RepairDetail />} />
             <Route path="/customers" element={<Customers />} />
             <Route path="/calendar" element={<CalendarView />} />
+            <Route path="/sms-settings" element={<SmsSettings />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </RepairProvider>

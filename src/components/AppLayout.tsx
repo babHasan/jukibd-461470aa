@@ -1,4 +1,4 @@
-import { Wrench, LayoutDashboard, Users, CalendarDays } from "lucide-react";
+import { Wrench, LayoutDashboard, Users, CalendarDays, MessageSquare } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { ReactNode } from "react";
 import { AddRepairDialog } from "@/components/AddRepairDialog";
@@ -8,6 +8,7 @@ const navItems = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/customers", label: "Customers", icon: Users },
   { to: "/calendar", label: "Calendar", icon: CalendarDays },
+  { to: "/sms-settings", label: "SMS", icon: MessageSquare },
 ];
 
 export function AppLayout({ children }: { children: ReactNode }) {
