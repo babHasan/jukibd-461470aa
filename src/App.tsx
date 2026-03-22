@@ -79,6 +79,7 @@ function AppRoutes() {
       <Route path="/my-profile" element={<ProtectedRoute><MyProfile /></ProtectedRoute>} />
       <Route path="/backup" element={<ProtectedRoute><BackupDatabase /></ProtectedRoute>} />
       <Route path="/collection/due-bill" element={<ProtectedRoute><DueBill /></ProtectedRoute>} />
+      <Route path="/collection/report" element={<ProtectedRoute><CollectionReport /></ProtectedRoute>} />
       <Route path="/expense-income/expense-category" element={<ProtectedRoute><ExpenseCategory /></ProtectedRoute>} />
       <Route path="/expense-income/expenses" element={<ProtectedRoute><Expenses /></ProtectedRoute>} />
       <Route path="/expense-income/income-category" element={<ProtectedRoute><IncomeCategory /></ProtectedRoute>} />

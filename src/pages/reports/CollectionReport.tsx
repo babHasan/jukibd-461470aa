@@ -229,7 +229,18 @@ export default function CollectionReport() {
                           <TableCell className="text-sm text-right font-medium">{g.collect_amount.toFixed(2)}</TableCell>
                           <TableCell className="text-sm text-right">{g.rebate_amount.toFixed(2)}</TableCell>
                           <TableCell className="text-center">
-                            <Button size="sm" variant="outline" className="text-[10px] h-7 bg-blue-600 text-white hover:bg-blue-700 border-blue-600">
+                            <Button size="sm" variant="outline" className="text-[10px] h-7 bg-blue-600 text-white hover:bg-blue-700 border-blue-600"
+                              onClick={() => {
+                                const jobIds = rows
+                                  .filter((r) => {
+                                    const key = `${r.customer_id || r.customer_name}_${r.job_date}_${r.factory_challan_number}`;
+                                    return key === g.key;
+                                  })
+                                  .map((r) => r.id);
+                                if (jobIds.length > 0) {
+                                  window.open(`/print-invoice?ids=${jobIds.join(",")}&type=due-collection`, "_blank");
+                                }
+                              }}>
                               PRINT
                             </Button>
                           </TableCell>
