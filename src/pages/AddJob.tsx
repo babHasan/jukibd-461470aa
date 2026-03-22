@@ -74,8 +74,8 @@ const AddJob = () => {
   }, []);
 
   function handleAddJob() {
-    if (!brandName || !selectedModel || !boardSerial) {
-      toast.error("Please fill required fields (Brand, Model, Board Serial)");
+    if (!brandName || !selectedModel) {
+      toast.error("Please fill required fields (Brand, Model)");
       return;
     }
     const newJob: JobItem = {
