@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useCallback } from "react";
+import { useAuth } from "@/context/AuthContext";
 import {
   RepairOrder,
   RepairStatus,
