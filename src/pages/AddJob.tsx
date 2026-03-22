@@ -51,6 +51,8 @@ const AddJob = () => {
   const [selectedBranch, setSelectedBranch] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [challanFile, setChallanFile] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [challanFile, setChallanFile] = useState<File | null>(null);
 
   useEffect(() => {
     supabase.from("brands").select("id, name").order("name").then(({ data }) => data && setBrands(data));
