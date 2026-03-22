@@ -27,6 +27,7 @@ import JobList from "./pages/JobList";
 import JobDetail from "./pages/JobDetail";
 import CustomerPortal from "./pages/CustomerPortal";
 import NotFound from "./pages/NotFound";
+import BackupDatabase from "./pages/BackupDatabase";
 
 const queryClient = new QueryClient();
 
@@ -63,6 +64,7 @@ function AppRoutes() {
       <Route path="/job-list" element={<ProtectedRoute><JobList /></ProtectedRoute>} />
       <Route path="/job/:id" element={<ProtectedRoute><JobDetail /></ProtectedRoute>} />
       <Route path="/my-profile" element={<ProtectedRoute><MyProfile /></ProtectedRoute>} />
+      <Route path="/backup" element={<ProtectedRoute><BackupDatabase /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
