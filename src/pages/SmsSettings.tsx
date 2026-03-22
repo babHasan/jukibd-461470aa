@@ -55,6 +55,33 @@ export default function SmsSettings() {
     fetchSmsConfig();
   }, []);
 
+  async function fetchSmsConfig() {
+    const { data } = await supabase.from("sms_config").select("*").limit(1).maybeSingle();
+    if (data) {
+      setSmsApiKey(data.api_key);
+      setSmsSenderId(data.sender_id);
+      setSmsConfigId(data.id);
+    }
+  }
+
+  async function handleSaveConfig() {
+    if (!smsApiKey.trim() || !smsSenderId.trim()) {
+      toast.error("API Key এবং Sender ID দুটোই দিতে হবে");
+      return;
+    }
+    setSavingConfig(true);
+    const { error } = await supabase
+      .from("sms_config")
+      .update({ api_key: smsApiKey.trim(), sender_id: smsSenderId.trim(), updated_at: new Date().toISOString() })
+      .eq("id", smsConfigId);
+    if (error) {
+      toast.error("সেভ ব্যর্থ: " + error.message);
+    } else {
+      toast.success("SMS কনফিগারেশন সেভ হয়েছে");
+    }
+    setSavingConfig(false);
+  }
+
   async function fetchTemplates() {
     const { data, error } = await supabase
       .from("sms_templates")
