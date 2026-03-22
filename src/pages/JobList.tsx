@@ -111,6 +111,15 @@ export default function JobList() {
   useEffect(() => { fetchJobs(); }, []);
 
   async function handleGroupStatusUpdate(group: JobGroup) {
+    // Check if any job is transitioning from in-progress to completed
+    const inProgressJobs = group.jobs.filter((j) => j.status === "in-progress");
+    if (inProgressJobs.length > 0) {
+      // Show completion wizard
+      setWizardJobs(group.jobs);
+      setWizardOpen(true);
+      return;
+    }
+
     const jobsToUpdate = group.jobs.filter((j) => {
       const idx = jobStatusFlow.indexOf(j.status);
       return idx < jobStatusFlow.length - 1;
