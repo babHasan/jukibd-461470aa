@@ -61,6 +61,22 @@ const statusColors: Record<string, string> = {
   completed: "bg-green-100 text-green-800",
   "picked-up": "bg-gray-100 text-gray-800",
 };
+const rowBgColors: Record<string, string> = {
+  received: "bg-blue-50",
+  diagnosing: "bg-yellow-50",
+  "in-progress": "bg-orange-50",
+  completed: "bg-green-50",
+  "picked-up": "bg-gray-50",
+};
+function getGroupStatus(jobs: Job[]): string {
+  const statuses = jobs.map((j) => j.status);
+  const unique = [...new Set(statuses)];
+  if (unique.length === 1) return unique[0];
+  for (const s of jobStatusFlow) {
+    if (unique.includes(s)) return s;
+  }
+  return statuses[0];
+}
 
 const Index = () => {
   const navigate = useNavigate();
