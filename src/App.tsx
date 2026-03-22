@@ -33,6 +33,7 @@ import ExpenseCategory from "./pages/expense-income/ExpenseCategory";
 import Expenses from "./pages/expense-income/Expenses";
 import IncomeCategory from "./pages/expense-income/IncomeCategory";
 import Income from "./pages/expense-income/Income";
+import CustomerLedger from "./pages/ledger/CustomerLedger";
 
 const queryClient = new QueryClient();
 
@@ -75,6 +76,7 @@ function AppRoutes() {
       <Route path="/expense-income/expenses" element={<ProtectedRoute><Expenses /></ProtectedRoute>} />
       <Route path="/expense-income/income-category" element={<ProtectedRoute><IncomeCategory /></ProtectedRoute>} />
       <Route path="/expense-income/income" element={<ProtectedRoute><Income /></ProtectedRoute>} />
+      <Route path="/ledger/customer" element={<ProtectedRoute><CustomerLedger /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

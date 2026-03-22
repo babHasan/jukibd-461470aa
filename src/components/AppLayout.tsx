@@ -121,8 +121,7 @@ const navItems: NavItem[] = [
     label: "LEDGER",
     icon: BookOpen,
     children: [
-      { to: "/ledger/general", label: "General Ledger", icon: FolderOpen },
-      { to: "/ledger/accounts", label: "Chart of Accounts", icon: FileText },
+      { to: "/ledger/customer", label: "Customer Ledger", icon: UserCircle },
     ],
   },
   {
