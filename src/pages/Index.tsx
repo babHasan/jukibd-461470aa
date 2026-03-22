@@ -23,6 +23,7 @@ interface Job {
   board_serial: string;
   details_of_problem: string;
   customer_name: string;
+  customer_mobile: string;
   branch_name: string;
   factory_challan_number: string;
   job_date: string;
