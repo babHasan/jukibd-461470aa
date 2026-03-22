@@ -51,6 +51,8 @@ const AddJob = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(() => sessionStorage.getItem("addJob_customer") || "");
   const [manualCustomerName, setManualCustomerName] = useState(() => sessionStorage.getItem("addJob_manualName") || "");
   const [manualCustomerMobile, setManualCustomerMobile] = useState(() => sessionStorage.getItem("addJob_manualMobile") || "");
+  const [manualCompanyName, setManualCompanyName] = useState(() => sessionStorage.getItem("addJob_manualCompany") || "");
+  const [manualAddress, setManualAddress] = useState(() => sessionStorage.getItem("addJob_manualAddress") || "");
   const [factoryChallanNumber, setFactoryChallanNumber] = useState(() => sessionStorage.getItem("addJob_challan") || "");
   const [selectedBranch, setSelectedBranch] = useState(() => sessionStorage.getItem("addJob_branch") || "");
   const [date, setDate] = useState(() => sessionStorage.getItem("addJob_date") || new Date().toISOString().split("T")[0]);
