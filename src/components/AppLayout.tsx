@@ -289,6 +289,15 @@ export function AppLayout({ children }: { children: ReactNode }) {
           ))}
         </nav>
 
+        {/* Logout */}
+        <button
+          onClick={() => signOut()}
+          className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-medium text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-white transition-colors border-t border-sidebar-border"
+        >
+          <LogOut className="h-4 w-4 shrink-0" />
+          {!collapsed && <span>LOG OUT</span>}
+        </button>
+
         <button
           onClick={() => setCollapsed(!collapsed)}
           className="hidden lg:flex items-center justify-center border-t border-sidebar-border py-3 text-sidebar-foreground hover:text-white transition-colors"
