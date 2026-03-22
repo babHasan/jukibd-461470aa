@@ -241,10 +241,28 @@ function SidebarItem({
   );
 }
 
+// Map nav labels to permission module names
+const navPermissionMap: Record<string, string> = {
+  "DASHBOARD": "Dashboard",
+  "BRANCH": "Branch",
+  "MACHINE DATA": "Machine Data",
+  "CLIENT DATA": "Client Data",
+  "ADD JOB": "Add Job",
+  "JOB LIST": "Job List",
+  "COLLECTION": "Collection",
+  "EXPENSE / INCOME": "Expense / Income",
+  "LEDGER": "Ledger",
+  "REPORTS": "Reports",
+  "CASHBOOK": "Cashbook",
+  "CHALLAN VERIFY": "Challan Verify",
+  "SETTING": "Setting",
+  "BACKUP DATABASE": "Backup Database",
+};
+
 export function AppLayout({ children }: { children: ReactNode }) {
   const location = useLocation();
   const { addOrder } = useRepairs();
-  const { signOut, user } = useAuth();
+  const { signOut, user, isAdmin, permissions } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -279,15 +297,26 @@ export function AppLayout({ children }: { children: ReactNode }) {
         </div>
 
         <nav className="flex-1 overflow-y-auto space-y-0.5 px-2 py-3 scrollbar-thin">
-          {navItems.map((item) => (
-            <SidebarItem
-              key={item.label}
-              item={item}
-              collapsed={collapsed}
-              currentPath={location.pathname}
-              onNavigate={() => setMobileOpen(false)}
-            />
-          ))}
+          {navItems
+            .filter((item) => {
+              // Admins see everything
+              if (isAdmin) return true;
+              // ADMIN menu is admin-only
+              if (item.label === "ADMIN") return false;
+              // Check if user has permission for this module
+              const requiredModule = navPermissionMap[item.label];
+              if (!requiredModule) return true;
+              return permissions.includes(requiredModule);
+            })
+            .map((item) => (
+              <SidebarItem
+                key={item.label}
+                item={item}
+                collapsed={collapsed}
+                currentPath={location.pathname}
+                onNavigate={() => setMobileOpen(false)}
+              />
+            ))}
         </nav>
 
         {/* Logout */}
@@ -322,9 +351,9 @@ export function AppLayout({ children }: { children: ReactNode }) {
             <AddRepairDialog onAdd={addOrder} />
             <div className="hidden sm:flex items-center gap-2 rounded-full bg-primary px-3 py-1.5">
               <div className="h-6 w-6 rounded-full bg-accent flex items-center justify-center text-xs font-bold text-accent-foreground">
-                A
+                {isAdmin ? "A" : "U"}
               </div>
-              <span className="text-xs font-medium text-primary-foreground">ADMIN</span>
+              <span className="text-xs font-medium text-primary-foreground">{isAdmin ? "ADMIN" : "USER"}</span>
             </div>
           </div>
         </header>
