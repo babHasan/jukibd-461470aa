@@ -150,6 +150,16 @@ export default function JobList() {
     fetchJobs();
   }
 
+  const companyOptions = useMemo(() => {
+    const set = new Set(jobs.map((j) => j.company_name).filter(Boolean));
+    return Array.from(set).sort();
+  }, [jobs]);
+
+  const mobileOptions = useMemo(() => {
+    const set = new Set(jobs.map((j) => j.customer_mobile).filter(Boolean));
+    return Array.from(set).sort();
+  }, [jobs]);
+
   const filtered = jobs.filter((j) => {
     const s = search.toLowerCase();
     const matchesSearch =
@@ -164,7 +174,9 @@ export default function JobList() {
       j.board_serial.toLowerCase().includes(s) ||
       j.branch_name.toLowerCase().includes(s);
     const matchesStatus = statusFilter === "all" || j.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesCompany = companyFilter === "all" || j.company_name === companyFilter;
+    const matchesMobile = mobileFilter === "all" || j.customer_mobile === mobileFilter;
+    return matchesSearch && matchesStatus && matchesCompany && matchesMobile;
   });
 
   const groups = useMemo(() => {
