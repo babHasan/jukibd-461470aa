@@ -127,9 +127,12 @@ export default function AddUser() {
           </CardHeader>
           <CardContent className="pt-6">
             <form onSubmit={handleSubmit}>
-              <div className="grid gap-6 lg:grid-cols-2">
+               <div className="grid gap-6 lg:grid-cols-2">
                 {/* Left: form fields */}
                 <div className="space-y-4">
+                  <div className="flex justify-center">
+                    <UserPhotoUpload photoUrl={photoUrl} onPhotoChange={setPhotoUrl} />
+                  </div>
                   <div className="space-y-2">
                     <Label>
                       User Name <span className="text-destructive">*</span>
