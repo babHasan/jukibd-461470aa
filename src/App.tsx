@@ -41,6 +41,7 @@ import CollectionReport from "./pages/reports/CollectionReport";
 import ExpenseReport from "./pages/reports/ExpenseReport";
 import CompanyInfo from "./pages/settings/CompanyInfo";
 import PrintInvoice from "./pages/PrintInvoice";
+import PortalScrollMessage from "./pages/settings/PortalScrollMessage";
 
 const queryClient = new QueryClient();
 
