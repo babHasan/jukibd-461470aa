@@ -379,12 +379,40 @@ export default function PrintInvoice() {
           </div>
         )}
 
+        {/* Verified Stamp for Customer Portal prints */}
+        {isCustomerPortal && (
+          <div style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: 30,
+          }}>
+            <div style={{
+              border: "3px solid #1a6b3c",
+              borderRadius: 12,
+              padding: "12px 28px",
+              textAlign: "center",
+              transform: "rotate(-6deg)",
+              opacity: 0.85,
+            }}>
+              <div style={{ fontSize: 20, fontWeight: 900, color: "#1a6b3c", letterSpacing: 3, lineHeight: 1.2 }}>
+                VERIFIED
+              </div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#1a6b3c", letterSpacing: 2, marginTop: 2 }}>
+                BY JUKIBD
+              </div>
+              <div style={{ fontSize: 9, color: "#1a6b3c", marginTop: 4, borderTop: "1px solid #1a6b3c", paddingTop: 4 }}>
+                {printDate}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Signatures */}
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
-            marginTop: 60,
+            marginTop: isCustomerPortal ? 30 : 60,
             paddingTop: 0,
           }}
         >
