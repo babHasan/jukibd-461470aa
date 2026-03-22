@@ -91,6 +91,10 @@ const Index = () => {
   const [jobFilter, setJobFilter] = useState("all");
   const [fromDate, setFromDate] = useState<Date | undefined>(undefined);
   const [toDate, setToDate] = useState<Date | undefined>(undefined);
+  const [wizardOpen, setWizardOpen] = useState(false);
+  const [wizardJobs, setWizardJobs] = useState<Job[]>([]);
+  const [deliveryWizardOpen, setDeliveryWizardOpen] = useState(false);
+  const [deliveryWizardJobs, setDeliveryWizardJobs] = useState<Job[]>([]);
 
   function fetchJobs() {
     supabase
