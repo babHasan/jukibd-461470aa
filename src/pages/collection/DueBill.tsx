@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Search, Phone, AlertCircle, Banknote, Loader2 } from "lucide-react";
+import { Search, Phone, AlertCircle, Banknote, Loader2, Printer } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import {
@@ -257,7 +257,7 @@ const DueBill = () => {
                         <TableCell className="text-right text-sm font-bold text-destructive">
                           ৳ {due.toLocaleString()}
                         </TableCell>
-                        <TableCell className="text-center">
+                        <TableCell className="text-center flex items-center justify-center gap-1">
                           <Button
                             size="sm"
                             variant="default"
@@ -266,6 +266,15 @@ const DueBill = () => {
                           >
                             <Banknote className="h-3.5 w-3.5" />
                             Collect
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="gap-1 text-xs bg-blue-600 text-white hover:bg-blue-700 border-blue-600"
+                            onClick={() => window.open(`/print-invoice?job=${job.id}&type=due-collection`, "_blank")}
+                          >
+                            <Printer className="h-3.5 w-3.5" />
+                            Print
                           </Button>
                         </TableCell>
                       </TableRow>
