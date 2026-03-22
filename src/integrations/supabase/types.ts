@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      boards: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          name: string
+          remarks: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          name: string
+          remarks?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          name?: string
+          remarks?: string
+        }
+        Relationships: []
+      }
       branches: {
         Row: {
           address: string
