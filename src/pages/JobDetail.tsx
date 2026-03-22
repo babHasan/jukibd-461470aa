@@ -357,13 +357,13 @@ export default function JobDetailPage() {
             <CompletionWizard
               open={wizardOpen}
               onOpenChange={setWizardOpen}
-              jobs={[job]}
+              jobs={wizardJobs}
               onCompleted={reloadJob}
             />
             <DeliveryWizard
               open={deliveryWizardOpen}
               onOpenChange={setDeliveryWizardOpen}
-              jobs={[job]}
+              jobs={deliveryWizardJobs}
               onCompleted={reloadJob}
             />
           </>
