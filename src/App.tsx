@@ -86,6 +86,7 @@ function AppRoutes() {
       <Route path="/reports/transaction" element={<ProtectedRoute><TransactionReport /></ProtectedRoute>} />
       <Route path="/reports/collection" element={<ProtectedRoute><CollectionReport /></ProtectedRoute>} />
       <Route path="/reports/expense" element={<ProtectedRoute><ExpenseReport /></ProtectedRoute>} />
+      <Route path="/challan-verify" element={<ProtectedRoute><ChallanVerify /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
