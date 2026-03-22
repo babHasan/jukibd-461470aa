@@ -128,11 +128,29 @@ const AddJob = () => {
     setSubmitting(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      const customerObj = clients.find((c) => c.id === selectedCustomer);
+      let customerObj = clients.find((c) => c.id === selectedCustomer);
       const branchObj = branches.find((b) => b.id === selectedBranch);
 
+      let customerId = selectedCustomer || null;
       const customerName = customerObj ? customerObj.client_name : manualCustomerName;
       const customerMobile = customerObj ? (customerObj.contact_number || "") : manualCustomerMobile;
+
+      // Auto-create new client if manual entry (not selected from dropdown)
+      if (!selectedCustomer && manualCustomerName) {
+        const { data: newClient, error: clientError } = await supabase
+          .from("clients")
+          .insert({
+            client_name: manualCustomerName,
+            contact_number: manualCustomerMobile,
+          })
+          .select()
+          .single();
+        if (clientError) {
+          console.error("Failed to create client:", clientError.message);
+        } else if (newClient) {
+          customerId = newClient.id;
+        }
+      }
 
       const jobRows = addedJobs.map((job) => ({
         job_number: job.jobNumber,
@@ -142,7 +160,7 @@ const AddJob = () => {
         board_serial: job.boardSerial,
         details_of_problem: job.detailsOfProblem,
         remarks: job.remarks,
-        customer_id: selectedCustomer || null,
+        customer_id: customerId,
         customer_name: customerName,
         branch_id: selectedBranch || null,
         branch_name: branchObj ? branchObj.name : "",
