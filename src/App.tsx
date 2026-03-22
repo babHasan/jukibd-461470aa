@@ -8,6 +8,7 @@ import Index from "./pages/Index.tsx";
 import RepairDetail from "./pages/RepairDetail.tsx";
 import Customers from "./pages/Customers.tsx";
 import CalendarView from "./pages/CalendarView.tsx";
+import SmsSettings from "./pages/SmsSettings.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
