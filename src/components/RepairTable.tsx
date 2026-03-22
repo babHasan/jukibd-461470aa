@@ -136,7 +136,7 @@ export function RepairTable({ orders, onUpdateStatus }: RepairTableProps) {
                           size="sm"
                           variant="ghost"
                           className="gap-1 text-xs text-accent hover:text-accent"
-                          onClick={() => onUpdateStatus(order.id, next)}
+                          onClick={(e) => { e.stopPropagation(); onUpdateStatus(order.id, next); }}
                         >
                           {statusLabels[next]}
                           <ChevronRight className="h-3 w-3" />
