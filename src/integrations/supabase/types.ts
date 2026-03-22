@@ -140,6 +140,7 @@ export type Database = {
           brand_name: string
           challan_url: string | null
           charge_type: string | null
+          cheque_url: string | null
           completed_date: string | null
           created_at: string
           created_by: string | null
@@ -168,6 +169,7 @@ export type Database = {
           brand_name?: string
           challan_url?: string | null
           charge_type?: string | null
+          cheque_url?: string | null
           completed_date?: string | null
           created_at?: string
           created_by?: string | null
@@ -196,6 +198,7 @@ export type Database = {
           brand_name?: string
           challan_url?: string | null
           charge_type?: string | null
+          cheque_url?: string | null
           completed_date?: string | null
           created_at?: string
           created_by?: string | null
