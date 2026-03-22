@@ -357,6 +357,12 @@ export default function JobList() {
             </div>
           )}
         </div>
+        <CompletionWizard
+          open={wizardOpen}
+          onOpenChange={setWizardOpen}
+          jobs={wizardJobs}
+          onCompleted={fetchJobs}
+        />
       </div>
     </AppLayout>
   );
