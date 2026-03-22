@@ -56,8 +56,6 @@ const AddJob = () => {
     supabase.from("branches").select("id, name").eq("status", "active").order("name").then(({ data }) => data && setBranches(data));
   }, []);
 
-  const machineTypes = ["Laptop", "Desktop", "Printer", "Photocopier", "Scanner", "UPS", "Monitor", "Other"];
-
   function handleAddJob() {
     if (!brandName || !selectedModel || !boardSerial) {
       toast.error("Please fill required fields (Brand, Model, Board Serial)");
