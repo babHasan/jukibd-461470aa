@@ -25,6 +25,7 @@ import BoardList from "./pages/machine-data/BoardList";
 import AddJob from "./pages/AddJob";
 import JobList from "./pages/JobList";
 import JobDetail from "./pages/JobDetail";
+import CustomerPortal from "./pages/CustomerPortal";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +43,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={user && !loading ? <Navigate to="/" replace /> : <Login />} />
+      <Route path="/track" element={<CustomerPortal />} />
       <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
       <Route path="/repair/:id" element={<ProtectedRoute><RepairDetail /></ProtectedRoute>} />
       <Route path="/customers" element={<ProtectedRoute><Customers /></ProtectedRoute>} />
