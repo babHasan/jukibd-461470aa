@@ -257,6 +257,7 @@ const navPermissionMap: Record<string, string> = {
   "REPORTS": "Reports",
   "CASHBOOK": "Cashbook",
   "CHALLAN VERIFY": "Challan Verify",
+  "ACCOUNTS": "Accounts",
   "SETTING": "Setting",
   "BACKUP DATABASE": "Backup Database",
 };
