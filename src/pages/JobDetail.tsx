@@ -82,6 +82,11 @@ export default function JobDetailPage() {
       setWizardOpen(true);
       return;
     }
+    // Intercept completed → picked-up transition
+    if (job.status === "completed" && newStatus === "picked-up") {
+      setDeliveryWizardOpen(true);
+      return;
+    }
     const { error } = await supabase.from("jobs").update({ status: newStatus }).eq("id", job.id);
     if (error) {
       toast.error("Failed to update status");
