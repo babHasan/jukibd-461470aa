@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Save, ArrowLeft } from "lucide-react";
+import { UserPhotoUpload } from "@/components/UserPhotoUpload";
 
 const ALL_MODULES = [
   "Dashboard", "Branch", "Admin", "Machine Data", "Client Data",
