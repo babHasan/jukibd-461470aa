@@ -40,6 +40,7 @@ const jobStatusLabels: Record<string, string> = {
   completed: "Completed",
   "picked-up": "Picked Up",
 };
+const statusColors: Record<string, string> = {
   received: "bg-blue-100 text-blue-800",
   diagnosing: "bg-yellow-100 text-yellow-800",
   "in-progress": "bg-orange-100 text-orange-800",
