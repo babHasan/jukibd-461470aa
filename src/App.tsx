@@ -43,6 +43,8 @@ import CompanyInfo from "./pages/settings/CompanyInfo";
 import PrintInvoice from "./pages/PrintInvoice";
 import PortalScrollMessage from "./pages/settings/PortalScrollMessage";
 import FooterSettings from "./pages/settings/FooterSettings";
+import AppearanceSettings from "./pages/settings/AppearanceSettings";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 const queryClient = new QueryClient();
 
