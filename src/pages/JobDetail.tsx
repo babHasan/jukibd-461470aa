@@ -331,12 +331,20 @@ export default function JobDetailPage() {
           </div>
         </div>
         {job && (
-          <CompletionWizard
-            open={wizardOpen}
-            onOpenChange={setWizardOpen}
-            jobs={[job]}
-            onCompleted={reloadJob}
-          />
+          <>
+            <CompletionWizard
+              open={wizardOpen}
+              onOpenChange={setWizardOpen}
+              jobs={[job]}
+              onCompleted={reloadJob}
+            />
+            <DeliveryWizard
+              open={deliveryWizardOpen}
+              onOpenChange={setDeliveryWizardOpen}
+              jobs={[job]}
+              onCompleted={reloadJob}
+            />
+          </>
         )}
       </div>
     </AppLayout>
