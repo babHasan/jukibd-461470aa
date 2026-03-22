@@ -74,8 +74,8 @@ const AddJob = () => {
   }, []);
 
   function handleAddJob() {
-    if (!brandName || !selectedModel || !boardSerial) {
-      toast.error("Please fill required fields (Brand, Model, Board Serial)");
+    if (!brandName || !selectedModel) {
+      toast.error("Please fill required fields (Brand, Model)");
       return;
     }
     const newJob: JobItem = {
@@ -256,9 +256,7 @@ const AddJob = () => {
               </div>
 
               <div className="grid grid-cols-[140px_1fr] items-center gap-2">
-                <Label className="text-right text-xs font-semibold">
-                  Board Serial Number <span className="text-destructive">*</span>
-                </Label>
+                <Label className="text-right text-xs font-semibold">Board Serial Number</Label>
                 <Input value={boardSerial} onChange={(e) => setBoardSerial(e.target.value)} className="h-8 text-sm" />
               </div>
 
