@@ -10,6 +10,7 @@ import RepairDetail from "./pages/RepairDetail";
 import Customers from "./pages/Customers";
 import CalendarView from "./pages/CalendarView";
 import SmsSettings from "./pages/SmsSettings";
+import BulkSms from "./pages/BulkSms";
 import Login from "./pages/Login";
 import UserList from "./pages/admin/UserList";
 import AddUser from "./pages/admin/AddUser";
@@ -68,6 +69,7 @@ function AppRoutes() {
       <Route path="/customers" element={<ProtectedRoute><Customers /></ProtectedRoute>} />
       <Route path="/calendar" element={<ProtectedRoute><CalendarView /></ProtectedRoute>} />
       <Route path="/sms-settings" element={<ProtectedRoute><SmsSettings /></ProtectedRoute>} />
+      <Route path="/bulk-sms" element={<ProtectedRoute><BulkSms /></ProtectedRoute>} />
       <Route path="/admin/users" element={<ProtectedRoute><UserList /></ProtectedRoute>} />
       <Route path="/admin/add-user" element={<ProtectedRoute><AddUser /></ProtectedRoute>} />
       <Route path="/admin/edit-user/:id" element={<ProtectedRoute><EditUser /></ProtectedRoute>} />
