@@ -98,6 +98,14 @@ export default function PrintInvoice() {
           .select("*")
           .eq("id", jobId);
         jobsData = data || [];
+      } else if (idsParam) {
+        const idList = idsParam.split(",").filter(Boolean);
+        const { data } = await supabase
+          .from("jobs")
+          .select("*")
+          .in("id", idList)
+          .order("created_at", { ascending: true });
+        jobsData = data || [];
       }
       setJobs(jobsData);
 
