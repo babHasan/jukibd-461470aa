@@ -160,7 +160,8 @@ export default function PrintInvoice() {
   const firstJob = jobs[0];
   const printDate = format(new Date(), "dd-MM-yyyy hh:mm:ss a");
   const isDueCollection = copyType === "due-collection";
-  const isDelivery = copyType === "delivery" || firstJob.status === "picked-up" || isDueCollection;
+  const isCustomerPortal = copyType === "customer-portal" || copyType === "customer-portal-delivery";
+  const isDelivery = copyType === "delivery" || copyType === "customer-portal-delivery" || firstJob.status === "picked-up" || isDueCollection;
 
   // Generate 15 empty rows to fill the table
   const totalRows = Math.max(isDelivery ? jobs.length : 15, jobs.length);
@@ -232,7 +233,7 @@ export default function PrintInvoice() {
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 4 }}>
           <h1 style={{ fontSize: 18, fontWeight: 800, letterSpacing: 2, margin: 0 }}>
-            {copyType === "office" ? "OFFICE COPY" : isDueCollection ? "DUE COLLECTION INVOICE" : isDelivery ? "DELIVERY INVOICE" : "CUSTOMER COPY"}
+            {copyType === "office" ? "OFFICE COPY" : isDueCollection ? "DUE COLLECTION INVOICE" : copyType === "customer-portal" ? "CUSTOMER COPY" : copyType === "customer-portal-delivery" ? "DELIVERY INVOICE" : isDelivery ? "DELIVERY INVOICE" : "CUSTOMER COPY"}
           </h1>
         </div>
 
@@ -378,12 +379,40 @@ export default function PrintInvoice() {
           </div>
         )}
 
+        {/* Verified Stamp for Customer Portal prints */}
+        {isCustomerPortal && (
+          <div style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: 30,
+          }}>
+            <div style={{
+              border: "3px solid #1a6b3c",
+              borderRadius: 12,
+              padding: "12px 28px",
+              textAlign: "center",
+              transform: "rotate(-6deg)",
+              opacity: 0.85,
+            }}>
+              <div style={{ fontSize: 20, fontWeight: 900, color: "#1a6b3c", letterSpacing: 3, lineHeight: 1.2 }}>
+                VERIFIED
+              </div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#1a6b3c", letterSpacing: 2, marginTop: 2 }}>
+                BY JUKIBD
+              </div>
+              <div style={{ fontSize: 9, color: "#1a6b3c", marginTop: 4, borderTop: "1px solid #1a6b3c", paddingTop: 4 }}>
+                {printDate}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Signatures */}
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
-            marginTop: 60,
+            marginTop: isCustomerPortal ? 30 : 60,
             paddingTop: 0,
           }}
         >
