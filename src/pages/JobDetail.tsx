@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { ArrowLeft, ChevronLeft, ChevronRight, Phone, Clock, MapPin, DollarSign } from "lucide-react";
 import { format } from "date-fns";
 import { CompletionWizard } from "@/components/CompletionWizard";
+import { DeliveryWizard } from "@/components/DeliveryWizard";
 
 const jobStatusFlow = ["received", "diagnosing", "in-progress", "completed", "picked-up"];
 const jobStatusLabels: Record<string, string> = {
