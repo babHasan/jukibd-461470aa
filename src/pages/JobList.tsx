@@ -248,6 +248,28 @@ export default function JobList() {
                 <SelectItem value="picked-up">Picked Up</SelectItem>
               </SelectContent>
             </Select>
+            <Select value={companyFilter} onValueChange={setCompanyFilter}>
+              <SelectTrigger className="sm:w-44">
+                <SelectValue placeholder="All Companies" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Companies</SelectItem>
+                {companyOptions.map((c) => (
+                  <SelectItem key={c} value={c}>{c}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={mobileFilter} onValueChange={setMobileFilter}>
+              <SelectTrigger className="sm:w-44">
+                <SelectValue placeholder="All Mobiles" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Mobiles</SelectItem>
+                {mobileOptions.map((m) => (
+                  <SelectItem key={m} value={m}>{m}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
