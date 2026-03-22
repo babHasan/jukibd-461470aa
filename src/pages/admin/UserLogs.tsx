@@ -90,6 +90,7 @@ export default function UserLogs() {
                 <TableHead className="text-primary-foreground font-semibold">SL</TableHead>
                 <TableHead className="text-primary-foreground font-semibold">User Name</TableHead>
                 <TableHead className="text-primary-foreground font-semibold">Action</TableHead>
+                <TableHead className="text-primary-foreground font-semibold">Details</TableHead>
                 <TableHead className="text-primary-foreground font-semibold">Time</TableHead>
               </TableRow>
             </TableHeader>
