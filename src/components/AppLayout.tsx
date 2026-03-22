@@ -256,7 +256,7 @@ const navPermissionMap: Record<string, string> = {
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const location = useLocation();
-  const { addOrder } = useRepairs();
+  
   const { signOut, user, isAdmin, permissions } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
