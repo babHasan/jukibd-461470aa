@@ -348,6 +348,11 @@ export default function PrintInvoice() {
             )}
           </tbody>
         </table>
+        {isDelivery && (
+          <div style={{ marginTop: 8, fontSize: 12, fontWeight: 700, fontStyle: "italic" }}>
+            In Words: {numberToWords(totalPayable)}
+          </div>
+        )}
 
         {/* Signatures */}
         <div
