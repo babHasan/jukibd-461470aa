@@ -204,6 +204,15 @@ export default function JobDetailPage() {
               size="sm"
               variant="outline"
               className="gap-1"
+              onClick={() => navigate(`/job/${job.id}/edit`)}
+            >
+              <Pencil className="h-3 w-3" />
+              Edit
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-1"
               onClick={() => {
                 const url = job.factory_challan_number
                   ? `/print-invoice?challan=${encodeURIComponent(job.factory_challan_number)}`
