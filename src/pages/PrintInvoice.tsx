@@ -66,7 +66,7 @@ export default function PrintInvoice() {
   const challan = searchParams.get("challan");
   const jobId = searchParams.get("job");
   const idsParam = searchParams.get("ids");
-  const copyType = searchParams.get("type"); // "office" or default "customer"
+  const copyType = searchParams.get("type");
 
   const [jobs, setJobs] = useState<Job[]>([]);
   const [company, setCompany] = useState<CompanyInfo | null>(null);
@@ -75,7 +75,6 @@ export default function PrintInvoice() {
 
   useEffect(() => {
     async function fetchData() {
-      // Fetch company info
       const { data: companyData } = await supabase
         .from("company_info")
         .select("*")
@@ -83,7 +82,6 @@ export default function PrintInvoice() {
         .single();
       if (companyData) setCompany(companyData);
 
-      // Fetch jobs
       let jobsData: Job[] = [];
       if (challan) {
         const { data } = await supabase
@@ -109,7 +107,6 @@ export default function PrintInvoice() {
       }
       setJobs(jobsData);
 
-      // Fetch client info
       if (jobsData.length > 0) {
         const firstJ = jobsData[0];
         let clientData = null;
@@ -134,25 +131,29 @@ export default function PrintInvoice() {
       }
 
       setLoading(false);
-
-      // Auto-print after a small delay
       setTimeout(() => window.print(), 600);
     }
     fetchData();
-  }, [challan, jobId]);
+  }, [challan, jobId, idsParam]);
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-500">Loading invoice...</p>
+      <div className="flex items-center justify-center min-h-screen bg-white">
+        <div className="text-center space-y-3">
+          <div className="w-8 h-8 border-3 border-gray-300 border-t-gray-700 rounded-full animate-spin mx-auto" />
+          <p className="text-gray-500 text-sm">Preparing invoice...</p>
+        </div>
       </div>
     );
   }
 
   if (jobs.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-500">No jobs found.</p>
+      <div className="flex items-center justify-center min-h-screen bg-white">
+        <div className="text-center space-y-2">
+          <p className="text-gray-400 text-4xl">📄</p>
+          <p className="text-gray-500 font-medium">No jobs found for this invoice.</p>
+        </div>
       </div>
     );
   }
@@ -163,61 +164,152 @@ export default function PrintInvoice() {
   const isCustomerPortal = copyType === "customer-portal" || copyType === "customer-portal-delivery";
   const isDelivery = copyType === "delivery" || copyType === "customer-portal-delivery" || firstJob.status === "picked-up" || isDueCollection;
 
-  // Generate 15 empty rows to fill the table
   const totalRows = Math.max(isDelivery ? jobs.length : 15, jobs.length);
 
-  // Calculate totals for delivery invoice
   const totalServiceCharge = jobs.reduce((sum, j) => sum + (j.service_charge || 0), 0);
   const totalDiscount = jobs.reduce((sum, j) => sum + (j.discount || 0), 0);
   const totalPayable = jobs.reduce((sum, j) => sum + (j.payable_amount || 0), 0);
   const totalReceived = jobs.reduce((sum, j) => sum + (j.receive_amount || 0), 0);
   const totalDue = totalPayable - totalReceived;
 
+  const invoiceTitle = copyType === "office"
+    ? "OFFICE COPY"
+    : isDueCollection
+    ? "DUE COLLECTION INVOICE"
+    : isDelivery
+    ? "DELIVERY INVOICE"
+    : "CUSTOMER RECEIVE COPY";
+
   return (
     <>
       <style>{`
         @media print {
-          @page { size: A4; margin: 25.4mm 10mm 12mm 10mm; }
+          @page { size: A4; margin: 20mm 10mm 12mm 10mm; }
           body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
           .no-print { display: none !important; }
         }
-        .invoice-page {
+        * { box-sizing: border-box; }
+        .inv {
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           max-width: 210mm;
           margin: 0 auto;
           padding: 16px;
-          color: #1a1a1a;
-          font-size: 13px;
+          color: #111;
+          font-size: 12px;
           line-height: 1.5;
         }
-        .invoice-table {
+        .inv-header {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          border-bottom: 2px solid #1a1a1a;
+          padding-bottom: 10px;
+          margin-bottom: 12px;
+        }
+        .inv-company { flex: 1; }
+        .inv-company h2 { font-size: 16px; font-weight: 800; margin: 0 0 2px 0; letter-spacing: 0.5px; }
+        .inv-company p { margin: 0; font-size: 11px; color: #444; line-height: 1.4; }
+        .inv-logo { width: 60px; height: 60px; object-fit: contain; margin-left: 12px; }
+        .inv-title {
+          text-align: center;
+          font-size: 14px;
+          font-weight: 800;
+          letter-spacing: 2px;
+          margin: 8px 0;
+          padding: 6px 0;
+          border: 1px solid #333;
+          background: #f5f5f5;
+        }
+        .inv-meta {
+          display: flex;
+          gap: 12px;
+          margin: 12px 0;
+        }
+        .inv-meta-box {
+          flex: 1;
+          border: 1px solid #aaa;
+          padding: 8px 12px;
+          font-size: 11.5px;
+          line-height: 1.6;
+          border-radius: 2px;
+        }
+        .inv-meta-box strong { font-weight: 700; }
+        .inv-section-label {
+          font-size: 15px;
+          font-weight: 700;
+          text-decoration: underline;
+          margin: 14px 0 4px 0;
+        }
+        .inv-tbl {
           width: 100%;
           border-collapse: collapse;
-          margin-top: 16px;
+          margin-top: 8px;
+          font-size: 11.5px;
         }
-        .invoice-table th,
-        .invoice-table td {
-          border: 1px solid #333;
-          padding: 6px 8px;
+        .inv-tbl th, .inv-tbl td {
+          border: 1px solid #555;
+          padding: 5px 7px;
           text-align: left;
           vertical-align: top;
-          font-size: 12px;
         }
-        .invoice-table th {
-          background: #f0f0f0;
+        .inv-tbl th {
+          background: #e8e8e8;
           font-weight: 700;
-          font-size: 12px;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.3px;
         }
-        .invoice-table td {
-          min-height: 28px;
+        .inv-tbl .num { text-align: right; font-variant-numeric: tabular-nums; }
+        .inv-tbl .total-row { background: #f0f0f0; font-weight: 700; }
+        .inv-tbl .grand-row { background: #ddd; font-weight: 800; font-size: 12px; }
+        .inv-footer {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 60px;
+          padding-top: 0;
         }
+        .inv-sig {
+          text-align: center;
+          width: 130px;
+        }
+        .inv-sig-line {
+          border-top: 1px solid #333;
+          padding-top: 4px;
+          font-size: 11px;
+          font-weight: 600;
+        }
+        .inv-words {
+          margin-top: 8px;
+          font-size: 11.5px;
+          font-weight: 600;
+          font-style: italic;
+          padding: 4px 8px;
+          border: 1px dashed #999;
+          background: #fafafa;
+        }
+        .inv-stamp {
+          display: flex;
+          justify-content: center;
+          margin-top: 30px;
+        }
+        .inv-stamp-box {
+          border: 3px solid #1a6b3c;
+          border-radius: 10px;
+          padding: 10px 24px;
+          text-align: center;
+          transform: rotate(-5deg);
+          opacity: 0.85;
+        }
+        .inv-stamp-title { font-size: 18px; font-weight: 900; color: #1a6b3c; letter-spacing: 3px; }
+        .inv-stamp-sub { font-size: 10px; font-weight: 700; color: #1a6b3c; letter-spacing: 2px; margin-top: 2px; }
+        .inv-stamp-date { font-size: 8px; color: #1a6b3c; margin-top: 3px; border-top: 1px solid #1a6b3c; padding-top: 3px; }
       `}</style>
 
       {/* Print / Close buttons */}
       <div className="no-print fixed top-4 right-4 z-50 flex gap-2">
         <button
           onClick={() => window.print()}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 transition-colors font-medium text-sm"
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 transition-colors font-medium text-sm flex items-center gap-1.5"
         >
           🖨️ Print
         </button>
@@ -229,25 +321,32 @@ export default function PrintInvoice() {
         </button>
       </div>
 
-      <div className="invoice-page">
-        {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: 4 }}>
-          <h1 style={{ fontSize: 18, fontWeight: 800, letterSpacing: 2, margin: 0 }}>
-            {copyType === "office" ? "OFFICE COPY" : isDueCollection ? "DUE COLLECTION INVOICE" : copyType === "customer-portal" ? "CUSTOMER COPY" : copyType === "customer-portal-delivery" ? "DELIVERY INVOICE" : isDelivery ? "DELIVERY INVOICE" : "CUSTOMER COPY"}
-          </h1>
+      <div className="inv">
+        {/* Company Header */}
+        <div className="inv-header">
+          <div className="inv-company">
+            {company ? (
+              <>
+                <h2>{company.company_name}</h2>
+                <p>{company.address}</p>
+                {company.phone && <p>Tel: {company.phone} {company.mobile ? `| Mobile: ${company.mobile}` : ""}</p>}
+                {company.email && <p>Email: {company.email} {company.website ? `| Web: ${company.website}` : ""}</p>}
+              </>
+            ) : (
+              <h2 style={{ color: "#888" }}>Company info not configured</h2>
+            )}
+          </div>
+          {company?.logo_url && (
+            <img src={company.logo_url} alt="Logo" className="inv-logo" />
+          )}
         </div>
 
-        {/* Company + Customer Info */}
-        <div style={{ display: "flex", gap: 16, marginTop: 12 }}>
-          {/* Customer Info - Left */}
-          <div
-            style={{
-              flex: 1,
-              border: "1px solid #333",
-              padding: "10px 14px",
-              fontSize: 12,
-            }}
-          >
+        {/* Invoice Title */}
+        <div className="inv-title">{invoiceTitle}</div>
+
+        {/* Customer & Invoice Meta */}
+        <div className="inv-meta">
+          <div className="inv-meta-box">
             {client ? (
               <>
                 <div><strong>Company Name :</strong> {client.company_name || "—"}</div>
@@ -256,76 +355,39 @@ export default function PrintInvoice() {
                 <div><strong>Address :</strong> {client.address}</div>
               </>
             ) : (
-              <>
-                <div><strong>C Name :</strong> {firstJob.customer_name}</div>
-              </>
+              <div><strong>Client Name :</strong> {firstJob.customer_name}</div>
             )}
-            <div><strong>Print&nbsp;&nbsp;&nbsp;:</strong> {printDate}</div>
           </div>
-
-          {/* Company Info - Right */}
-          <div style={{ flex: 1, fontSize: 11.5, lineHeight: 1.6 }}>
-            {company ? (
-              <>
-                <div style={{ fontWeight: 700, fontSize: 13 }}>{company.company_name}</div>
-                <div>{company.address}</div>
-                {company.phone && <div>Tel: {company.phone}</div>}
-                {company.mobile && <div>Mobile: {company.mobile}</div>}
-                {company.email && <div>E-mail: {company.email}</div>}
-                {company.website && <div>Web: {company.website}</div>}
-              </>
-            ) : (
-              <div style={{ color: "#888" }}>Company info not configured</div>
-            )}
+          <div className="inv-meta-box" style={{ maxWidth: 220 }}>
+            <div><strong>Date :</strong> {isDelivery && firstJob.delivery_date ? firstJob.delivery_date : firstJob.job_date}</div>
+            <div><strong>Challan No :</strong> {firstJob.factory_challan_number || "—"}</div>
+            <div><strong>Print :</strong> {printDate}</div>
+            <div><strong>Total Items :</strong> {jobs.length}</div>
           </div>
         </div>
 
-        {/* Receive Title + Meta */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            marginTop: 20,
-            borderTop: "1px solid #ccc",
-            paddingTop: 12,
-          }}
-        >
-          <h2
-            style={{
-              fontSize: 20,
-              fontWeight: 700,
-              textDecoration: "underline",
-              margin: 0,
-            }}
-          >
-            {isDelivery ? "Delivery" : "Receive"}
-          </h2>
-          <div style={{ textAlign: "right", fontSize: 12 }}>
-            <div>Date : {isDelivery && firstJob.delivery_date ? firstJob.delivery_date : firstJob.job_date}</div>
-            <div>Challan Number : {firstJob.factory_challan_number || "—"}</div>
-          </div>
-        </div>
+        {/* Section Label */}
+        <div className="inv-section-label">{isDelivery ? "Delivery" : "Receive"}</div>
 
         {/* Job Table */}
-        <table className="invoice-table">
+        <table className="inv-tbl">
           <thead>
             <tr>
-              <th style={{ width: 30 }}>Sl#</th>
-              <th style={{ width: 70 }}>Job Number</th>
-              <th>Machine type</th>
+              <th style={{ width: 28 }}>Sl</th>
+              <th style={{ width: 68 }}>Job No.</th>
+              <th>Machine</th>
               <th>Brand</th>
               <th>Model</th>
               <th>Board</th>
-              <th>Board Serial</th>
+              <th>Board S/N</th>
               {isDelivery ? (
                 <>
-                  <th style={{ textAlign: "right" }}>Charge</th>
-                  <th style={{ textAlign: "right" }}>Discount</th>
-                  <th style={{ textAlign: "right" }}>Payable</th>
+                  <th className="num">Charge</th>
+                  <th className="num">Disc.</th>
+                  <th className="num">Payable</th>
                 </>
               ) : (
-                <th>Details of Problem</th>
+                <th>Problem Details</th>
               )}
             </tr>
           </thead>
@@ -335,7 +397,7 @@ export default function PrintInvoice() {
               return (
                 <tr key={i}>
                   <td>{job ? i + 1 : ""}</td>
-                  <td>{job?.job_number || ""}</td>
+                  <td style={{ fontFamily: "monospace", fontSize: 11 }}>{job?.job_number || ""}</td>
                   <td>{job?.board_name || ""}</td>
                   <td>{job?.brand_name || ""}</td>
                   <td>{job?.model_name || ""}</td>
@@ -343,9 +405,9 @@ export default function PrintInvoice() {
                   <td>{job?.board_serial || ""}</td>
                   {isDelivery ? (
                     <>
-                      <td style={{ textAlign: "right" }}>{job ? (job.service_charge || 0).toLocaleString() : ""}</td>
-                      <td style={{ textAlign: "right" }}>{job ? (job.discount || 0).toLocaleString() : ""}</td>
-                      <td style={{ textAlign: "right" }}>{job ? (job.payable_amount || 0).toLocaleString() : ""}</td>
+                      <td className="num">{job ? (job.service_charge || 0).toLocaleString() : ""}</td>
+                      <td className="num">{job ? (job.discount || 0).toLocaleString() : ""}</td>
+                      <td className="num">{job ? (job.payable_amount || 0).toLocaleString() : ""}</td>
                     </>
                   ) : (
                     <td>{job?.details_of_problem || ""}</td>
@@ -355,90 +417,50 @@ export default function PrintInvoice() {
             })}
             {isDelivery && (
               <>
-                <tr style={{ fontWeight: 700, background: "#f0f0f0" }}>
-                  <td colSpan={7} style={{ textAlign: "right" }}>Total</td>
-                  <td style={{ textAlign: "right" }}>{totalServiceCharge.toLocaleString()}</td>
-                  <td style={{ textAlign: "right" }}>{totalDiscount.toLocaleString()}</td>
-                  <td style={{ textAlign: "right" }}>{totalPayable.toLocaleString()}</td>
+                <tr className="total-row">
+                  <td colSpan={7} className="num">Sub Total</td>
+                  <td className="num">{totalServiceCharge.toLocaleString()}</td>
+                  <td className="num">{totalDiscount.toLocaleString()}</td>
+                  <td className="num">{totalPayable.toLocaleString()}</td>
                 </tr>
-                <tr style={{ fontWeight: 700 }}>
-                  <td colSpan={9} style={{ textAlign: "right" }}>Received Amount</td>
-                  <td style={{ textAlign: "right" }}>{totalReceived.toLocaleString()}</td>
+                <tr className="total-row">
+                  <td colSpan={9} className="num">Received Amount</td>
+                  <td className="num">{totalReceived.toLocaleString()}</td>
                 </tr>
-                <tr style={{ fontWeight: 700 }}>
-                  <td colSpan={9} style={{ textAlign: "right" }}>Due Amount</td>
-                  <td style={{ textAlign: "right" }}>{totalDue.toLocaleString()}</td>
+                <tr className="grand-row">
+                  <td colSpan={9} className="num">{totalDue > 0 ? "Due Amount" : "Change"}</td>
+                  <td className="num">{Math.abs(totalDue).toLocaleString()}</td>
                 </tr>
               </>
             )}
           </tbody>
         </table>
+
+        {/* Amount in Words */}
         {isDelivery && (
-          <div style={{ marginTop: 8, fontSize: 12, fontWeight: 700, fontStyle: "italic" }}>
+          <div className="inv-words">
             In Words: {numberToWords(totalPayable)}
           </div>
         )}
 
-        {/* Verified Stamp for Customer Portal prints */}
+        {/* Verified Stamp */}
         {isCustomerPortal && (
-          <div style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: 30,
-          }}>
-            <div style={{
-              border: "3px solid #1a6b3c",
-              borderRadius: 12,
-              padding: "12px 28px",
-              textAlign: "center",
-              transform: "rotate(-6deg)",
-              opacity: 0.85,
-            }}>
-              <div style={{ fontSize: 20, fontWeight: 900, color: "#1a6b3c", letterSpacing: 3, lineHeight: 1.2 }}>
-                VERIFIED
-              </div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "#1a6b3c", letterSpacing: 2, marginTop: 2 }}>
-                BY JUKIBD
-              </div>
-              <div style={{ fontSize: 9, color: "#1a6b3c", marginTop: 4, borderTop: "1px solid #1a6b3c", paddingTop: 4 }}>
-                {printDate}
-              </div>
+          <div className="inv-stamp">
+            <div className="inv-stamp-box">
+              <div className="inv-stamp-title">VERIFIED</div>
+              <div className="inv-stamp-sub">BY JUKIBD</div>
+              <div className="inv-stamp-date">{printDate}</div>
             </div>
           </div>
         )}
 
         {/* Signatures */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginTop: isCustomerPortal ? 30 : 60,
-            paddingTop: 0,
-          }}
-        >
-          <div style={{ textAlign: "center" }}>
-            <div
-              style={{
-                width: 120,
-                borderTop: "1px solid #333",
-                paddingTop: 4,
-                fontSize: 12,
-              }}
-            >
-              Received by
-            </div>
+        <div className="inv-footer">
+          <div className="inv-sig">
+            <div className="inv-sig-line">Received by</div>
           </div>
-          <div style={{ textAlign: "center" }}>
-            <div
-              style={{
-                width: 120,
-                borderTop: "1px solid #333",
-                paddingTop: 4,
-                fontSize: 12,
-              }}
-            >
-              Authorized by
-            </div>
+          <div className="inv-sig">
+            <div className="inv-sig-line">Authorized by</div>
           </div>
         </div>
       </div>
