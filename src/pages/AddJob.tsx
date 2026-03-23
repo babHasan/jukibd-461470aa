@@ -133,6 +133,12 @@ const AddJob = () => {
     setSubmitting(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
+      // Fetch user profile name
+      let createdByName = "";
+      if (user) {
+        const { data: profileData } = await supabase.from("profiles").select("name").eq("id", user.id).single();
+        createdByName = profileData?.name || "";
+      }
       let customerObj = clients.find((c) => c.id === selectedCustomer);
       const branchObj = branches.find((b) => b.id === selectedBranch);
 
@@ -175,6 +181,7 @@ const AddJob = () => {
         job_date: date,
         status: "received",
         created_by: user?.id,
+        created_by_name: createdByName,
       }));
 
       const { data: insertedJobs, error } = await supabase.from("jobs").insert(jobRows).select();

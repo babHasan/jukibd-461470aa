@@ -157,6 +157,14 @@ export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: Delive
 
     setSubmitting(true);
     try {
+      // Get current user name for delivered_by_name
+      let deliveredByName = "";
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profileData } = await supabase.from("profiles").select("name").eq("id", user.id).single();
+        deliveredByName = profileData?.name || "";
+      }
+
       // Upload cheque photo if Cheque type selected
       let chequeUrl: string | null = null;
       if (receiveType === "Cheque") {
@@ -180,6 +188,7 @@ export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: Delive
           receive_amount: receiveAmount,
           receive_type: receiveType,
           delivery_date: deliveryDate,
+          delivered_by_name: deliveredByName,
         };
         if (chequeUrl) {
           updateData.cheque_url = chequeUrl;

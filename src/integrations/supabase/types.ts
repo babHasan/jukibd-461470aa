@@ -381,8 +381,10 @@ export type Database = {
           completed_date: string | null
           created_at: string
           created_by: string | null
+          created_by_name: string
           customer_id: string | null
           customer_name: string
+          delivered_by_name: string
           delivery_date: string | null
           details_of_problem: string
           discount: number | null
@@ -410,8 +412,10 @@ export type Database = {
           completed_date?: string | null
           created_at?: string
           created_by?: string | null
+          created_by_name?: string
           customer_id?: string | null
           customer_name?: string
+          delivered_by_name?: string
           delivery_date?: string | null
           details_of_problem?: string
           discount?: number | null
@@ -439,8 +443,10 @@ export type Database = {
           completed_date?: string | null
           created_at?: string
           created_by?: string | null
+          created_by_name?: string
           customer_id?: string | null
           customer_name?: string
+          delivered_by_name?: string
           delivery_date?: string | null
           details_of_problem?: string
           discount?: number | null
