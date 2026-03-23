@@ -312,13 +312,15 @@ export function AppLayout({ children }: { children: ReactNode }) {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex flex-col bg-sidebar text-sidebar-foreground transition-all duration-300 lg:relative ${
-          collapsed ? "w-16" : "w-56"
+        className={`fixed inset-y-0 left-0 z-40 flex flex-col transition-all duration-300 lg:relative ${
+          collapsed ? "w-16" : "w-60"
         } ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
+        style={{ background: "linear-gradient(180deg, #0a0f1e 0%, #111936 50%, #0d1428 100%)" }}
       >
-        <div className="flex h-14 items-center gap-3 border-b border-sidebar-border px-4">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-sidebar-primary">
-            <Wrench className="h-4 w-4 text-sidebar-primary-foreground" />
+        {/* Logo / Brand */}
+        <div className="flex h-16 items-center gap-3 border-b border-white/5 px-4">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/25">
+            <Wrench className="h-4 w-4 text-white" />
           </div>
           {!collapsed && (
             <span className="text-lg font-bold tracking-tight text-white">
@@ -327,14 +329,28 @@ export function AppLayout({ children }: { children: ReactNode }) {
           )}
         </div>
 
-        <nav className="flex-1 overflow-y-auto space-y-0.5 px-2 py-3 scrollbar-thin">
+        {/* User Profile Mini Card */}
+        {!collapsed && profile && (
+          <Link to="/my-profile" className="mx-3 mt-4 mb-2 flex items-center gap-3 rounded-xl bg-white/5 px-3 py-2.5 hover:bg-white/8 transition-colors">
+            <div className="h-9 w-9 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-xs font-bold text-white overflow-hidden shrink-0 ring-2 ring-white/10">
+              {profile?.photo_url ? (
+                <img src={profile.photo_url} alt="" className="h-full w-full object-cover" />
+              ) : (
+                (profile?.name?.[0] || "U").toUpperCase()
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-white truncate">{profile?.name || "User"}</p>
+              <p className="text-[11px] text-slate-500 truncate">{isAdmin ? "Administrator" : "Staff"}</p>
+            </div>
+          </Link>
+        )}
+
+        <nav className="flex-1 overflow-y-auto space-y-1 px-3 py-3 scrollbar-thin">
           {navItems
             .filter((item) => {
-              // Admins see everything
               if (isAdmin) return true;
-              // ADMIN menu is admin-only
               if (item.label === "ADMIN") return false;
-              // Check if user has permission for this module
               const requiredModule = navPermissionMap[item.label];
               if (!requiredModule) return true;
               return permissions.includes(requiredModule);
@@ -353,7 +369,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
         {/* Logout */}
         <button
           onClick={() => signOut()}
-          className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-medium text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-white transition-colors border-t border-sidebar-border"
+          className="flex items-center gap-3 mx-3 mb-3 px-3 py-2.5 rounded-xl text-[13px] font-medium text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200 border border-white/5"
         >
           <LogOut className="h-4 w-4 shrink-0" />
           {!collapsed && <span>LOG OUT</span>}
@@ -361,7 +377,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
 
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="hidden lg:flex items-center justify-center border-t border-sidebar-border py-3 text-sidebar-foreground hover:text-white transition-colors"
+          className="hidden lg:flex items-center justify-center border-t border-white/5 py-3 text-slate-500 hover:text-white transition-colors"
         >
           {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </button>
