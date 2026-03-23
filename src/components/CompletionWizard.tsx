@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { syncJobsToMySQL } from "@/lib/sync-mysql";
+import {
 import {
   Dialog,
   DialogContent,
