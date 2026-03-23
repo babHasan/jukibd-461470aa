@@ -42,6 +42,7 @@ import TransactionReport from "./pages/reports/TransactionReport";
 import CollectionReport from "./pages/reports/CollectionReport";
 import ExpenseReport from "./pages/reports/ExpenseReport";
 import CompanyWiseReport from "./pages/reports/CompanyWiseReport";
+import UserWiseReport from "./pages/reports/UserWiseReport";
 import CompanyInfo from "./pages/settings/CompanyInfo";
 import PrintInvoice from "./pages/PrintInvoice";
 import PortalScrollMessage from "./pages/settings/PortalScrollMessage";
