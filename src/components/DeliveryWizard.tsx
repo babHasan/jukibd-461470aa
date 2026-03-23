@@ -188,6 +188,7 @@ export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: Delive
           receive_amount: receiveAmount,
           receive_type: receiveType,
           delivery_date: deliveryDate,
+          delivered_by_name: deliveredByName,
         };
         if (chequeUrl) {
           updateData.cheque_url = chequeUrl;
