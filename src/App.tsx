@@ -26,6 +26,7 @@ import BoardList from "./pages/machine-data/BoardList";
 import AddJob from "./pages/AddJob";
 import JobList from "./pages/JobList";
 import JobDetail from "./pages/JobDetail";
+import EditJob from "./pages/EditJob";
 import CustomerPortal from "./pages/CustomerPortal";
 import ChallanVerify from "./pages/ChallanVerify";
 import NotFound from "./pages/NotFound";
