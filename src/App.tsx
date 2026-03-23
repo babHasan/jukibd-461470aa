@@ -47,6 +47,10 @@ import PrintInvoice from "./pages/PrintInvoice";
 import PortalScrollMessage from "./pages/settings/PortalScrollMessage";
 import FooterSettings from "./pages/settings/FooterSettings";
 import AppearanceSettings from "./pages/settings/AppearanceSettings";
+import NotificationSettings from "./pages/settings/NotificationSettings";
+import CashIn from "./pages/cashbook/CashIn";
+import CashOut from "./pages/cashbook/CashOut";
+import BalanceSheet from "./pages/cashbook/BalanceSheet";
 import { ThemeProvider } from "@/context/ThemeContext";
 
 const queryClient = new QueryClient();
@@ -104,6 +108,10 @@ function AppRoutes() {
       <Route path="/settings/portal-message" element={<ProtectedRoute><PortalScrollMessage /></ProtectedRoute>} />
       <Route path="/settings/footer" element={<ProtectedRoute><FooterSettings /></ProtectedRoute>} />
       <Route path="/settings/appearance" element={<ProtectedRoute><AppearanceSettings /></ProtectedRoute>} />
+      <Route path="/settings/notifications" element={<ProtectedRoute><NotificationSettings /></ProtectedRoute>} />
+      <Route path="/cashbook/cash-in" element={<ProtectedRoute><CashIn /></ProtectedRoute>} />
+      <Route path="/cashbook/cash-out" element={<ProtectedRoute><CashOut /></ProtectedRoute>} />
+      <Route path="/cashbook/balance" element={<ProtectedRoute><BalanceSheet /></ProtectedRoute>} />
       <Route path="/print-invoice" element={<ProtectedRoute><PrintInvoice /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
