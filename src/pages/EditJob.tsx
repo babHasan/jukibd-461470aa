@@ -85,6 +85,15 @@ export default function EditJob() {
       setBranchName(data.branch_name);
       setFactoryChallanNumber(data.factory_challan_number);
       setJobDate(data.job_date);
+      setStatus(data.status);
+      setChargeType(data.charge_type || "Normal");
+      setServiceCharge(data.service_charge || 0);
+      setDiscount(data.discount || 0);
+      setPayableAmount(data.payable_amount || 0);
+      setReceiveAmount(data.receive_amount || 0);
+      setReceiveType(data.receive_type || "Cash");
+      setCompletedDate(data.completed_date || "");
+      setDeliveryDate(data.delivery_date || "");
       setLoading(false);
     });
   }, [id]);
