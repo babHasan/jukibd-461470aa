@@ -6,7 +6,12 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-import { ArrowLeft, ChevronLeft, ChevronRight, Phone, Clock, MapPin, DollarSign, Printer, Pencil } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Phone, Clock, MapPin, DollarSign, Printer, Pencil, Trash2 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
 import { CompletionWizard } from "@/components/CompletionWizard";
 import { DeliveryWizard } from "@/components/DeliveryWizard";
