@@ -56,13 +56,14 @@ Deno.serve(async (req) => {
     const { action }: SyncRequest = await req.json();
 
     // Connect to MySQL
-    mysqlConn = await connect({
+    const mysqlClient = await new Client().connect({
       hostname: Deno.env.get("MYSQL_HOST")!,
       username: Deno.env.get("MYSQL_USER")!,
       password: Deno.env.get("MYSQL_PASSWORD")!,
       db: Deno.env.get("MYSQL_DATABASE")!,
       port: parseInt(Deno.env.get("MYSQL_PORT") || "3306"),
     });
+    mysqlConn = mysqlClient;
 
     // Ensure MySQL table exists
     await mysqlConn.execute(`
