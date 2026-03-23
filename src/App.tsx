@@ -26,6 +26,7 @@ import BoardList from "./pages/machine-data/BoardList";
 import AddJob from "./pages/AddJob";
 import JobList from "./pages/JobList";
 import JobDetail from "./pages/JobDetail";
+import EditJob from "./pages/EditJob";
 import CustomerPortal from "./pages/CustomerPortal";
 import ChallanVerify from "./pages/ChallanVerify";
 import NotFound from "./pages/NotFound";
@@ -83,6 +84,7 @@ function AppRoutes() {
       <Route path="/add-job" element={<ProtectedRoute><AddJob /></ProtectedRoute>} />
       <Route path="/job-list" element={<ProtectedRoute><JobList /></ProtectedRoute>} />
       <Route path="/job/:id" element={<ProtectedRoute><JobDetail /></ProtectedRoute>} />
+      <Route path="/job/:id/edit" element={<ProtectedRoute><EditJob /></ProtectedRoute>} />
       <Route path="/my-profile" element={<ProtectedRoute><MyProfile /></ProtectedRoute>} />
       <Route path="/backup" element={<ProtectedRoute><BackupDatabase /></ProtectedRoute>} />
       <Route path="/collection/due-bill" element={<ProtectedRoute><DueBill /></ProtectedRoute>} />

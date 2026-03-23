@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { syncJobsToMySQL } from "@/lib/sync-mysql";
-import { ArrowLeft, ChevronLeft, ChevronRight, Phone, Clock, MapPin, DollarSign, Printer } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Phone, Clock, MapPin, DollarSign, Printer, Pencil } from "lucide-react";
 import { format } from "date-fns";
 import { CompletionWizard } from "@/components/CompletionWizard";
 import { DeliveryWizard } from "@/components/DeliveryWizard";
@@ -200,6 +200,15 @@ export default function JobDetailPage() {
             <Badge variant="secondary" className={`${statusColors[job.status] || ""}`}>
               {jobStatusLabels[job.status] || job.status}
             </Badge>
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-1"
+              onClick={() => navigate(`/job/${job.id}/edit`)}
+            >
+              <Pencil className="h-3 w-3" />
+              Edit
+            </Button>
             <Button
               size="sm"
               variant="outline"
