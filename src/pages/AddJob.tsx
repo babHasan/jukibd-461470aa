@@ -198,7 +198,7 @@ const AddJob = () => {
             : `/print-invoice?job=${insertedJobs[0].id}`;
           window.open(printUrl, "_blank");
 
-          syncJobsToMySQL(insertedJobs.map((j) => j.id));
+          
         }
 
         // Send SMS for each job (trigger_status = "received")

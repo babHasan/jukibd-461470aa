@@ -207,7 +207,7 @@ export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: Delive
         await sendDeliverySms(job, payableAmount);
       }
       toast.success("Jobs marked as Picked Up & SMS sent");
-      syncJobsToMySQL(selected.map((j) => j.id));
+      
       onOpenChange(false);
       onCompleted();
     } catch {

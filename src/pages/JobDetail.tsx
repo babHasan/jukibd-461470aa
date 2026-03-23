@@ -171,7 +171,7 @@ export default function JobDetailPage() {
       toast.error("Failed to update status");
     } else {
       toast.success(`Status reverted to ${jobStatusLabels[prevStatus]}`);
-      syncJobsToMySQL([job.id]);
+      
       reloadJob();
     }
   }

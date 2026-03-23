@@ -133,7 +133,7 @@ export default function EditJob() {
       toast.error("Failed to update: " + error.message);
     } else {
       toast.success("Job updated successfully");
-      syncJobsToMySQL([id]);
+      
       navigate(`/job/${id}`);
     }
     setSaving(false);
