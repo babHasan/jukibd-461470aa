@@ -223,9 +223,40 @@ export default function Customers() {
                     <TableCell className="text-muted-foreground">{client.remarks || "—"}</TableCell>
                     {isAdmin && (
                       <TableCell className="text-right">
-                        <Button size="sm" variant="default" onClick={() => openEdit(client)}>
-                          <Edit className="h-3.5 w-3.5 mr-1" /> EDIT
-                        </Button>
+                        <div className="flex items-center justify-end gap-1">
+                          <Button size="sm" variant="default" onClick={() => openEdit(client)}>
+                            <Edit className="h-3.5 w-3.5 mr-1" /> EDIT
+                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button size="sm" variant="destructive">
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Delete "{client.client_name}"?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  This action cannot be undone. This will permanently delete this client record.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                  onClick={async () => {
+                                    const { error } = await supabase.from("clients").delete().eq("id", client.id);
+                                    if (error) { toast.error("Failed to delete client"); return; }
+                                    toast.success("Client deleted");
+                                    fetchClients();
+                                  }}
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
                       </TableCell>
                     )}
                   </TableRow>
