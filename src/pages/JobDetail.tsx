@@ -57,6 +57,7 @@ interface JobDetail {
 export default function JobDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
   const [job, setJob] = useState<JobDetail | null>(null);
   const [customerMobile, setCustomerMobile] = useState("");
   const [loading, setLoading] = useState(true);
