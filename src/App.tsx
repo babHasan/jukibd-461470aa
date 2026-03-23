@@ -47,6 +47,10 @@ import PrintInvoice from "./pages/PrintInvoice";
 import PortalScrollMessage from "./pages/settings/PortalScrollMessage";
 import FooterSettings from "./pages/settings/FooterSettings";
 import AppearanceSettings from "./pages/settings/AppearanceSettings";
+import NotificationSettings from "./pages/settings/NotificationSettings";
+import CashIn from "./pages/cashbook/CashIn";
+import CashOut from "./pages/cashbook/CashOut";
+import BalanceSheet from "./pages/cashbook/BalanceSheet";
 import { ThemeProvider } from "@/context/ThemeContext";
 
 const queryClient = new QueryClient();
