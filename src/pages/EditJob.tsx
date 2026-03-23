@@ -371,7 +371,7 @@ export default function EditJob() {
               </div>
             </CardContent>
           </Card>
-        )
+        )}
 
         <div className="flex justify-end gap-3">
           <Button variant="outline" onClick={() => navigate(`/job/${id}`)}>Cancel</Button>
