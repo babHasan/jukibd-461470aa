@@ -118,6 +118,15 @@ export default function EditJob() {
       branch_name: selectedBranch?.name || branchName,
       factory_challan_number: factoryChallanNumber,
       job_date: jobDate,
+      status,
+      charge_type: chargeType,
+      service_charge: serviceCharge,
+      discount,
+      payable_amount: payableAmount,
+      receive_amount: receiveAmount,
+      receive_type: receiveType,
+      completed_date: completedDate || null,
+      delivery_date: deliveryDate || null,
     }).eq("id", id);
 
     if (error) {
