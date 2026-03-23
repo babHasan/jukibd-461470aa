@@ -147,21 +147,38 @@ const AddJob = () => {
       const customerMobile = customerObj ? (customerObj.contact_number || "") : manualCustomerMobile;
 
       // Auto-create new client if manual entry (not selected from dropdown)
+      // Check for duplicate company_name first to avoid duplicates
       if (!selectedCustomer && manualCustomerName) {
-        const { data: newClient, error: clientError } = await supabase
-          .from("clients")
-          .insert({
-            client_name: manualCustomerName,
-            contact_number: manualCustomerMobile,
-            company_name: manualCompanyName,
-            address: manualAddress,
-          })
-          .select()
-          .single();
-        if (clientError) {
-          console.error("Failed to create client:", clientError.message);
-        } else if (newClient) {
-          customerId = newClient.id;
+        let existingClient = null;
+        if (manualCompanyName.trim()) {
+          const { data: found } = await supabase
+            .from("clients")
+            .select("id")
+            .ilike("company_name", manualCompanyName.trim())
+            .limit(1)
+            .maybeSingle();
+          existingClient = found;
+        }
+
+        if (existingClient) {
+          // Reuse existing client with matching company name
+          customerId = existingClient.id;
+        } else {
+          const { data: newClient, error: clientError } = await supabase
+            .from("clients")
+            .insert({
+              client_name: manualCustomerName,
+              contact_number: manualCustomerMobile,
+              company_name: manualCompanyName,
+              address: manualAddress,
+            })
+            .select()
+            .single();
+          if (clientError) {
+            console.error("Failed to create client:", clientError.message);
+          } else if (newClient) {
+            customerId = newClient.id;
+          }
         }
       }
 
