@@ -317,11 +317,7 @@ export default function TransactionReport() {
                               }}
                             >
                               <Printer className="h-3 w-3 mr-1" />
-                              CLIENT COPY
-                            </Button>
-                            <Button size="sm" variant="outline" className="text-[10px] h-7 bg-teal-600 text-white hover:bg-teal-700 border-teal-600">
-                              <Printer className="h-3 w-3 mr-1" />
-                              FOC COPY
+                            CLIENT COPY
                             </Button>
                           </div>
                         </TableCell>
