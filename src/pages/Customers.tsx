@@ -217,15 +217,6 @@ export default function Customers() {
                     <TableCell className="text-muted-foreground">{client.email || "—"}</TableCell>
                     <TableCell className="text-muted-foreground max-w-[200px] truncate">{client.address || "—"}</TableCell>
                     <TableCell className="text-muted-foreground">{client.remarks || "—"}</TableCell>
-                    <TableCell>
-                      {client.image_url ? (
-                        <img src={client.image_url} alt="" className="h-8 w-8 rounded object-cover" />
-                      ) : (
-                        <span className="text-xs text-muted-foreground flex items-center gap-1">
-                          <ImageIcon className="h-3.5 w-3.5" /> No Image
-                        </span>
-                      )}
-                    </TableCell>
                     {isAdmin && (
                       <TableCell className="text-right">
                         <Button size="sm" variant="default" onClick={() => openEdit(client)}>
