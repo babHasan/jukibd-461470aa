@@ -6,7 +6,12 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-import { ArrowLeft, ChevronLeft, ChevronRight, Phone, Clock, MapPin, DollarSign, Printer, Pencil } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Phone, Clock, MapPin, DollarSign, Printer, Pencil, Trash2 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
 import { CompletionWizard } from "@/components/CompletionWizard";
 import { DeliveryWizard } from "@/components/DeliveryWizard";
@@ -52,6 +57,7 @@ interface JobDetail {
 export default function JobDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
   const [job, setJob] = useState<JobDetail | null>(null);
   const [customerMobile, setCustomerMobile] = useState("");
   const [loading, setLoading] = useState(true);
@@ -222,6 +228,38 @@ export default function JobDetailPage() {
               <Printer className="h-3 w-3" />
               Print
             </Button>
+            {isAdmin && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button size="sm" variant="destructive" className="gap-1">
+                    <Trash2 className="h-3 w-3" />
+                    Delete
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete Job {job.job_number}?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete this job record.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      onClick={async () => {
+                        const { error } = await supabase.from("jobs").delete().eq("id", job.id);
+                        if (error) { toast.error("Failed to delete job"); return; }
+                        toast.success("Job deleted");
+                        navigate("/job-list");
+                      }}
+                    >
+                      Delete
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
             {prevStatus && (
               <Button
                 size="sm"
