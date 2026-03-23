@@ -1,5 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.99.3";
-import { connect } from "https://deno.land/x/mysql@v2.12.1/mod.ts";
+import { Client } from "https://deno.land/x/mysql@v2.12.1/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -56,13 +56,14 @@ Deno.serve(async (req) => {
     const { action }: SyncRequest = await req.json();
 
     // Connect to MySQL
-    mysqlConn = await connect({
+    const mysqlClient = await new Client().connect({
       hostname: Deno.env.get("MYSQL_HOST")!,
       username: Deno.env.get("MYSQL_USER")!,
       password: Deno.env.get("MYSQL_PASSWORD")!,
       db: Deno.env.get("MYSQL_DATABASE")!,
       port: parseInt(Deno.env.get("MYSQL_PORT") || "3306"),
     });
+    mysqlConn = mysqlClient;
 
     // Ensure MySQL table exists
     await mysqlConn.execute(`
