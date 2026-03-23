@@ -289,6 +289,90 @@ export default function EditJob() {
           </CardContent>
         </Card>
 
+        {/* Status & Financial */}
+        {(status === "completed" || status === "picked-up") && (
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="text-base">Status & Financial Details</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="space-y-2">
+                  <Label>Status</Label>
+                  <Select value={status} onValueChange={setStatus}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="received">Received</SelectItem>
+                      <SelectItem value="diagnosing">Diagnosing</SelectItem>
+                      <SelectItem value="in-progress">In Progress</SelectItem>
+                      <SelectItem value="completed">Completed</SelectItem>
+                      <SelectItem value="picked-up">Picked Up</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Charge Type</Label>
+                  <Select value={chargeType} onValueChange={setChargeType}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Normal">Normal</SelectItem>
+                      <SelectItem value="FOC">FOC</SelectItem>
+                      <SelectItem value="Damage">Damage</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Completed Date</Label>
+                  <Input type="date" value={completedDate} onChange={(e) => setCompletedDate(e.target.value)} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Delivery Date</Label>
+                  <Input type="date" value={deliveryDate} onChange={(e) => setDeliveryDate(e.target.value)} />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="space-y-2">
+                  <Label>Service Charge</Label>
+                  <Input type="number" value={serviceCharge} onChange={(e) => {
+                    const sc = Number(e.target.value);
+                    setServiceCharge(sc);
+                    setPayableAmount(sc - discount);
+                  }} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Discount</Label>
+                  <Input type="number" value={discount} onChange={(e) => {
+                    const d = Number(e.target.value);
+                    setDiscount(d);
+                    setPayableAmount(serviceCharge - d);
+                  }} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Payable Amount</Label>
+                  <Input type="number" value={payableAmount} readOnly className="bg-muted" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Receive Amount</Label>
+                  <Input type="number" value={receiveAmount} onChange={(e) => setReceiveAmount(Number(e.target.value))} />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Receive Type</Label>
+                  <Select value={receiveType} onValueChange={setReceiveType}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Cash">Cash</SelectItem>
+                      <SelectItem value="Cheque">Cheque</SelectItem>
+                      <SelectItem value="Due">Due</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )
+
         <div className="flex justify-end gap-3">
           <Button variant="outline" onClick={() => navigate(`/job/${id}`)}>Cancel</Button>
           <Button onClick={handleSave} disabled={saving} className="gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
