@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
-import { syncJobsToMySQL } from "@/lib/sync-mysql";
+
 import { toast } from "sonner";
 import { ArrowLeft, Save } from "lucide-react";
 
@@ -133,7 +133,7 @@ export default function EditJob() {
       toast.error("Failed to update: " + error.message);
     } else {
       toast.success("Job updated successfully");
-      syncJobsToMySQL([id]);
+      
       navigate(`/job/${id}`);
     }
     setSaving(false);

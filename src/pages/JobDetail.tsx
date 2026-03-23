@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { syncJobsToMySQL } from "@/lib/sync-mysql";
+
 import { ArrowLeft, ChevronLeft, ChevronRight, Phone, Clock, MapPin, DollarSign, Printer, Pencil } from "lucide-react";
 import { format } from "date-fns";
 import { CompletionWizard } from "@/components/CompletionWizard";
@@ -115,7 +115,6 @@ export default function JobDetailPage() {
       toast.error("Failed to update status");
     } else {
       toast.success(`Status updated to ${jobStatusLabels[newStatus]}`);
-      syncJobsToMySQL([job.id]);
       setJob({ ...job, status: newStatus });
     }
   }
@@ -172,7 +171,7 @@ export default function JobDetailPage() {
       toast.error("Failed to update status");
     } else {
       toast.success(`Status reverted to ${jobStatusLabels[prevStatus]}`);
-      syncJobsToMySQL([job.id]);
+      
       reloadJob();
     }
   }
