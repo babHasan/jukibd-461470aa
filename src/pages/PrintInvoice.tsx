@@ -41,6 +41,8 @@ interface Job {
   receive_amount: number | null;
   charge_type: string | null;
   delivery_date: string | null;
+  created_by_name?: string;
+  delivered_by_name?: string;
 }
 
 interface CompanyInfo {
