@@ -38,6 +38,15 @@ export default function EditJob() {
   const [branchName, setBranchName] = useState("");
   const [factoryChallanNumber, setFactoryChallanNumber] = useState("");
   const [jobDate, setJobDate] = useState("");
+  const [status, setStatus] = useState("");
+  const [chargeType, setChargeType] = useState("Normal");
+  const [serviceCharge, setServiceCharge] = useState<number>(0);
+  const [discount, setDiscount] = useState<number>(0);
+  const [payableAmount, setPayableAmount] = useState<number>(0);
+  const [receiveAmount, setReceiveAmount] = useState<number>(0);
+  const [receiveType, setReceiveType] = useState("Cash");
+  const [completedDate, setCompletedDate] = useState("");
+  const [deliveryDate, setDeliveryDate] = useState("");
 
   useEffect(() => {
     Promise.all([
