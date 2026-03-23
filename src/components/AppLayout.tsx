@@ -197,15 +197,15 @@ function SidebarItem({
       <Link
         to={item.children ? item.children[0].to : item.to}
         onClick={onNavigate}
-        className={`flex items-center gap-3 rounded-md px-3 py-2 font-medium transition-colors ${
+        className={`flex items-center gap-3 rounded-xl px-3 py-2.5 font-medium transition-all duration-200 ${
           isActive
-            ? "bg-sidebar-accent text-white"
-            : "hover:bg-sidebar-accent/50 hover:text-white"
+            ? "bg-gradient-to-r from-blue-600/90 to-blue-500/80 text-white shadow-lg shadow-blue-500/20"
+            : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
         }`}
-        style={{ fontSize: "var(--menu-font-size, 13px)", color: isActive ? "#fff" : "var(--menu-font-color, #94a3b8)" }}
+        style={{ fontSize: "var(--menu-font-size, 13px)" }}
         title={collapsed ? item.label : undefined}
       >
-        <item.icon className="h-4 w-4 shrink-0" />
+        <item.icon className={`h-4 w-4 shrink-0 ${isActive ? "text-white" : "text-slate-500"}`} />
         {!collapsed && <span className="flex-1">{item.label}</span>}
       </Link>
     );
@@ -215,14 +215,14 @@ function SidebarItem({
     <div>
       <button
         onClick={() => setOpen(!open)}
-        className={`flex w-full items-center gap-3 rounded-md px-3 py-2 font-medium transition-colors ${
+        className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 font-medium transition-all duration-200 ${
           isActive
-            ? "bg-sidebar-accent text-white"
-            : "hover:bg-sidebar-accent/50 hover:text-white"
+            ? "bg-gradient-to-r from-blue-600/90 to-blue-500/80 text-white shadow-lg shadow-blue-500/20"
+            : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
         }`}
-        style={{ fontSize: "var(--menu-font-size, 13px)", color: isActive ? "#fff" : "var(--menu-font-color, #94a3b8)" }}
+        style={{ fontSize: "var(--menu-font-size, 13px)" }}
       >
-        <item.icon className="h-4 w-4 shrink-0" />
+        <item.icon className={`h-4 w-4 shrink-0 ${isActive ? "text-white" : "text-slate-500"}`} />
         <span className="flex-1 text-left">{item.label}</span>
         <ChevronDown
           className={`h-3 w-3 shrink-0 transition-transform duration-200 ${
@@ -231,7 +231,7 @@ function SidebarItem({
         />
       </button>
       {open && (
-        <div className="ml-4 mt-0.5 space-y-0.5 border-l border-sidebar-border pl-3">
+        <div className="ml-4 mt-1 space-y-0.5 border-l border-white/10 pl-3">
           {item.children.map((child) => {
             const childActive = currentPath === child.to;
             return (
@@ -239,14 +239,14 @@ function SidebarItem({
                 key={child.to}
                 to={child.to}
                 onClick={onNavigate}
-                className={`flex items-center gap-2.5 rounded-md px-2.5 py-1.5 font-medium transition-colors ${
+                className={`flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 font-medium transition-all duration-200 ${
                   childActive
-                    ? "bg-sidebar-accent/70"
-                    : "hover:text-white hover:bg-sidebar-accent/30"
+                    ? "bg-blue-500/20 text-blue-300"
+                    : "text-slate-500 hover:text-slate-300 hover:bg-white/5"
                 }`}
-                style={{ fontSize: "var(--submenu-font-size, 12px)", color: childActive ? "#fff" : "var(--submenu-font-color, #94a3b8)" }}
+                style={{ fontSize: "var(--submenu-font-size, 12px)" }}
               >
-                <child.icon className="h-3.5 w-3.5 shrink-0" />
+                <child.icon className={`h-3.5 w-3.5 shrink-0 ${childActive ? "text-blue-400" : ""}`} />
                 <span>{child.label}</span>
               </Link>
             );
@@ -312,13 +312,15 @@ export function AppLayout({ children }: { children: ReactNode }) {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex flex-col bg-sidebar text-sidebar-foreground transition-all duration-300 lg:relative ${
-          collapsed ? "w-16" : "w-56"
+        className={`fixed inset-y-0 left-0 z-40 flex flex-col transition-all duration-300 lg:relative ${
+          collapsed ? "w-16" : "w-60"
         } ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
+        style={{ background: "linear-gradient(180deg, #0a0f1e 0%, #111936 50%, #0d1428 100%)" }}
       >
-        <div className="flex h-14 items-center gap-3 border-b border-sidebar-border px-4">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-sidebar-primary">
-            <Wrench className="h-4 w-4 text-sidebar-primary-foreground" />
+        {/* Logo / Brand */}
+        <div className="flex h-16 items-center gap-3 border-b border-white/5 px-4">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/25">
+            <Wrench className="h-4 w-4 text-white" />
           </div>
           {!collapsed && (
             <span className="text-lg font-bold tracking-tight text-white">
@@ -327,14 +329,28 @@ export function AppLayout({ children }: { children: ReactNode }) {
           )}
         </div>
 
-        <nav className="flex-1 overflow-y-auto space-y-0.5 px-2 py-3 scrollbar-thin">
+        {/* User Profile Mini Card */}
+        {!collapsed && profile && (
+          <Link to="/my-profile" className="mx-3 mt-4 mb-2 flex items-center gap-3 rounded-xl bg-white/5 px-3 py-2.5 hover:bg-white/8 transition-colors">
+            <div className="h-9 w-9 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-xs font-bold text-white overflow-hidden shrink-0 ring-2 ring-white/10">
+              {profile?.photo_url ? (
+                <img src={profile.photo_url} alt="" className="h-full w-full object-cover" />
+              ) : (
+                (profile?.name?.[0] || "U").toUpperCase()
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-white truncate">{profile?.name || "User"}</p>
+              <p className="text-[11px] text-slate-500 truncate">{isAdmin ? "Administrator" : "Staff"}</p>
+            </div>
+          </Link>
+        )}
+
+        <nav className="flex-1 overflow-y-auto space-y-1 px-3 py-3 scrollbar-thin">
           {navItems
             .filter((item) => {
-              // Admins see everything
               if (isAdmin) return true;
-              // ADMIN menu is admin-only
               if (item.label === "ADMIN") return false;
-              // Check if user has permission for this module
               const requiredModule = navPermissionMap[item.label];
               if (!requiredModule) return true;
               return permissions.includes(requiredModule);
@@ -353,7 +369,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
         {/* Logout */}
         <button
           onClick={() => signOut()}
-          className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-medium text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-white transition-colors border-t border-sidebar-border"
+          className="flex items-center gap-3 mx-3 mb-3 px-3 py-2.5 rounded-xl text-[13px] font-medium text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200 border border-white/5"
         >
           <LogOut className="h-4 w-4 shrink-0" />
           {!collapsed && <span>LOG OUT</span>}
@@ -361,7 +377,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
 
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="hidden lg:flex items-center justify-center border-t border-sidebar-border py-3 text-sidebar-foreground hover:text-white transition-colors"
+          className="hidden lg:flex items-center justify-center border-t border-white/5 py-3 text-slate-500 hover:text-white transition-colors"
         >
           {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </button>
