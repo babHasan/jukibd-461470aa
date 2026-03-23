@@ -199,7 +199,6 @@ export default function Customers() {
                 <TableHead>Email ID</TableHead>
                 <TableHead>Address</TableHead>
                 <TableHead>Remarks</TableHead>
-                <TableHead className="w-20">Image</TableHead>
                 {isAdmin && <TableHead className="w-20 text-right">Edit</TableHead>}
               </TableRow>
             </TableHeader>
