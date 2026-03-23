@@ -104,6 +104,7 @@ function AppRoutes() {
       <Route path="/reports/collection" element={<ProtectedRoute><CollectionReport /></ProtectedRoute>} />
       <Route path="/reports/expense" element={<ProtectedRoute><ExpenseReport /></ProtectedRoute>} />
       <Route path="/reports/company-wise" element={<ProtectedRoute><CompanyWiseReport /></ProtectedRoute>} />
+      <Route path="/reports/user-wise" element={<ProtectedRoute><UserWiseReport /></ProtectedRoute>} />
       <Route path="/challan-verify" element={<ProtectedRoute><ChallanVerify /></ProtectedRoute>} />
       <Route path="/settings/company-info" element={<ProtectedRoute><CompanyInfo /></ProtectedRoute>} />
       <Route path="/settings/portal-message" element={<ProtectedRoute><PortalScrollMessage /></ProtectedRoute>} />
