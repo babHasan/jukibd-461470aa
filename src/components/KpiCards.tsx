@@ -14,43 +14,29 @@ interface KpiCardsProps {
 export function KpiCards({ jobs }: KpiCardsProps) {
   const today = new Date().toISOString().slice(0, 10);
 
-  const todayReceived = jobs.filter(
-    (j) => j.status === "received" && j.job_date === today
-  ).length;
-  const totalReceived = jobs.filter((j) => j.status === "received").length;
-
-  const todayOnRepair = jobs.filter(
-    (j) =>
-      ["diagnosing", "in-progress"].includes(j.status) &&
-      j.job_date === today
-  ).length;
-  const totalOnRepair = jobs.filter((j) =>
-    ["diagnosing", "in-progress"].includes(j.status)
-  ).length;
-
-  const todayCompleted = jobs.filter(
-    (j) => j.status === "completed" && j.completed_date?.startsWith(today.split("-").reverse().join("-"))
-  ).length;
-  const totalCompleted = jobs.filter((j) => j.status === "completed").length;
-
-  const todayDelivery = jobs.filter(
-    (j) => j.status === "picked-up" && j.delivery_date?.startsWith(today.split("-").reverse().join("-"))
-  ).length;
-  const totalDelivery = jobs.filter((j) => j.status === "picked-up").length;
-
-  const cards = [
-    { label: "TODAY RECEIVED", value: todayReceived },
-    { label: "TOTAL RECEIVED", value: totalReceived },
-    { label: "TODAY ON REPAIR", value: todayOnRepair },
-    { label: "TOTAL ON REPAIR", value: totalOnRepair },
-    { label: "TODAY COMPLETED", value: todayCompleted },
-    { label: "TOTAL COMPLETED", value: totalCompleted },
-    { label: "TODAY DELIVERY", value: todayDelivery },
-    { label: "TOTAL DELIVERY", value: totalDelivery },
+  const statuses = [
+    { key: "received", label: "Received" },
+    { key: "diagnosing", label: "Diagnosing" },
+    { key: "in-progress", label: "In Progress" },
+    { key: "completed", label: "Completed" },
+    { key: "picked-up", label: "Picked Up" },
   ];
 
+  const cards = statuses.flatMap((s) => {
+    const all = jobs.filter((j) => j.status === s.key);
+    const daily = all.filter((j) => {
+      if (s.key === "completed") return j.completed_date?.startsWith(today.split("-").reverse().join("-"));
+      if (s.key === "picked-up") return j.delivery_date?.startsWith(today.split("-").reverse().join("-"));
+      return j.job_date === today;
+    });
+    return [
+      { label: `DAILY ${s.label.toUpperCase()}`, value: daily.length },
+      { label: `TOTAL ${s.label.toUpperCase()}`, value: all.length },
+    ];
+  });
+
   return (
-    <div className="grid grid-cols-2 gap-2 sm:gap-4 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-2 sm:gap-4 lg:grid-cols-5">
       {cards.map((card) => (
         <div
           key={card.label}
