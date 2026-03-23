@@ -4,7 +4,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UserCircle, PlusCircle, Edit, Search, FileUp, ImageIcon } from "lucide-react";
+import { UserCircle, PlusCircle, Edit, Search, FileUp } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import * as XLSX from "xlsx";
@@ -199,7 +199,6 @@ export default function Customers() {
                 <TableHead>Email ID</TableHead>
                 <TableHead>Address</TableHead>
                 <TableHead>Remarks</TableHead>
-                <TableHead className="w-20">Image</TableHead>
                 {isAdmin && <TableHead className="w-20 text-right">Edit</TableHead>}
               </TableRow>
             </TableHeader>
@@ -218,15 +217,6 @@ export default function Customers() {
                     <TableCell className="text-muted-foreground">{client.email || "—"}</TableCell>
                     <TableCell className="text-muted-foreground max-w-[200px] truncate">{client.address || "—"}</TableCell>
                     <TableCell className="text-muted-foreground">{client.remarks || "—"}</TableCell>
-                    <TableCell>
-                      {client.image_url ? (
-                        <img src={client.image_url} alt="" className="h-8 w-8 rounded object-cover" />
-                      ) : (
-                        <span className="text-xs text-muted-foreground flex items-center gap-1">
-                          <ImageIcon className="h-3.5 w-3.5" /> No Image
-                        </span>
-                      )}
-                    </TableCell>
                     {isAdmin && (
                       <TableCell className="text-right">
                         <Button size="sm" variant="default" onClick={() => openEdit(client)}>
