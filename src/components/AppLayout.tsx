@@ -197,15 +197,15 @@ function SidebarItem({
       <Link
         to={item.children ? item.children[0].to : item.to}
         onClick={onNavigate}
-        className={`flex items-center gap-3 rounded-md px-3 py-2 font-medium transition-colors ${
+        className={`flex items-center gap-3 rounded-xl px-3 py-2.5 font-medium transition-all duration-200 ${
           isActive
-            ? "bg-sidebar-accent text-white"
-            : "hover:bg-sidebar-accent/50 hover:text-white"
+            ? "bg-gradient-to-r from-blue-600/90 to-blue-500/80 text-white shadow-lg shadow-blue-500/20"
+            : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
         }`}
-        style={{ fontSize: "var(--menu-font-size, 13px)", color: isActive ? "#fff" : "var(--menu-font-color, #94a3b8)" }}
+        style={{ fontSize: "var(--menu-font-size, 13px)" }}
         title={collapsed ? item.label : undefined}
       >
-        <item.icon className="h-4 w-4 shrink-0" />
+        <item.icon className={`h-4 w-4 shrink-0 ${isActive ? "text-white" : "text-slate-500"}`} />
         {!collapsed && <span className="flex-1">{item.label}</span>}
       </Link>
     );
@@ -215,14 +215,14 @@ function SidebarItem({
     <div>
       <button
         onClick={() => setOpen(!open)}
-        className={`flex w-full items-center gap-3 rounded-md px-3 py-2 font-medium transition-colors ${
+        className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 font-medium transition-all duration-200 ${
           isActive
-            ? "bg-sidebar-accent text-white"
-            : "hover:bg-sidebar-accent/50 hover:text-white"
+            ? "bg-gradient-to-r from-blue-600/90 to-blue-500/80 text-white shadow-lg shadow-blue-500/20"
+            : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
         }`}
-        style={{ fontSize: "var(--menu-font-size, 13px)", color: isActive ? "#fff" : "var(--menu-font-color, #94a3b8)" }}
+        style={{ fontSize: "var(--menu-font-size, 13px)" }}
       >
-        <item.icon className="h-4 w-4 shrink-0" />
+        <item.icon className={`h-4 w-4 shrink-0 ${isActive ? "text-white" : "text-slate-500"}`} />
         <span className="flex-1 text-left">{item.label}</span>
         <ChevronDown
           className={`h-3 w-3 shrink-0 transition-transform duration-200 ${
@@ -231,7 +231,7 @@ function SidebarItem({
         />
       </button>
       {open && (
-        <div className="ml-4 mt-0.5 space-y-0.5 border-l border-sidebar-border pl-3">
+        <div className="ml-4 mt-1 space-y-0.5 border-l border-white/10 pl-3">
           {item.children.map((child) => {
             const childActive = currentPath === child.to;
             return (
@@ -239,14 +239,14 @@ function SidebarItem({
                 key={child.to}
                 to={child.to}
                 onClick={onNavigate}
-                className={`flex items-center gap-2.5 rounded-md px-2.5 py-1.5 font-medium transition-colors ${
+                className={`flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 font-medium transition-all duration-200 ${
                   childActive
-                    ? "bg-sidebar-accent/70"
-                    : "hover:text-white hover:bg-sidebar-accent/30"
+                    ? "bg-blue-500/20 text-blue-300"
+                    : "text-slate-500 hover:text-slate-300 hover:bg-white/5"
                 }`}
-                style={{ fontSize: "var(--submenu-font-size, 12px)", color: childActive ? "#fff" : "var(--submenu-font-color, #94a3b8)" }}
+                style={{ fontSize: "var(--submenu-font-size, 12px)" }}
               >
-                <child.icon className="h-3.5 w-3.5 shrink-0" />
+                <child.icon className={`h-3.5 w-3.5 shrink-0 ${childActive ? "text-blue-400" : ""}`} />
                 <span>{child.label}</span>
               </Link>
             );
