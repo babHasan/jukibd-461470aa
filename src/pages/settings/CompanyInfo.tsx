@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Building, Upload } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 export default function CompanyInfo() {
   const [loading, setLoading] = useState(true);
@@ -21,6 +22,7 @@ export default function CompanyInfo() {
     phone: "",
     mobile: "",
     logo_url: "" as string | null,
+    portal_enabled: true,
   });
 
   useEffect(() => {
@@ -35,6 +37,7 @@ export default function CompanyInfo() {
           phone: data.phone || "",
           mobile: data.mobile || "",
           logo_url: data.logo_url || null,
+          portal_enabled: (data as any).portal_enabled ?? true,
         });
       }
       setLoading(false);
@@ -80,6 +83,7 @@ export default function CompanyInfo() {
       phone: form.phone.trim(),
       mobile: form.mobile.trim(),
       logo_url: form.logo_url,
+      portal_enabled: form.portal_enabled,
       updated_at: new Date().toISOString(),
     };
 
@@ -205,6 +209,17 @@ export default function CompanyInfo() {
                   className="mt-1"
                 />
                 {uploading && <p className="text-xs text-muted-foreground mt-1">Uploading...</p>}
+              </div>
+
+              <div className="flex items-center justify-between rounded-lg border p-4">
+                <div>
+                  <Label className="text-sm font-semibold">Client Portal</Label>
+                  <p className="text-xs text-muted-foreground">Enable or disable the public client portal (/track)</p>
+                </div>
+                <Switch
+                  checked={form.portal_enabled}
+                  onCheckedChange={(checked) => setForm((f) => ({ ...f, portal_enabled: checked }))}
+                />
               </div>
             </div>
           </div>
