@@ -181,6 +181,7 @@ export type Database = {
           logo_url: string | null
           mobile: string
           phone: string
+          portal_enabled: boolean
           updated_at: string
           website: string
         }
@@ -192,6 +193,7 @@ export type Database = {
           logo_url?: string | null
           mobile?: string
           phone?: string
+          portal_enabled?: boolean
           updated_at?: string
           website?: string
         }
@@ -203,6 +205,7 @@ export type Database = {
           logo_url?: string | null
           mobile?: string
           phone?: string
+          portal_enabled?: boolean
           updated_at?: string
           website?: string
         }
