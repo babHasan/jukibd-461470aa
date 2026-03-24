@@ -4,9 +4,11 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Search, Package, Clock, CheckCircle, Loader2, Printer, PartyPopper } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Search, Package, Clock, CheckCircle, Loader2, Printer, PartyPopper, Star, MessageSquare } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 const jobStatusLabels: Record<string, string> = {
   received: "Received",
@@ -42,6 +44,75 @@ interface JobResult {
   created_at: string;
   service_charge: number | null;
   charge_type: string | null;
+}
+
+function FeedbackForm({ jobId, jobNumber, customerName }: { jobId: string; jobNumber: string; customerName: string }) {
+  const [rating, setRating] = useState(0);
+  const [hovered, setHovered] = useState(0);
+  const [text, setText] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  // Check if already submitted
+  useEffect(() => {
+    supabase.from("customer_feedback").select("id").eq("job_id", jobId).limit(1).then(({ data }) => {
+      if (data && data.length > 0) setSubmitted(true);
+    });
+  }, [jobId]);
+
+  const handleSubmit = async () => {
+    if (rating === 0) { toast.error("Please select a rating"); return; }
+    setSubmitting(true);
+    const { error } = await supabase.from("customer_feedback").insert({
+      job_id: jobId, job_number: jobNumber, customer_name: customerName,
+      rating, feedback_text: text,
+    } as any);
+    setSubmitting(false);
+    if (error) { toast.error("Failed to submit feedback"); return; }
+    toast.success("Thank you for your feedback!");
+    setSubmitted(true);
+  };
+
+  if (submitted) {
+    return (
+      <div className="rounded-md border bg-green-50 dark:bg-green-950/20 p-3 text-center">
+        <CheckCircle className="h-5 w-5 text-green-600 mx-auto mb-1" />
+        <p className="text-sm font-medium text-green-700 dark:text-green-400">Thank you for your feedback!</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-md border p-3 space-y-3">
+      <div className="flex items-center gap-2">
+        <MessageSquare className="h-4 w-4 text-muted-foreground" />
+        <p className="text-sm font-semibold">Rate your experience</p>
+      </div>
+      <div className="flex gap-1">
+        {[1, 2, 3, 4, 5].map(i => (
+          <button
+            key={i}
+            onMouseEnter={() => setHovered(i)}
+            onMouseLeave={() => setHovered(0)}
+            onClick={() => setRating(i)}
+            className="p-0.5 transition-transform hover:scale-110"
+          >
+            <Star className={`h-6 w-6 ${i <= (hovered || rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`} />
+          </button>
+        ))}
+      </div>
+      <Textarea
+        placeholder="Tell us about your experience (optional)..."
+        value={text}
+        onChange={e => setText(e.target.value)}
+        rows={2}
+        className="text-sm"
+      />
+      <Button size="sm" onClick={handleSubmit} disabled={submitting} className="w-full">
+        {submitting ? "Submitting..." : "Submit Feedback"}
+      </Button>
+    </div>
+  );
 }
 
 export default function CustomerPortal() {
@@ -99,7 +170,7 @@ export default function CustomerPortal() {
             <h1 className="text-lg sm:text-2xl font-bold text-foreground">Job Status Tracker</h1>
           </div>
           <p className="text-muted-foreground text-xs sm:text-sm">
-            Enter your Challan Number to check the current status of your repair.
+            Enter your Challan Number or Job Number to check the current status of your repair.
           </p>
         </div>
       </div>
@@ -120,7 +191,7 @@ export default function CustomerPortal() {
       <div className="mx-auto max-w-3xl px-3 sm:px-4 py-4 sm:py-8">
         <form onSubmit={handleSearch} className="flex gap-2">
           <Input
-            placeholder="Enter Challan Number..."
+            placeholder="Enter Challan Number or Job Number..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="text-sm sm:text-base"
@@ -144,7 +215,7 @@ export default function CustomerPortal() {
             <div className="text-center text-muted-foreground py-12">
               <Search className="h-10 w-10 mx-auto mb-3 opacity-40" />
               <p className="text-lg font-medium">No jobs found</p>
-              <p className="text-sm mt-1">Please check your Challan Number and try again.</p>
+              <p className="text-sm mt-1">Please check your Challan Number or Job Number and try again.</p>
             </div>
           )}
 
@@ -271,6 +342,11 @@ export default function CustomerPortal() {
                       </Button>
                     )}
                   </div>
+
+                  {/* Feedback Form - show for picked-up jobs */}
+                  {job.status === "picked-up" && (
+                    <FeedbackForm jobId={job.id} jobNumber={job.job_number} customerName={job.customer_name} />
+                  )}
                 </CardContent>
               </Card>
             );
