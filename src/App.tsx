@@ -119,6 +119,10 @@ function AppRoutes() {
       <Route path="/cashbook/cash-out" element={<ProtectedRoute><CashOut /></ProtectedRoute>} />
       <Route path="/cashbook/balance" element={<ProtectedRoute><BalanceSheet /></ProtectedRoute>} />
       <Route path="/print-invoice" element={<ProtectedRoute><PrintInvoice /></ProtectedRoute>} />
+      <Route path="/inventory" element={<ProtectedRoute><InventoryList /></ProtectedRoute>} />
+      <Route path="/warranty" element={<ProtectedRoute><WarrantyList /></ProtectedRoute>} />
+      <Route path="/analytics" element={<ProtectedRoute><AnalyticsDashboard /></ProtectedRoute>} />
+      <Route path="/feedback" element={<ProtectedRoute><CustomerFeedback /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
