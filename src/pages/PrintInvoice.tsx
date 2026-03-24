@@ -366,8 +366,8 @@ export default function PrintInvoice() {
             <div><strong>Challan No :</strong> {firstJob.factory_challan_number || "—"}</div>
             <div><strong>Print :</strong> {printDate}</div>
             <div><strong>Total Items :</strong> {jobs.length}</div>
-            {!isDelivery && firstJob.created_by_name && (
-              <div><strong>Received By :</strong> {firstJob.created_by_name}</div>
+            {firstJob.created_by_name && (
+              <div><strong>Created By :</strong> {firstJob.created_by_name}</div>
             )}
             {isDelivery && firstJob.delivered_by_name && (
               <div><strong>Delivered By :</strong> {firstJob.delivered_by_name}</div>
