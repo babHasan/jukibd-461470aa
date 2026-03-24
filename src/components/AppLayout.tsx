@@ -48,6 +48,7 @@ import {
   Package,
   ShieldCheck,
   Star,
+  QrCode,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { ReactNode, useState, useEffect } from "react";
@@ -167,6 +168,8 @@ const navItems: NavItem[] = [
   { to: "/warranty", label: "WARRANTY", icon: ShieldCheck },
   { to: "/analytics", label: "ANALYTICS", icon: BarChart3 },
   { to: "/feedback", label: "FEEDBACK", icon: Star },
+  { to: "/qr-scanner", label: "QR SCANNER", icon: QrCode },
+  { to: "/tally-export", label: "TALLY EXPORT", icon: FileText },
   { to: "/challan-verify", label: "CHALLAN VERIFY", icon: CheckCheck },
   {
     to: "/settings",
