@@ -208,6 +208,44 @@ export type Database = {
         }
         Relationships: []
       }
+      customer_feedback: {
+        Row: {
+          created_at: string
+          customer_name: string
+          feedback_text: string
+          id: string
+          job_id: string | null
+          job_number: string
+          rating: number
+        }
+        Insert: {
+          created_at?: string
+          customer_name?: string
+          feedback_text?: string
+          id?: string
+          job_id?: string | null
+          job_number?: string
+          rating?: number
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string
+          feedback_text?: string
+          id?: string
+          job_id?: string | null
+          job_number?: string
+          rating?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_feedback_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       expense_categories: {
         Row: {
           created_at: string
@@ -367,6 +405,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      inventory: {
+        Row: {
+          brand: string
+          category: string
+          created_at: string
+          id: string
+          location: string
+          min_stock_level: number
+          part_name: string
+          part_number: string
+          quantity: number
+          remarks: string
+          supplier: string
+          unit_price: number
+          updated_at: string
+        }
+        Insert: {
+          brand?: string
+          category?: string
+          created_at?: string
+          id?: string
+          location?: string
+          min_stock_level?: number
+          part_name: string
+          part_number?: string
+          quantity?: number
+          remarks?: string
+          supplier?: string
+          unit_price?: number
+          updated_at?: string
+        }
+        Update: {
+          brand?: string
+          category?: string
+          created_at?: string
+          id?: string
+          location?: string
+          min_stock_level?: number
+          part_name?: string
+          part_number?: string
+          quantity?: number
+          remarks?: string
+          supplier?: string
+          unit_price?: number
+          updated_at?: string
+        }
+        Relationships: []
       }
       jobs: {
         Row: {
@@ -760,6 +846,56 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      warranties: {
+        Row: {
+          created_at: string
+          customer_name: string
+          id: string
+          job_id: string | null
+          job_number: string
+          status: string
+          terms: string
+          updated_at: string
+          warranty_end_date: string
+          warranty_start_date: string
+          warranty_type: string
+        }
+        Insert: {
+          created_at?: string
+          customer_name?: string
+          id?: string
+          job_id?: string | null
+          job_number?: string
+          status?: string
+          terms?: string
+          updated_at?: string
+          warranty_end_date: string
+          warranty_start_date?: string
+          warranty_type?: string
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string
+          id?: string
+          job_id?: string | null
+          job_number?: string
+          status?: string
+          terms?: string
+          updated_at?: string
+          warranty_end_date?: string
+          warranty_start_date?: string
+          warranty_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "warranties_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
