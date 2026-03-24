@@ -48,6 +48,8 @@ interface JobResult {
   receive_amount?: number | null;
   discount?: number | null;
   delivery_date?: string | null;
+  company_name?: string;
+  contact_number?: string;
 }
 
 interface ClientInfo {
@@ -178,6 +180,12 @@ function JobCard({ job, showFinancials = false }: { job: JobResult; showFinancia
 
         {/* Details */}
         <div className="grid grid-cols-2 gap-3 text-sm">
+          {job.company_name && (
+            <div className="col-span-2">
+              <p className="text-muted-foreground text-xs">Company</p>
+              <p className="font-medium text-foreground">{job.company_name}</p>
+            </div>
+          )}
           <div>
             <p className="text-muted-foreground text-xs">Customer</p>
             <p className="font-medium text-foreground">{job.customer_name}</p>
