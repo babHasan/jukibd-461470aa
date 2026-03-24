@@ -373,6 +373,17 @@ export default function PrintInvoice() {
               <div><strong>Delivered By :</strong> {firstJob.delivered_by_name}</div>
             )}
           </div>
+          {/* QR Code for quick job lookup */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "4px 8px", border: "1px solid #aaa", borderRadius: 2, minWidth: 90 }}>
+            <QRCodeSVG
+              value={jobs.length === 1 ? `JUKIBD-${firstJob.job_number}` : `JUKIBD-CH-${firstJob.factory_challan_number || firstJob.job_number}`}
+              size={72}
+              level="H"
+            />
+            <div style={{ fontSize: 8, marginTop: 3, fontWeight: 600, textAlign: "center" }}>
+              {jobs.length === 1 ? firstJob.job_number : (firstJob.factory_challan_number || firstJob.job_number)}
+            </div>
+          </div>
         </div>
 
         {/* Section Label */}
