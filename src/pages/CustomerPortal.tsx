@@ -374,6 +374,30 @@ export default function CustomerPortal() {
   const activeJobs = historyJobs.filter(j => j.status !== "picked-up").length;
   const completedJobs = historyJobs.filter(j => j.status === "picked-up").length;
 
+  if (portalEnabled === null) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (!portalEnabled) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Card className="max-w-md mx-4">
+          <CardContent className="pt-6 text-center space-y-3">
+            <Package className="h-12 w-12 text-muted-foreground mx-auto" />
+            <h2 className="text-xl font-bold text-foreground">Portal Unavailable</h2>
+            <p className="text-muted-foreground text-sm">
+              The client portal is currently disabled. Please contact the service center for assistance.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
