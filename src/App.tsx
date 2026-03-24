@@ -125,6 +125,8 @@ function AppRoutes() {
       <Route path="/warranty" element={<ProtectedRoute><WarrantyList /></ProtectedRoute>} />
       <Route path="/analytics" element={<ProtectedRoute><AnalyticsDashboard /></ProtectedRoute>} />
       <Route path="/feedback" element={<ProtectedRoute><CustomerFeedback /></ProtectedRoute>} />
+      <Route path="/qr-scanner" element={<ProtectedRoute><QrScanner /></ProtectedRoute>} />
+      <Route path="/tally-export" element={<ProtectedRoute><TallyExport /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
