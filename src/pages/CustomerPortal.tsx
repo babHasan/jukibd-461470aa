@@ -4,9 +4,11 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Search, Package, Clock, CheckCircle, Loader2, Printer, PartyPopper } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Search, Package, Clock, CheckCircle, Loader2, Printer, PartyPopper, Star, MessageSquare } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 const jobStatusLabels: Record<string, string> = {
   received: "Received",
