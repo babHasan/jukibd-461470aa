@@ -273,6 +273,11 @@ export default function CustomerPortal() {
                       </Button>
                     )}
                   </div>
+
+                  {/* Feedback Form - show for picked-up jobs */}
+                  {job.status === "picked-up" && (
+                    <FeedbackForm jobId={job.id} jobNumber={job.job_number} customerName={job.customer_name} />
+                  )}
                 </CardContent>
               </Card>
             );
