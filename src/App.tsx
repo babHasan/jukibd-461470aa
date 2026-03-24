@@ -52,6 +52,10 @@ import NotificationSettings from "./pages/settings/NotificationSettings";
 import CashIn from "./pages/cashbook/CashIn";
 import CashOut from "./pages/cashbook/CashOut";
 import BalanceSheet from "./pages/cashbook/BalanceSheet";
+import InventoryList from "./pages/inventory/InventoryList";
+import WarrantyList from "./pages/warranty/WarrantyList";
+import AnalyticsDashboard from "./pages/analytics/AnalyticsDashboard";
+import CustomerFeedback from "./pages/feedback/CustomerFeedback";
 import { ThemeProvider } from "@/context/ThemeContext";
 
 const queryClient = new QueryClient();
