@@ -295,6 +295,7 @@ export default function CustomerPortal() {
   const [scrollMessage, setScrollMessage] = useState("");
   const [scrollFontSize, setScrollFontSize] = useState(14);
   const [scrollFontColor, setScrollFontColor] = useState("#FFFFFF");
+  const [portalEnabled, setPortalEnabled] = useState<boolean | null>(null);
 
   // Job History state
   const [phone, setPhone] = useState("");
@@ -304,6 +305,16 @@ export default function CustomerPortal() {
   const [historyLoading, setHistoryLoading] = useState(false);
 
   useEffect(() => {
+    // Check portal enabled status
+    supabase
+      .from("company_info")
+      .select("portal_enabled")
+      .limit(1)
+      .single()
+      .then(({ data }) => {
+        setPortalEnabled((data as any)?.portal_enabled ?? true);
+      });
+
     supabase
       .from("portal_scroll_messages")
       .select("message_text, font_size, font_color")
