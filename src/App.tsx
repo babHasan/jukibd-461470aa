@@ -56,6 +56,8 @@ import InventoryList from "./pages/inventory/InventoryList";
 import WarrantyList from "./pages/warranty/WarrantyList";
 import AnalyticsDashboard from "./pages/analytics/AnalyticsDashboard";
 import CustomerFeedback from "./pages/feedback/CustomerFeedback";
+import QrScanner from "./pages/QrScanner";
+import TallyExport from "./pages/TallyExport";
 import { ThemeProvider } from "@/context/ThemeContext";
 
 const queryClient = new QueryClient();
