@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
 
     const { data, error } = await supabase
       .from("jobs")
-      .select("id, job_number, brand_name, model_name, board_name, board_serial, details_of_problem, customer_name, branch_name, factory_challan_number, job_date, status, created_at, service_charge, charge_type")
+      .select("id, job_number, brand_name, model_name, board_name, board_serial, details_of_problem, customer_name, branch_name, factory_challan_number, job_date, status, created_at, service_charge, charge_type, customer_id")
       .or(`factory_challan_number.ilike.%${trimmed}%,job_number.ilike.%${trimmed}%`)
       .order("created_at", { ascending: false })
       .limit(20);
@@ -72,6 +72,23 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ jobs: [] }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    // Fetch client company names
+    if (data && data.length > 0) {
+      const customerIds = [...new Set(data.filter(j => j.customer_id).map(j => j.customer_id))];
+      if (customerIds.length > 0) {
+        const { data: clients } = await supabase
+          .from("clients")
+          .select("id, company_name, contact_number")
+          .in("id", customerIds);
+        const clientMap = new Map((clients || []).map(c => [c.id, c]));
+        for (const job of data) {
+          const cl = job.customer_id ? clientMap.get(job.customer_id) : null;
+          (job as any).company_name = cl?.company_name || "";
+          (job as any).contact_number = cl?.contact_number || "";
+        }
+      }
     }
 
     return new Response(JSON.stringify({ jobs: data || [] }), {
