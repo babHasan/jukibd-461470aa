@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
+import { QRCodeSVG } from "qrcode.react";
 
 function numberToWords(num: number): string {
   if (num === 0) return "Zero";
