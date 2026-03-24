@@ -45,6 +45,9 @@ import {
   Bell,
   Palette,
   Megaphone,
+  Package,
+  ShieldCheck,
+  Star,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { ReactNode, useState, useEffect } from "react";
@@ -160,6 +163,10 @@ const navItems: NavItem[] = [
       { to: "/accounts/chart", label: "Chart of Accounts", icon: FileText },
     ],
   },
+  { to: "/inventory", label: "INVENTORY", icon: Package },
+  { to: "/warranty", label: "WARRANTY", icon: ShieldCheck },
+  { to: "/analytics", label: "ANALYTICS", icon: BarChart3 },
+  { to: "/feedback", label: "FEEDBACK", icon: Star },
   { to: "/challan-verify", label: "CHALLAN VERIFY", icon: CheckCheck },
   {
     to: "/settings",

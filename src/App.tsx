@@ -52,6 +52,10 @@ import NotificationSettings from "./pages/settings/NotificationSettings";
 import CashIn from "./pages/cashbook/CashIn";
 import CashOut from "./pages/cashbook/CashOut";
 import BalanceSheet from "./pages/cashbook/BalanceSheet";
+import InventoryList from "./pages/inventory/InventoryList";
+import WarrantyList from "./pages/warranty/WarrantyList";
+import AnalyticsDashboard from "./pages/analytics/AnalyticsDashboard";
+import CustomerFeedback from "./pages/feedback/CustomerFeedback";
 import { ThemeProvider } from "@/context/ThemeContext";
 
 const queryClient = new QueryClient();
@@ -115,6 +119,10 @@ function AppRoutes() {
       <Route path="/cashbook/cash-out" element={<ProtectedRoute><CashOut /></ProtectedRoute>} />
       <Route path="/cashbook/balance" element={<ProtectedRoute><BalanceSheet /></ProtectedRoute>} />
       <Route path="/print-invoice" element={<ProtectedRoute><PrintInvoice /></ProtectedRoute>} />
+      <Route path="/inventory" element={<ProtectedRoute><InventoryList /></ProtectedRoute>} />
+      <Route path="/warranty" element={<ProtectedRoute><WarrantyList /></ProtectedRoute>} />
+      <Route path="/analytics" element={<ProtectedRoute><AnalyticsDashboard /></ProtectedRoute>} />
+      <Route path="/feedback" element={<ProtectedRoute><CustomerFeedback /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
