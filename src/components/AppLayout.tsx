@@ -48,6 +48,7 @@ import {
   Package,
   ShieldCheck,
   Star,
+  QrCode,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { ReactNode, useState, useEffect } from "react";
