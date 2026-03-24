@@ -46,6 +46,75 @@ interface JobResult {
   charge_type: string | null;
 }
 
+function FeedbackForm({ jobId, jobNumber, customerName }: { jobId: string; jobNumber: string; customerName: string }) {
+  const [rating, setRating] = useState(0);
+  const [hovered, setHovered] = useState(0);
+  const [text, setText] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  // Check if already submitted
+  useEffect(() => {
+    supabase.from("customer_feedback").select("id").eq("job_id", jobId).limit(1).then(({ data }) => {
+      if (data && data.length > 0) setSubmitted(true);
+    });
+  }, [jobId]);
+
+  const handleSubmit = async () => {
+    if (rating === 0) { toast.error("Please select a rating"); return; }
+    setSubmitting(true);
+    const { error } = await supabase.from("customer_feedback").insert({
+      job_id: jobId, job_number: jobNumber, customer_name: customerName,
+      rating, feedback_text: text,
+    } as any);
+    setSubmitting(false);
+    if (error) { toast.error("Failed to submit feedback"); return; }
+    toast.success("Thank you for your feedback!");
+    setSubmitted(true);
+  };
+
+  if (submitted) {
+    return (
+      <div className="rounded-md border bg-green-50 dark:bg-green-950/20 p-3 text-center">
+        <CheckCircle className="h-5 w-5 text-green-600 mx-auto mb-1" />
+        <p className="text-sm font-medium text-green-700 dark:text-green-400">Thank you for your feedback!</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-md border p-3 space-y-3">
+      <div className="flex items-center gap-2">
+        <MessageSquare className="h-4 w-4 text-muted-foreground" />
+        <p className="text-sm font-semibold">Rate your experience</p>
+      </div>
+      <div className="flex gap-1">
+        {[1, 2, 3, 4, 5].map(i => (
+          <button
+            key={i}
+            onMouseEnter={() => setHovered(i)}
+            onMouseLeave={() => setHovered(0)}
+            onClick={() => setRating(i)}
+            className="p-0.5 transition-transform hover:scale-110"
+          >
+            <Star className={`h-6 w-6 ${i <= (hovered || rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`} />
+          </button>
+        ))}
+      </div>
+      <Textarea
+        placeholder="Tell us about your experience (optional)..."
+        value={text}
+        onChange={e => setText(e.target.value)}
+        rows={2}
+        className="text-sm"
+      />
+      <Button size="sm" onClick={handleSubmit} disabled={submitting} className="w-full">
+        {submitting ? "Submitting..." : "Submit Feedback"}
+      </Button>
+    </div>
+  );
+}
+
 export default function CustomerPortal() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<JobResult[]>([]);
