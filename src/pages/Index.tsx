@@ -195,7 +195,13 @@ const Index = () => {
         {/* Job Orders Section */}
         <div className="rounded-lg border bg-card shadow-sm">
           <div className="flex flex-col gap-3 border-b p-4">
-            <h2 className="text-lg font-semibold text-foreground">Job Orders</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-foreground">Job Orders</h2>
+              <Button onClick={() => navigate("/add-job")} className="gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
+                <Plus className="h-4 w-4" />
+                Add Job
+              </Button>
+            </div>
             <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
               <div className="relative w-full sm:w-auto">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
