@@ -48,6 +48,8 @@ interface JobResult {
   receive_amount?: number | null;
   discount?: number | null;
   delivery_date?: string | null;
+  company_name?: string;
+  contact_number?: string;
 }
 
 interface ClientInfo {
