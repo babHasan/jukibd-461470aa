@@ -16,7 +16,9 @@ import { UserPhotoUpload } from "@/components/UserPhotoUpload";
 const ALL_MODULES = [
   "Dashboard", "Branch", "Admin", "Machine Data", "Client Data",
   "Add Job", "Job List", "Collection", "Expense / Income",
-  "Ledger", "Reports", "Cashbook", "Setting", "Backup Database", "Delivery",
+  "Ledger", "Reports", "Cashbook", "Accounts", "Challan Verify",
+  "Inventory", "Warranty", "Analytics", "Feedback",
+  "QR Scanner", "Tally Export", "Setting", "Backup Database", "Delivery",
 ];
 
 export default function EditUser() {
