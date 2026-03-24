@@ -45,6 +45,9 @@ import {
   Bell,
   Palette,
   Megaphone,
+  Package,
+  ShieldCheck,
+  Star,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { ReactNode, useState, useEffect } from "react";
