@@ -295,6 +295,7 @@ export default function CustomerPortal() {
   const [scrollMessage, setScrollMessage] = useState("");
   const [scrollFontSize, setScrollFontSize] = useState(14);
   const [scrollFontColor, setScrollFontColor] = useState("#FFFFFF");
+  const [portalEnabled, setPortalEnabled] = useState<boolean | null>(null);
 
   // Job History state
   const [phone, setPhone] = useState("");
@@ -304,6 +305,16 @@ export default function CustomerPortal() {
   const [historyLoading, setHistoryLoading] = useState(false);
 
   useEffect(() => {
+    // Check portal enabled status
+    supabase
+      .from("company_info")
+      .select("portal_enabled")
+      .limit(1)
+      .single()
+      .then(({ data }) => {
+        setPortalEnabled((data as any)?.portal_enabled ?? true);
+      });
+
     supabase
       .from("portal_scroll_messages")
       .select("message_text, font_size, font_color")
@@ -362,6 +373,30 @@ export default function CustomerPortal() {
   const totalJobs = historyJobs.length;
   const activeJobs = historyJobs.filter(j => j.status !== "picked-up").length;
   const completedJobs = historyJobs.filter(j => j.status === "picked-up").length;
+
+  if (portalEnabled === null) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (!portalEnabled) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Card className="max-w-md mx-4">
+          <CardContent className="pt-6 text-center space-y-3">
+            <Package className="h-12 w-12 text-muted-foreground mx-auto" />
+            <h2 className="text-xl font-bold text-foreground">Portal Unavailable</h2>
+            <p className="text-muted-foreground text-sm">
+              The client portal is currently disabled. Please contact the service center for assistance.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">

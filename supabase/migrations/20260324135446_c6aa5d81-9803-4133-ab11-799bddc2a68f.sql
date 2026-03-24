@@ -1,0 +1,1 @@
+ALTER TABLE public.company_info ADD COLUMN portal_enabled boolean NOT NULL DEFAULT true;
