@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
+import { QRCodeSVG } from "qrcode.react";
 
 function numberToWords(num: number): string {
   if (num === 0) return "Zero";
@@ -371,6 +372,17 @@ export default function PrintInvoice() {
             {isDelivery && firstJob.delivered_by_name && (
               <div><strong>Delivered By :</strong> {firstJob.delivered_by_name}</div>
             )}
+          </div>
+          {/* QR Code for quick job lookup */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "4px 8px", border: "1px solid #aaa", borderRadius: 2, minWidth: 90 }}>
+            <QRCodeSVG
+              value={jobs.length === 1 ? `JUKIBD-${firstJob.job_number}` : `JUKIBD-CH-${firstJob.factory_challan_number || firstJob.job_number}`}
+              size={72}
+              level="H"
+            />
+            <div style={{ fontSize: 8, marginTop: 3, fontWeight: 600, textAlign: "center" }}>
+              {jobs.length === 1 ? firstJob.job_number : (firstJob.factory_challan_number || firstJob.job_number)}
+            </div>
           </div>
         </div>
 
