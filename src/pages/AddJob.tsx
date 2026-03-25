@@ -362,16 +362,15 @@ const AddJob = () => {
               <CardTitle className="text-sm font-bold text-primary-foreground uppercase">Added Job</CardTitle>
             </CardHeader>
             <CardContent className="p-2">
-              <div className="overflow-auto max-h-[500px]">
+              {/* Desktop table */}
+              <div className="hidden sm:block overflow-auto max-h-[500px]">
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead className="text-xs font-bold">SL</TableHead>
-                      
                       <TableHead className="text-xs font-bold">BRAND</TableHead>
                       <TableHead className="text-xs font-bold">MODEL</TableHead>
                       <TableHead className="text-xs font-bold">BOARD</TableHead>
-                      
                       <TableHead className="text-xs font-bold">BOARD SERIAL</TableHead>
                       <TableHead className="text-xs font-bold">DETAILS OF PROBLEM</TableHead>
                       <TableHead className="text-xs font-bold">REMARKS</TableHead>
@@ -390,11 +389,9 @@ const AddJob = () => {
                       addedJobs.map((job, idx) => (
                         <TableRow key={job.id}>
                           <TableCell className="text-xs">{idx + 1}</TableCell>
-                          
                           <TableCell className="text-xs">{job.brand}</TableCell>
                           <TableCell className="text-xs">{job.model}</TableCell>
                           <TableCell className="text-xs">{job.board}</TableCell>
-                          
                           <TableCell className="text-xs">{job.boardSerial}</TableCell>
                           <TableCell className="text-xs max-w-[120px] truncate">{job.detailsOfProblem}</TableCell>
                           <TableCell className="text-xs max-w-[100px] truncate">{job.remarks}</TableCell>
@@ -409,6 +406,27 @@ const AddJob = () => {
                     )}
                   </TableBody>
                 </Table>
+              </div>
+              {/* Mobile card view */}
+              <div className="sm:hidden space-y-2 p-2 max-h-[400px] overflow-auto">
+                {addedJobs.length === 0 ? (
+                  <p className="text-center text-muted-foreground text-xs py-8">No jobs added yet</p>
+                ) : (
+                  addedJobs.map((job, idx) => (
+                    <div key={job.id} className="rounded-lg border bg-card p-3 space-y-1 text-xs">
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono font-semibold">{job.jobNumber}</span>
+                        <Button variant="destructive" size="icon" className="h-6 w-6" onClick={() => handleRemoveJob(job.id)}>
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      <p><span className="font-semibold">Brand:</span> {job.brand}</p>
+                      <p><span className="font-semibold">Model:</span> {job.model}</p>
+                      <p><span className="font-semibold">Board:</span> {job.board} {job.boardSerial && `(${job.boardSerial})`}</p>
+                      {job.detailsOfProblem && <p className="text-muted-foreground line-clamp-2">{job.detailsOfProblem}</p>}
+                    </div>
+                  ))
+                )}
               </div>
             </CardContent>
           </Card>
