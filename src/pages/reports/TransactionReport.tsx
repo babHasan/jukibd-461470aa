@@ -58,6 +58,7 @@ const statusOptions = [
 ];
 
 export default function TransactionReport() {
+  const { isAdmin } = useAuth();
   const today = new Date().toISOString().split("T")[0];
   const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString().split("T")[0];
 
