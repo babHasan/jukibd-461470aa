@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
 import { AppLayout } from "@/components/AppLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
@@ -57,6 +58,7 @@ const statusOptions = [
 ];
 
 export default function TransactionReport() {
+  const { isAdmin } = useAuth();
   const today = new Date().toISOString().split("T")[0];
   const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString().split("T")[0];
 
@@ -251,7 +253,7 @@ export default function TransactionReport() {
                     <TableHead className="font-semibold">Customer Info</TableHead>
                     <TableHead className="font-semibold">Service</TableHead>
                     <TableHead className="font-semibold text-center">Print</TableHead>
-                    <TableHead className="font-semibold text-center">Delete</TableHead>
+                    {isAdmin && <TableHead className="font-semibold text-center">Delete</TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -321,17 +323,19 @@ export default function TransactionReport() {
                             </Button>
                           </div>
                         </TableCell>
-                        <TableCell className="text-center">
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            className="text-[10px] h-7"
-                            onClick={() => handleDelete(group)}
-                          >
-                            <Trash2 className="h-3 w-3 mr-1" />
-                            DELETE
-                          </Button>
-                        </TableCell>
+                        {isAdmin && (
+                          <TableCell className="text-center">
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              className="text-[10px] h-7"
+                              onClick={() => handleDelete(group)}
+                            >
+                              <Trash2 className="h-3 w-3 mr-1" />
+                              DELETE
+                            </Button>
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))
                   )}
