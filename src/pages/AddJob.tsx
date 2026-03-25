@@ -285,13 +285,13 @@ const AddJob = () => {
               <CardTitle className="text-sm font-bold text-primary-foreground uppercase">Job</CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-3">
-              <div className="grid grid-cols-[140px_1fr] items-center gap-2">
-                <Label className="text-right text-xs font-semibold">Job Number</Label>
+              <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start sm:items-center gap-1 sm:gap-2">
+                <Label className="text-left sm:text-right text-xs font-semibold">Job Number</Label>
                 <Input value={jobNumber} onChange={(e) => setJobNumber(e.target.value)} placeholder="Auto-generated if empty" className="h-8 text-sm" />
               </div>
 
-              <div className="grid grid-cols-[140px_1fr] items-center gap-2">
-                <Label className="text-right text-xs font-semibold">
+              <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start sm:items-center gap-1 sm:gap-2">
+                <Label className="text-left sm:text-right text-xs font-semibold">
                   Brand Name <span className="text-destructive">*</span>
                 </Label>
                 <Select value={brandName} onValueChange={setBrandName}>
@@ -304,8 +304,8 @@ const AddJob = () => {
                 </Select>
               </div>
 
-              <div className="grid grid-cols-[140px_1fr] items-center gap-2">
-                <Label className="text-right text-xs font-semibold">
+              <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start sm:items-center gap-1 sm:gap-2">
+                <Label className="text-left sm:text-right text-xs font-semibold">
                   Select Model <span className="text-destructive">*</span>
                 </Label>
                 <Select value={selectedModel} onValueChange={setSelectedModel}>
@@ -318,8 +318,8 @@ const AddJob = () => {
                 </Select>
               </div>
 
-              <div className="grid grid-cols-[140px_1fr] items-center gap-2">
-                <Label className="text-right text-xs font-semibold">
+              <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start sm:items-center gap-1 sm:gap-2">
+                <Label className="text-left sm:text-right text-xs font-semibold">
                   Select Board <span className="text-destructive">*</span>
                 </Label>
                 <Select value={board} onValueChange={setBoard}>
@@ -332,18 +332,18 @@ const AddJob = () => {
                 </Select>
               </div>
 
-              <div className="grid grid-cols-[140px_1fr] items-center gap-2">
-                <Label className="text-right text-xs font-semibold">Board Serial Number</Label>
+              <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start sm:items-center gap-1 sm:gap-2">
+                <Label className="text-left sm:text-right text-xs font-semibold">Board Serial Number</Label>
                 <Input value={boardSerial} onChange={(e) => setBoardSerial(e.target.value)} className="h-8 text-sm" />
               </div>
 
-              <div className="grid grid-cols-[140px_1fr] items-start gap-2">
-                <Label className="text-right text-xs font-semibold pt-2">Details Of Problem</Label>
+              <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start gap-1 sm:gap-2">
+                <Label className="text-left sm:text-right text-xs font-semibold sm:pt-2">Details Of Problem</Label>
                 <Textarea value={detailsOfProblem} onChange={(e) => setDetailsOfProblem(e.target.value)} className="text-sm min-h-[60px]" />
               </div>
 
-              <div className="grid grid-cols-[140px_1fr] items-start gap-2">
-                <Label className="text-right text-xs font-semibold pt-2">Remarks</Label>
+              <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start gap-1 sm:gap-2">
+                <Label className="text-left sm:text-right text-xs font-semibold sm:pt-2">Remarks</Label>
                 <Textarea value={remarks} onChange={(e) => setRemarks(e.target.value)} className="text-sm min-h-[60px]" />
               </div>
 
