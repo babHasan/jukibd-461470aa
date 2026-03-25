@@ -253,7 +253,7 @@ export default function TransactionReport() {
                     <TableHead className="font-semibold">Customer Info</TableHead>
                     <TableHead className="font-semibold">Service</TableHead>
                     <TableHead className="font-semibold text-center">Print</TableHead>
-                    <TableHead className="font-semibold text-center">Delete</TableHead>
+                    {isAdmin && <TableHead className="font-semibold text-center">Delete</TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
