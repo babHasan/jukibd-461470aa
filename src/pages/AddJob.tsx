@@ -347,9 +347,9 @@ const AddJob = () => {
                 <Textarea value={remarks} onChange={(e) => setRemarks(e.target.value)} className="text-sm min-h-[60px]" />
               </div>
 
-              <div className="grid grid-cols-[140px_1fr] items-center gap-2">
-                <div />
-                <Button onClick={handleAddJob} size="sm" className="w-fit bg-accent hover:bg-accent/90 text-accent-foreground">
+              <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-center gap-1 sm:gap-2">
+                <div className="hidden sm:block" />
+                <Button onClick={handleAddJob} size="sm" className="w-full sm:w-fit bg-accent hover:bg-accent/90 text-accent-foreground">
                   <Plus className="h-3 w-3 mr-1" /> ADD
                 </Button>
               </div>
@@ -417,8 +417,8 @@ const AddJob = () => {
         {/* Bottom Section: Customer, Branch, Date, Challan */}
         <Card>
           <CardContent className="p-4 space-y-3">
-            <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
-              <Label className="text-right text-xs font-semibold">Select Customer</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-[160px_1fr] items-start sm:items-center gap-1 sm:gap-2 max-w-2xl">
+              <Label className="text-left sm:text-right text-xs font-semibold">Select Customer</Label>
               <Select value={selectedCustomer} onValueChange={(val) => {
                 setSelectedCustomer(val);
                 const c = clients.find((cl) => cl.id === val);
@@ -440,35 +440,35 @@ const AddJob = () => {
               </Select>
             </div>
 
-            <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
-              <Label className="text-right text-xs font-semibold">
+            <div className="grid grid-cols-1 sm:grid-cols-[160px_1fr] items-start sm:items-center gap-1 sm:gap-2 max-w-2xl">
+              <Label className="text-left sm:text-right text-xs font-semibold">
                 Customer Name <span className="text-destructive">*</span>
               </Label>
               <Input value={manualCustomerName} onChange={(e) => { setManualCustomerName(e.target.value); setSelectedCustomer(""); }} placeholder="Enter customer name" className="h-8 text-sm" />
             </div>
 
-            <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
-              <Label className="text-right text-xs font-semibold">Company Name</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-[160px_1fr] items-start sm:items-center gap-1 sm:gap-2 max-w-2xl">
+              <Label className="text-left sm:text-right text-xs font-semibold">Company Name</Label>
               <Input value={manualCompanyName} onChange={(e) => { setManualCompanyName(e.target.value); setSelectedCustomer(""); }} placeholder="Enter company name" className="h-8 text-sm" />
             </div>
 
-            <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
-              <Label className="text-right text-xs font-semibold">Mobile Number</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-[160px_1fr] items-start sm:items-center gap-1 sm:gap-2 max-w-2xl">
+              <Label className="text-left sm:text-right text-xs font-semibold">Mobile Number</Label>
               <Input value={manualCustomerMobile} onChange={(e) => { setManualCustomerMobile(e.target.value); setSelectedCustomer(""); }} placeholder="Enter mobile number" className="h-8 text-sm" />
             </div>
 
-            <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
-              <Label className="text-right text-xs font-semibold">Address</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-[160px_1fr] items-start sm:items-center gap-1 sm:gap-2 max-w-2xl">
+              <Label className="text-left sm:text-right text-xs font-semibold">Address</Label>
               <Input value={manualAddress} onChange={(e) => { setManualAddress(e.target.value); setSelectedCustomer(""); }} placeholder="Enter address" className="h-8 text-sm" />
             </div>
 
-            <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
-              <Label className="text-right text-xs font-semibold">Factory Challan Number</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-[160px_1fr] items-start sm:items-center gap-1 sm:gap-2 max-w-2xl">
+              <Label className="text-left sm:text-right text-xs font-semibold">Factory Challan Number</Label>
               <Input value={factoryChallanNumber} onChange={(e) => setFactoryChallanNumber(e.target.value)} className="h-8 text-sm" />
             </div>
 
-            <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
-              <Label className="text-right text-xs font-semibold">Branch</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-[160px_1fr] items-start sm:items-center gap-1 sm:gap-2 max-w-2xl">
+              <Label className="text-left sm:text-right text-xs font-semibold">Branch</Label>
               <Select value={selectedBranch} onValueChange={setSelectedBranch}>
                 <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Select Branch" /></SelectTrigger>
                 <SelectContent>
@@ -479,15 +479,15 @@ const AddJob = () => {
               </Select>
             </div>
 
-            <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
-              <Label className="text-right text-xs font-semibold">
+            <div className="grid grid-cols-1 sm:grid-cols-[160px_1fr] items-start sm:items-center gap-1 sm:gap-2 max-w-2xl">
+              <Label className="text-left sm:text-right text-xs font-semibold">
                 Date <span className="text-destructive">*</span>
               </Label>
               <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="h-8 text-sm w-40" />
             </div>
 
-            <div className="grid grid-cols-[160px_1fr] items-center gap-2 max-w-2xl">
-              <Label className="text-right text-xs font-semibold">Challan Copy Upload</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-[160px_1fr] items-start sm:items-center gap-1 sm:gap-2 max-w-2xl">
+              <Label className="text-left sm:text-right text-xs font-semibold">Challan Copy Upload</Label>
               <Input type="file" accept="image/*,.pdf" onChange={(e) => setChallanFile(e.target.files?.[0] || null)} className="h-8 text-sm" />
             </div>
           </CardContent>
