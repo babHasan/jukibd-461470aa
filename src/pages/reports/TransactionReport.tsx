@@ -323,17 +323,19 @@ export default function TransactionReport() {
                             </Button>
                           </div>
                         </TableCell>
-                        <TableCell className="text-center">
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            className="text-[10px] h-7"
-                            onClick={() => handleDelete(group)}
-                          >
-                            <Trash2 className="h-3 w-3 mr-1" />
-                            DELETE
-                          </Button>
-                        </TableCell>
+                        {isAdmin && (
+                          <TableCell className="text-center">
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              className="text-[10px] h-7"
+                              onClick={() => handleDelete(group)}
+                            >
+                              <Trash2 className="h-3 w-3 mr-1" />
+                              DELETE
+                            </Button>
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))
                   )}
