@@ -230,10 +230,10 @@ export default function JobList() {
             </Select>
             <span className="text-sm text-muted-foreground">records</span>
           </div>
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-            <div className="relative">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:flex-wrap">
+            <div className="relative w-full sm:w-auto">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input className="pl-9 w-56" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
+              <Input className="pl-9 w-full sm:w-56" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="sm:w-40">
@@ -273,7 +273,8 @@ export default function JobList() {
           </div>
         </div>
 
-        <div className="rounded-lg border bg-card overflow-auto">
+        {/* Desktop Table View */}
+        <div className="hidden md:block rounded-lg border bg-card overflow-auto">
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
@@ -372,6 +373,65 @@ export default function JobList() {
               )}
             </TableBody>
           </Table>
+        </div>
+
+        {/* Mobile Card View */}
+        <div className="md:hidden divide-y rounded-lg border bg-card">
+          {loading ? (
+            <div className="py-8 text-center text-muted-foreground">Loading...</div>
+          ) : paginatedGroups.length === 0 ? (
+            <div className="py-8 text-center text-muted-foreground">No jobs found</div>
+          ) : (
+            paginatedGroups.map((group) => (
+              <div key={group.key} className={`p-4 space-y-3 ${rowBgColors[getGroupStatus(group.jobs)] || ""}`}>
+                <div className="flex items-start justify-between gap-2">
+                  <div className="space-y-0.5 text-sm min-w-0">
+                    <p className="font-semibold text-foreground truncate">{group.customer_name}</p>
+                    {group.company_name && <p className="text-xs text-muted-foreground">{group.company_name}</p>}
+                    {group.customer_mobile && (
+                      <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <Phone className="h-3 w-3" /> {group.customer_mobile}
+                      </p>
+                    )}
+                  </div>
+                  <div className="text-right shrink-0">
+                    <p className="text-xs text-muted-foreground">{group.job_date}</p>
+                    {group.factory_challan_number && (
+                      <p className="text-xs font-mono font-medium mt-0.5">{group.factory_challan_number}</p>
+                    )}
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  {group.jobs.map((job) => (
+                    <div
+                      key={job.id}
+                      className="rounded-md border bg-card/80 p-3 space-y-1.5 cursor-pointer active:scale-[0.98] transition-transform"
+                      onClick={() => navigate(`/job/${job.id}`)}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-xs font-mono font-semibold">{job.job_number}</span>
+                        <Badge variant="secondary" className={`text-[10px] ${statusColors[job.status] || ""}`}>
+                          {jobStatusLabels[job.status] || job.status}
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground"><span className="font-medium text-foreground">Board:</span> {job.board_name}</p>
+                      {job.details_of_problem && (
+                        <p className="text-xs text-muted-foreground line-clamp-2">{job.details_of_problem}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full gap-1 text-xs"
+                  onClick={() => handleGroupStatusUpdate(group)}
+                >
+                  Change Status <ChevronRight className="h-3 w-3" />
+                </Button>
+              </div>
+            ))
+          )}
         </div>
 
         <div className="flex items-center justify-between">
