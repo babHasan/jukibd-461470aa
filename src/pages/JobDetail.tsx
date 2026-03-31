@@ -195,7 +195,7 @@ export default function JobDetailPage() {
               <ArrowLeft className="h-4 w-4" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-foreground">{job.job_number}</h1>
+              <h1 className="text-xl font-bold text-foreground">{job.job_number.startsWith("JOB-") ? job.job_number : `JOB-${job.job_number}`}</h1>
               <p className="text-sm text-muted-foreground">
                 {job.brand_name} — {job.model_name}
               </p>
