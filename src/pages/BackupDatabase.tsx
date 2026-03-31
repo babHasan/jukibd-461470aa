@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Database, Download, Loader2, RefreshCw, ArrowUpFromLine, ArrowDownToLine } from "lucide-react";
+import { Database, Download, Loader2, RefreshCw, ArrowUpFromLine, ArrowDownToLine, Upload } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import * as XLSX from "xlsx";
 
@@ -31,6 +31,10 @@ const BackupDatabase = () => {
   const [currentTable, setCurrentTable] = useState("");
   const [syncing, setSyncing] = useState(false);
   const [syncResult, setSyncResult] = useState<{ pushed?: number; pulled?: number } | null>(null);
+  const [importing, setImporting] = useState(false);
+  const [importProgress, setImportProgress] = useState(0);
+  const [importCurrentTable, setImportCurrentTable] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function fetchAllRows(table: TableName) {
     const rows: any[] = [];
@@ -74,6 +78,62 @@ const BackupDatabase = () => {
       toast.error("Backup failed: " + (err.message || "Unknown error"));
     } finally {
       setExporting(false);
+    }
+  }
+
+  async function handleImport(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImporting(true);
+    setImportProgress(0);
+    let totalInserted = 0;
+
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const wb = XLSX.read(arrayBuffer, { type: "array" });
+
+      const validSheets = wb.SheetNames.filter((name) =>
+        TABLES.includes(name as TableName)
+      );
+
+      if (validSheets.length === 0) {
+        toast.error("No valid table sheets found in file");
+        return;
+      }
+
+      for (let i = 0; i < validSheets.length; i++) {
+        const sheetName = validSheets[i] as TableName;
+        setImportCurrentTable(sheetName);
+        setImportProgress(Math.round((i / validSheets.length) * 100));
+
+        const ws = wb.Sheets[sheetName];
+        const rows: any[] = XLSX.utils.sheet_to_json(ws);
+        if (rows.length === 0) continue;
+
+        // Upsert in batches of 100
+        for (let j = 0; j < rows.length; j += 100) {
+          const batch = rows.slice(j, j + 100);
+          const { error } = await supabase
+            .from(sheetName)
+            .upsert(batch, { onConflict: "id" });
+          if (error) {
+            console.error(`Import error on ${sheetName}:`, error);
+            toast.error(`${sheetName} import error: ${error.message}`);
+          } else {
+            totalInserted += batch.length;
+          }
+        }
+      }
+
+      setImportProgress(100);
+      setImportCurrentTable("");
+      toast.success(`Database restore complete! ${totalInserted} records imported.`);
+    } catch (err: any) {
+      console.error("Import failed:", err);
+      toast.error("Import failed: " + (err.message || "Unknown error"));
+    } finally {
+      setImporting(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   }
 
@@ -147,7 +207,52 @@ const BackupDatabase = () => {
           </Button>
         </div>
 
-        {/* MySQL Sync */}
+        {/* Database Import/Restore */}
+        <div className="rounded-lg border bg-card p-6 shadow-sm space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+              <Upload className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">Restore Database</h2>
+              <p className="text-sm text-muted-foreground">Upload backup Excel file to restore data</p>
+            </div>
+          </div>
+          <div className="rounded-md border bg-destructive/5 p-4 text-sm text-destructive">
+            ⚠️ Warning: This will overwrite existing records with matching IDs. Please ensure you are uploading a valid backup file.
+          </div>
+          {importing && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">
+                  {importProgress < 100 ? `Importing: ${importCurrentTable}...` : "Finalizing..."}
+                </span>
+                <span className="font-medium text-foreground">{importProgress}%</span>
+              </div>
+              <Progress value={importProgress} />
+            </div>
+          )}
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept=".xlsx,.xls"
+            className="hidden"
+            onChange={handleImport}
+          />
+          <Button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={importing}
+            variant="outline"
+            className="w-full gap-2"
+            size="lg"
+          >
+            {importing ? (
+              <><Loader2 className="h-4 w-4 animate-spin" /> Importing...</>
+            ) : (
+              <><Upload className="h-4 w-4" /> Upload & Restore Database</>
+            )}
+          </Button>
+        </div>
         <div className="rounded-lg border bg-card p-6 shadow-sm space-y-6">
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
