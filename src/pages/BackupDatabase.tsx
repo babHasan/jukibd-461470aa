@@ -31,6 +31,10 @@ const BackupDatabase = () => {
   const [currentTable, setCurrentTable] = useState("");
   const [syncing, setSyncing] = useState(false);
   const [syncResult, setSyncResult] = useState<{ pushed?: number; pulled?: number } | null>(null);
+  const [importing, setImporting] = useState(false);
+  const [importProgress, setImportProgress] = useState(0);
+  const [importCurrentTable, setImportCurrentTable] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function fetchAllRows(table: TableName) {
     const rows: any[] = [];
