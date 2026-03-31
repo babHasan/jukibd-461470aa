@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Database, Download, Loader2, RefreshCw, ArrowUpFromLine, ArrowDownToLine } from "lucide-react";
+import { Database, Download, Loader2, RefreshCw, ArrowUpFromLine, ArrowDownToLine, Upload } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import * as XLSX from "xlsx";
 
