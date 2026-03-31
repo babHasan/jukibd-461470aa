@@ -207,7 +207,52 @@ const BackupDatabase = () => {
           </Button>
         </div>
 
-        {/* MySQL Sync */}
+        {/* Database Import/Restore */}
+        <div className="rounded-lg border bg-card p-6 shadow-sm space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+              <Upload className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">Restore Database</h2>
+              <p className="text-sm text-muted-foreground">Upload backup Excel file to restore data</p>
+            </div>
+          </div>
+          <div className="rounded-md border bg-destructive/5 p-4 text-sm text-destructive">
+            ⚠️ Warning: This will overwrite existing records with matching IDs. Please ensure you are uploading a valid backup file.
+          </div>
+          {importing && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">
+                  {importProgress < 100 ? `Importing: ${importCurrentTable}...` : "Finalizing..."}
+                </span>
+                <span className="font-medium text-foreground">{importProgress}%</span>
+              </div>
+              <Progress value={importProgress} />
+            </div>
+          )}
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept=".xlsx,.xls"
+            className="hidden"
+            onChange={handleImport}
+          />
+          <Button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={importing}
+            variant="outline"
+            className="w-full gap-2"
+            size="lg"
+          >
+            {importing ? (
+              <><Loader2 className="h-4 w-4 animate-spin" /> Importing...</>
+            ) : (
+              <><Upload className="h-4 w-4" /> Upload & Restore Database</>
+            )}
+          </Button>
+        </div>
         <div className="rounded-lg border bg-card p-6 shadow-sm space-y-6">
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
