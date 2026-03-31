@@ -12,8 +12,9 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Search, UserPlus } from "lucide-react";
+import { Search, UserPlus, Download, Upload } from "lucide-react";
 import { Link } from "react-router-dom";
+import * as XLSX from "xlsx";
 
 interface UserProfile {
   id: string;
@@ -111,6 +112,91 @@ export default function UserList() {
     }
   }
 
+  function handleExport() {
+    const exportData = filtered.map((u, i) => ({
+      SL: i + 1,
+      Name: u.name,
+      "Employee ID": u.employee_id,
+      Mobile: u.mobile,
+      Email: u.email,
+      NID: u.nid,
+      Address: u.address,
+      Status: u.status,
+      Roles: u.roles.join(", "),
+      Permissions: u.permissions.join(", "),
+    }));
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Users");
+    XLSX.writeFile(wb, "user_list.xlsx");
+    toast.success("User list exported");
+  }
+
+  async function handleImport(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (evt) => {
+      try {
+        const data = new Uint8Array(evt.target?.result as ArrayBuffer);
+        const wb = XLSX.read(data, { type: "array" });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const rows: any[] = XLSX.utils.sheet_to_json(ws);
+
+        if (rows.length === 0) {
+          toast.error("No data found in file");
+          return;
+        }
+
+        let importCount = 0;
+        for (const row of rows) {
+          const name = row["Name"] || row["name"] || "";
+          const email = row["Email"] || row["email"] || "";
+          const mobile = row["Mobile"] || row["mobile"] || "";
+          const employee_id = row["Employee ID"] || row["employee_id"] || "";
+          const nid = row["NID"] || row["nid"] || "";
+          const address = row["Address"] || row["address"] || "";
+
+          if (!name && !email) continue;
+
+          // Check if profile already exists by email
+          const { data: existing } = await supabase
+            .from("profiles")
+            .select("id")
+            .eq("email", email)
+            .maybeSingle();
+
+          if (existing) continue;
+
+          // Create auth user via edge function or skip if no email
+          if (!email) continue;
+
+          // Insert profile directly (for data import only)
+          const { error } = await supabase.from("profiles").insert({
+            id: crypto.randomUUID(),
+            name,
+            email,
+            mobile,
+            employee_id,
+            nid,
+            address,
+            status: "active",
+          });
+
+          if (!error) importCount++;
+        }
+
+        toast.success(`${importCount} users imported`);
+        fetchUsers();
+      } catch {
+        toast.error("Failed to parse file");
+      }
+    };
+    reader.readAsArrayBuffer(file);
+    e.target.value = "";
+  }
+
   const filtered = users.filter(
     (u) =>
       u.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -121,13 +207,26 @@ export default function UserList() {
   return (
     <AppLayout>
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-2">
           <h2 className="text-xl font-bold text-foreground">USER LIST</h2>
-          <Link to="/admin/add-user">
-            <Button className="gap-2">
-              <UserPlus className="h-4 w-4" /> ADD NEW USER
+          <div className="flex gap-2 flex-wrap">
+            <Button variant="outline" className="gap-2" onClick={handleExport}>
+              <Download className="h-4 w-4" /> EXPORT
             </Button>
-          </Link>
+            <label>
+              <Button variant="outline" className="gap-2" asChild>
+                <span>
+                  <Upload className="h-4 w-4" /> IMPORT
+                  <input type="file" accept=".xlsx,.xls,.csv" className="hidden" onChange={handleImport} />
+                </span>
+              </Button>
+            </label>
+            <Link to="/admin/add-user">
+              <Button className="gap-2">
+                <UserPlus className="h-4 w-4" /> ADD NEW USER
+              </Button>
+            </Link>
+          </div>
         </div>
 
         <div className="flex items-center justify-between gap-4">
