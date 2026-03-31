@@ -459,15 +459,15 @@ const AddJob = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-[160px_1fr] items-start sm:items-center gap-1 sm:gap-2 max-w-2xl">
-              <Label className="text-left sm:text-right text-xs font-semibold">
-                Customer Name <span className="text-destructive">*</span>
-              </Label>
-              <Input value={manualCustomerName} onChange={(e) => { setManualCustomerName(e.target.value); setSelectedCustomer(""); }} placeholder="Enter customer name" className="h-8 text-sm" />
+              <Label className="text-left sm:text-right text-xs font-semibold">Company Name</Label>
+              <Input value={manualCompanyName} onChange={(e) => { setManualCompanyName(e.target.value); setSelectedCustomer(""); }} placeholder="Enter company name" className="h-8 text-sm" />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-[160px_1fr] items-start sm:items-center gap-1 sm:gap-2 max-w-2xl">
-              <Label className="text-left sm:text-right text-xs font-semibold">Company Name</Label>
-              <Input value={manualCompanyName} onChange={(e) => { setManualCompanyName(e.target.value); setSelectedCustomer(""); }} placeholder="Enter company name" className="h-8 text-sm" />
+              <Label className="text-left sm:text-right text-xs font-semibold">
+                Client Name <span className="text-destructive">*</span>
+              </Label>
+              <Input value={manualCustomerName} onChange={(e) => { setManualCustomerName(e.target.value); setSelectedCustomer(""); }} placeholder="Enter client name" className="h-8 text-sm" />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-[160px_1fr] items-start sm:items-center gap-1 sm:gap-2 max-w-2xl">
