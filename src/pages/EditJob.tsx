@@ -231,13 +231,13 @@ export default function EditJob() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label>Customer</Label>
+                <Label>Company Name</Label>
                 <Select value={customerId || ""} onValueChange={(v) => {
                   setCustomerId(v);
                   const found = clients.find(c => c.id === v);
                   if (found) setCustomerName(found.client_name);
                 }}>
-                  <SelectTrigger><SelectValue placeholder="Select customer" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="Select company" /></SelectTrigger>
                   <SelectContent>
                     {clients.map((c) => (
                       <SelectItem key={c.id} value={c.id}>
@@ -248,8 +248,8 @@ export default function EditJob() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Customer Name (Manual)</Label>
-                <Input value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
+                <Label>Client Name</Label>
+                <Input value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="Enter client name" />
               </div>
               <div className="space-y-2">
                 <Label>Branch</Label>
