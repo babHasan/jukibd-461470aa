@@ -12,8 +12,9 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Search, UserPlus } from "lucide-react";
+import { Search, UserPlus, Download, Upload } from "lucide-react";
 import { Link } from "react-router-dom";
+import * as XLSX from "xlsx";
 
 interface UserProfile {
   id: string;
