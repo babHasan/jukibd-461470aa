@@ -81,6 +81,62 @@ const BackupDatabase = () => {
     }
   }
 
+  async function handleImport(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImporting(true);
+    setImportProgress(0);
+    let totalInserted = 0;
+
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const wb = XLSX.read(arrayBuffer, { type: "array" });
+
+      const validSheets = wb.SheetNames.filter((name) =>
+        TABLES.includes(name as TableName)
+      );
+
+      if (validSheets.length === 0) {
+        toast.error("No valid table sheets found in file");
+        return;
+      }
+
+      for (let i = 0; i < validSheets.length; i++) {
+        const sheetName = validSheets[i] as TableName;
+        setImportCurrentTable(sheetName);
+        setImportProgress(Math.round((i / validSheets.length) * 100));
+
+        const ws = wb.Sheets[sheetName];
+        const rows: any[] = XLSX.utils.sheet_to_json(ws);
+        if (rows.length === 0) continue;
+
+        // Upsert in batches of 100
+        for (let j = 0; j < rows.length; j += 100) {
+          const batch = rows.slice(j, j + 100);
+          const { error } = await supabase
+            .from(sheetName)
+            .upsert(batch, { onConflict: "id" });
+          if (error) {
+            console.error(`Import error on ${sheetName}:`, error);
+            toast.error(`${sheetName} import error: ${error.message}`);
+          } else {
+            totalInserted += batch.length;
+          }
+        }
+      }
+
+      setImportProgress(100);
+      setImportCurrentTable("");
+      toast.success(`Database restore complete! ${totalInserted} records imported.`);
+    } catch (err: any) {
+      console.error("Import failed:", err);
+      toast.error("Import failed: " + (err.message || "Unknown error"));
+    } finally {
+      setImporting(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  }
+
   async function handleMySQLSync(action: "push" | "pull" | "full_sync") {
     setSyncing(true);
     setSyncResult(null);
