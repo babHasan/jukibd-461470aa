@@ -74,6 +74,28 @@ const AddJob = () => {
   useEffect(() => { sessionStorage.setItem("addJob_branch", selectedBranch); }, [selectedBranch]);
   useEffect(() => { sessionStorage.setItem("addJob_date", date); }, [date]);
 
+  // Generate next sequential job number
+  const generateNextJobNumber = async () => {
+    const { data } = await supabase
+      .from("jobs")
+      .select("job_number")
+      .ilike("job_number", "JOB-%")
+      .order("created_at", { ascending: false })
+      .limit(100);
+    
+    let maxNum = 99;
+    if (data) {
+      for (const row of data) {
+        const match = row.job_number.match(/^JOB-(\d+)$/i);
+        if (match) {
+          const num = parseInt(match[1], 10);
+          if (num > maxNum) maxNum = num;
+        }
+      }
+    }
+    return `JOB-${maxNum + 1}`;
+  };
+
   useEffect(() => {
     supabase.from("brands").select("id, name").order("name").then(({ data }) => data && setBrands(data));
     supabase.from("models").select("id, name").order("name").then(({ data }) => data && setModels(data));
@@ -81,7 +103,6 @@ const AddJob = () => {
     supabase.from("branches").select("id, name").eq("status", "active").order("name").then(({ data }) => {
       if (data) {
         setBranches(data);
-        // Auto-select first branch if none selected
         if (!selectedBranch && data.length > 0) {
           setSelectedBranch(data[0].id);
         }
@@ -90,11 +111,12 @@ const AddJob = () => {
     supabase.from("boards").select("id, name").order("name").then(({ data }) => data && setBoardsList(data));
   }, []);
 
-  function handleAddJob() {
+  async function handleAddJob() {
     if (!brandName || !selectedModel) {
       toast.error("Please fill required fields (Brand, Model)");
       return;
     }
+    const autoJobNumber = jobNumber || await generateNextJobNumber();
     const newJob: JobItem = {
       id: crypto.randomUUID(),
       service: "",
@@ -105,7 +127,7 @@ const AddJob = () => {
       boardSerial,
       detailsOfProblem,
       remarks,
-      jobNumber: jobNumber || `JOB-${Date.now().toString(36).toUpperCase()}`,
+      jobNumber: autoJobNumber,
     };
     setAddedJobs((prev) => [...prev, newJob]);
     // Only reset per-job unique fields, keep brand/model/board selection
