@@ -1,0 +1,1 @@
+UPDATE invoice_column_settings SET visible_in_delivery = false, visible_in_receive = false WHERE column_key = 'details_of_problem';
