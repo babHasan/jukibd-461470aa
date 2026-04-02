@@ -62,6 +62,7 @@ const AddJob = () => {
   const [selectedBranch, setSelectedBranch] = useState(() => sessionStorage.getItem("addJob_branch") || "");
   const [date, setDate] = useState(() => sessionStorage.getItem("addJob_date") || new Date().toISOString().split("T")[0]);
   const [challanFile, setChallanFile] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [customerPopoverOpen, setCustomerPopoverOpen] = useState(false);
 
   // Sync to sessionStorage
