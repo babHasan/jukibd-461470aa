@@ -23,6 +23,7 @@ export default function CompanyInfo() {
     mobile: "",
     logo_url: "" as string | null,
     portal_enabled: true,
+    header_font_size: 16,
   });
 
   useEffect(() => {
