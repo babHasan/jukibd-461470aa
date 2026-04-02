@@ -7,6 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
@@ -59,6 +63,7 @@ const AddJob = () => {
   const [date, setDate] = useState(() => sessionStorage.getItem("addJob_date") || new Date().toISOString().split("T")[0]);
   const [challanFile, setChallanFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [customerPopoverOpen, setCustomerPopoverOpen] = useState(false);
 
   // Sync to sessionStorage
   useEffect(() => { sessionStorage.setItem("addJob_brand", brandName); }, [brandName]);
@@ -459,25 +464,49 @@ const AddJob = () => {
           <CardContent className="p-4 space-y-3">
             <div className="grid grid-cols-1 sm:grid-cols-[160px_1fr] items-start sm:items-center gap-1 sm:gap-2 max-w-2xl">
               <Label className="text-left sm:text-right text-xs font-semibold">Select Customer</Label>
-              <Select value={selectedCustomer} onValueChange={(val) => {
-                setSelectedCustomer(val);
-                const c = clients.find((cl) => cl.id === val);
-                if (c) {
-                  setManualCustomerName(c.client_name);
-                  setManualCustomerMobile(c.contact_number || "");
-                  setManualCompanyName(c.company_name || "");
-                  setManualAddress(c.address || "");
-                }
-              }}>
-                <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="Select or type below" /></SelectTrigger>
-                <SelectContent>
-                  {clients.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.company_name ? `${c.company_name} (${c.client_name})` : c.client_name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Popover open={customerPopoverOpen} onOpenChange={setCustomerPopoverOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" role="combobox" aria-expanded={customerPopoverOpen} className="h-8 text-sm w-full justify-between font-normal">
+                    {selectedCustomer
+                      ? (() => {
+                          const c = clients.find((cl) => cl.id === selectedCustomer);
+                          return c ? (c.company_name ? `${c.company_name} (${c.client_name})` : c.client_name) : "Select Customer";
+                        })()
+                      : "Select or type below"}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder="Search customer..." className="h-9" />
+                    <CommandList>
+                      <CommandEmpty>No customer found.</CommandEmpty>
+                      <CommandGroup>
+                        {clients.map((c) => (
+                          <CommandItem
+                            key={c.id}
+                            value={`${c.company_name || ""} ${c.client_name} ${c.contact_number || ""}`}
+                            onSelect={() => {
+                              setSelectedCustomer(c.id);
+                              setManualCustomerName(c.client_name);
+                              setManualCustomerMobile(c.contact_number || "");
+                              setManualCompanyName(c.company_name || "");
+                              setManualAddress(c.address || "");
+                              setCustomerPopoverOpen(false);
+                            }}
+                          >
+                            <Check className={cn("mr-2 h-4 w-4", selectedCustomer === c.id ? "opacity-100" : "opacity-0")} />
+                            <div className="flex flex-col">
+                              <span className="text-sm">{c.company_name ? `${c.company_name} (${c.client_name})` : c.client_name}</span>
+                              {c.contact_number && <span className="text-xs text-muted-foreground">{c.contact_number}</span>}
+                            </div>
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-[160px_1fr] items-start sm:items-center gap-1 sm:gap-2 max-w-2xl">
