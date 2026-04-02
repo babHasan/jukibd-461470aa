@@ -289,9 +289,24 @@ export default function JobList() {
   return (
     <AppLayout>
       <div className="space-y-4">
-        <div className="flex items-center gap-3">
-          <ClipboardList className="h-6 w-6 text-primary" />
-          <h2 className="text-xl font-bold text-foreground">JOB LIST</h2>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <ClipboardList className="h-6 w-6 text-primary" />
+            <h2 className="text-xl font-bold text-foreground">JOB LIST</h2>
+          </div>
+          {isAdmin && (
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" className="gap-1" onClick={handleExport}>
+                <Download className="h-4 w-4" /> Export
+              </Button>
+              <label>
+                <input type="file" accept=".xlsx,.xls,.csv" className="hidden" onChange={handleImport} />
+                <Button variant="outline" size="sm" className="gap-1" asChild>
+                  <span><Upload className="h-4 w-4" /> Import</span>
+                </Button>
+              </label>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
