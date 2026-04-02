@@ -6,6 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Trash2, GripVertical, Save, FileText } from "lucide-react";
 
 interface ColumnSetting {
@@ -15,6 +16,8 @@ interface ColumnSetting {
   visible_in_delivery: boolean;
   visible_in_receive: boolean;
   display_order: number;
+  font_size: number;
+  alignment: string;
 }
 
 export default function InvoiceColumnSettings() {
@@ -58,6 +61,8 @@ export default function InvoiceColumnSettings() {
           visible_in_delivery: col.visible_in_delivery,
           visible_in_receive: col.visible_in_receive,
           display_order: col.display_order,
+          font_size: col.font_size,
+          alignment: col.alignment,
         })
         .eq("id", col.id);
       if (error) hasError = true;
@@ -163,8 +168,10 @@ export default function InvoiceColumnSettings() {
                         <th className="text-left p-3 font-medium">Order</th>
                         <th className="text-left p-3 font-medium">Column Label</th>
                         <th className="text-left p-3 font-medium">Key</th>
-                        <th className="text-center p-3 font-medium">Delivery Invoice</th>
-                        <th className="text-center p-3 font-medium">Receive Copy</th>
+                        <th className="text-center p-3 font-medium">Font Size</th>
+                        <th className="text-center p-3 font-medium">Alignment</th>
+                        <th className="text-center p-3 font-medium">Delivery</th>
+                        <th className="text-center p-3 font-medium">Receive</th>
                         <th className="text-center p-3 font-medium">Actions</th>
                       </tr>
                     </thead>
@@ -199,6 +206,35 @@ export default function InvoiceColumnSettings() {
                           </td>
                           <td className="p-3">
                             <code className="text-xs bg-muted px-1.5 py-0.5 rounded">{col.column_key}</code>
+                          </td>
+                          <td className="p-3 text-center">
+                            <Input
+                              type="number"
+                              min={8}
+                              max={20}
+                              value={col.font_size}
+                              onChange={e => setColumns(prev =>
+                                prev.map(c => c.id === col.id ? { ...c, font_size: Number(e.target.value) || 11 } : c)
+                              )}
+                              className="h-8 w-16 text-xs text-center mx-auto"
+                            />
+                          </td>
+                          <td className="p-3 text-center">
+                            <Select
+                              value={col.alignment}
+                              onValueChange={v => setColumns(prev =>
+                                prev.map(c => c.id === col.id ? { ...c, alignment: v } : c)
+                              )}
+                            >
+                              <SelectTrigger className="h-8 w-24 text-xs mx-auto">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="left">Left</SelectItem>
+                                <SelectItem value="center">Center</SelectItem>
+                                <SelectItem value="right">Right</SelectItem>
+                              </SelectContent>
+                            </Select>
                           </td>
                           <td className="p-3 text-center">
                             <Switch
