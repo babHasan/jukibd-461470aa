@@ -23,6 +23,7 @@ export default function CompanyInfo() {
     mobile: "",
     logo_url: "" as string | null,
     portal_enabled: true,
+    header_font_size: 16,
   });
 
   useEffect(() => {
@@ -38,6 +39,7 @@ export default function CompanyInfo() {
           mobile: data.mobile || "",
           logo_url: data.logo_url || null,
           portal_enabled: (data as any).portal_enabled ?? true,
+          header_font_size: (data as any).header_font_size ?? 16,
         });
       }
       setLoading(false);
@@ -84,6 +86,7 @@ export default function CompanyInfo() {
       mobile: form.mobile.trim(),
       logo_url: form.logo_url,
       portal_enabled: form.portal_enabled,
+      header_font_size: form.header_font_size,
       updated_at: new Date().toISOString(),
     };
 
@@ -209,6 +212,19 @@ export default function CompanyInfo() {
                   className="mt-1"
                 />
                 {uploading && <p className="text-xs text-muted-foreground mt-1">Uploading...</p>}
+              </div>
+
+              <div>
+                <Label className="text-sm font-semibold">Invoice Header Font Size (px)</Label>
+                <Input
+                  type="number"
+                  min={10}
+                  max={30}
+                  value={form.header_font_size}
+                  onChange={(e) => setForm((f) => ({ ...f, header_font_size: parseInt(e.target.value) || 16 }))}
+                  className="mt-1 w-24"
+                />
+                <p className="text-xs text-muted-foreground mt-1">Company name font size on printed invoices</p>
               </div>
 
               <div className="flex items-center justify-between rounded-lg border p-4">

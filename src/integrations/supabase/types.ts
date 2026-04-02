@@ -177,6 +177,7 @@ export type Database = {
           address: string
           company_name: string
           email: string
+          header_font_size: number
           id: string
           logo_url: string | null
           mobile: string
@@ -189,6 +190,7 @@ export type Database = {
           address?: string
           company_name?: string
           email?: string
+          header_font_size?: number
           id?: string
           logo_url?: string | null
           mobile?: string
@@ -201,6 +203,7 @@ export type Database = {
           address?: string
           company_name?: string
           email?: string
+          header_font_size?: number
           id?: string
           logo_url?: string | null
           mobile?: string

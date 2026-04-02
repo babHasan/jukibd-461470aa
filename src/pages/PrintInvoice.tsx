@@ -66,6 +66,7 @@ interface CompanyInfo {
   phone: string;
   mobile: string;
   logo_url: string | null;
+  header_font_size: number;
 }
 
 interface ClientInfo {
@@ -233,15 +234,16 @@ export default function PrintInvoice() {
           line-height: 1.5;
         }
         .inv-header {
+          position: relative;
           display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
+          align-items: center;
+          justify-content: center;
           border-bottom: 2px solid #1a1a1a;
           padding-bottom: 10px;
           margin-bottom: 12px;
         }
         .inv-company { flex: 1; }
-        .inv-company h2 { font-size: 16px; font-weight: 800; margin: 0 0 2px 0; letter-spacing: 0.5px; }
+        .inv-company h2 { font-weight: 800; margin: 0 0 2px 0; letter-spacing: 0.5px; }
         .inv-company p { margin: 0; font-size: 11px; color: #444; line-height: 1.4; }
         .inv-logo { width: 60px; height: 60px; object-fit: contain; margin-left: 12px; }
         .inv-title {
@@ -357,11 +359,11 @@ export default function PrintInvoice() {
 
       <div className="inv">
         {/* Company Header */}
-        <div className="inv-header">
-          <div className="inv-company">
+        <div className="inv-header" style={{ flexDirection: "column", alignItems: "center" }}>
+          <div className="inv-company" style={{ textAlign: "center", width: "100%" }}>
             {company ? (
               <>
-                <h2>{company.company_name}</h2>
+                <h2 style={{ fontSize: `${company.header_font_size || 16}px`, textAlign: "center" }}>{company.company_name}</h2>
                 <p>{company.address}</p>
                 {company.phone && <p>Tel: {company.phone} {company.mobile ? `| Mobile: ${company.mobile}` : ""}</p>}
                 {company.email && <p>Email: {company.email} {company.website ? `| Web: ${company.website}` : ""}</p>}
@@ -371,7 +373,7 @@ export default function PrintInvoice() {
             )}
           </div>
           {company?.logo_url && (
-            <img src={company.logo_url} alt="Logo" className="inv-logo" />
+            <img src={company.logo_url} alt="Logo" className="inv-logo" style={{ position: "absolute", right: 0, top: 0 }} />
           )}
         </div>
 
