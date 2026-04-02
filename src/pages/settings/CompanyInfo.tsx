@@ -86,6 +86,7 @@ export default function CompanyInfo() {
       mobile: form.mobile.trim(),
       logo_url: form.logo_url,
       portal_enabled: form.portal_enabled,
+      header_font_size: form.header_font_size,
       updated_at: new Date().toISOString(),
     };
 
