@@ -459,28 +459,34 @@ export type Database = {
       }
       invoice_column_settings: {
         Row: {
+          alignment: string
           column_key: string
           column_label: string
           created_at: string
           display_order: number
+          font_size: number
           id: string
           visible_in_delivery: boolean
           visible_in_receive: boolean
         }
         Insert: {
+          alignment?: string
           column_key: string
           column_label: string
           created_at?: string
           display_order?: number
+          font_size?: number
           id?: string
           visible_in_delivery?: boolean
           visible_in_receive?: boolean
         }
         Update: {
+          alignment?: string
           column_key?: string
           column_label?: string
           created_at?: string
           display_order?: number
+          font_size?: number
           id?: string
           visible_in_delivery?: boolean
           visible_in_receive?: boolean
