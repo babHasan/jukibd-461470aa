@@ -66,6 +66,7 @@ interface CompanyInfo {
   phone: string;
   mobile: string;
   logo_url: string | null;
+  header_font_size: number;
 }
 
 interface ClientInfo {
