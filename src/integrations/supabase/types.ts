@@ -457,6 +457,36 @@ export type Database = {
         }
         Relationships: []
       }
+      invoice_column_settings: {
+        Row: {
+          column_key: string
+          column_label: string
+          created_at: string
+          display_order: number
+          id: string
+          visible_in_delivery: boolean
+          visible_in_receive: boolean
+        }
+        Insert: {
+          column_key: string
+          column_label: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          visible_in_delivery?: boolean
+          visible_in_receive?: boolean
+        }
+        Update: {
+          column_key?: string
+          column_label?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          visible_in_delivery?: boolean
+          visible_in_receive?: boolean
+        }
+        Relationships: []
+      }
       jobs: {
         Row: {
           board_name: string
