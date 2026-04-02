@@ -413,10 +413,11 @@ export default function JobList() {
                           {jobStatusLabels[job.status] || job.status}
                         </Badge>
                       </div>
-                      <p className="text-xs text-muted-foreground"><span className="font-medium text-foreground">Board:</span> {job.board_name}</p>
-                      {job.details_of_problem && (
-                        <p className="text-xs text-muted-foreground line-clamp-2">{job.details_of_problem}</p>
-                      )}
+                       <p className="text-xs text-muted-foreground"><span className="font-medium text-foreground">Board:</span> {job.board_name}</p>
+                       {job.board_serial && (
+                         <p className="text-xs text-muted-foreground"><span className="font-medium text-foreground">Board No:</span> {job.board_serial}</p>
+                       )}
+                       <p className="text-xs text-muted-foreground"><span className="font-medium text-foreground">Charge:</span> {(job as any).charge_type || "—"} | <span className="font-medium text-foreground">Service:</span> {(job as any).service_charge ? Number((job as any).service_charge).toLocaleString() : "—"}</p>
                     </div>
                   ))}
                 </div>
