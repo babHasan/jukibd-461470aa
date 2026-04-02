@@ -208,6 +208,35 @@ export default function InvoiceColumnSettings() {
                             <code className="text-xs bg-muted px-1.5 py-0.5 rounded">{col.column_key}</code>
                           </td>
                           <td className="p-3 text-center">
+                            <Input
+                              type="number"
+                              min={8}
+                              max={20}
+                              value={col.font_size}
+                              onChange={e => setColumns(prev =>
+                                prev.map(c => c.id === col.id ? { ...c, font_size: Number(e.target.value) || 11 } : c)
+                              )}
+                              className="h-8 w-16 text-xs text-center mx-auto"
+                            />
+                          </td>
+                          <td className="p-3 text-center">
+                            <Select
+                              value={col.alignment}
+                              onValueChange={v => setColumns(prev =>
+                                prev.map(c => c.id === col.id ? { ...c, alignment: v } : c)
+                              )}
+                            >
+                              <SelectTrigger className="h-8 w-24 text-xs mx-auto">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="left">Left</SelectItem>
+                                <SelectItem value="center">Center</SelectItem>
+                                <SelectItem value="right">Right</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </td>
+                          <td className="p-3 text-center">
                             <Switch
                               checked={col.visible_in_delivery}
                               onCheckedChange={() => toggleField(col.id, "visible_in_delivery")}
