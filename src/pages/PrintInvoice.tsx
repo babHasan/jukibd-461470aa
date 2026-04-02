@@ -84,6 +84,7 @@ export default function PrintInvoice() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [company, setCompany] = useState<CompanyInfo | null>(null);
   const [client, setClient] = useState<ClientInfo | null>(null);
+  const [columnSettings, setColumnSettings] = useState<ColumnSetting[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
