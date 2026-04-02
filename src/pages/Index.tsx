@@ -303,8 +303,10 @@ const Index = () => {
                             <thead>
                               <tr className="bg-muted/60">
                                 <th className="px-3 py-1.5 text-left font-semibold text-xs">Board</th>
-                                <th className="px-3 py-1.5 text-left font-semibold text-xs">Details Of Problem</th>
+                                <th className="px-3 py-1.5 text-left font-semibold text-xs">Board Number</th>
                                 <th className="px-3 py-1.5 text-left font-semibold text-xs">Job Number</th>
+                                <th className="px-3 py-1.5 text-left font-semibold text-xs">Charge Type</th>
+                                <th className="px-3 py-1.5 text-right font-semibold text-xs">Service Charge</th>
                                 <th className="px-3 py-1.5 text-left font-semibold text-xs">Status</th>
                               </tr>
                             </thead>
@@ -316,10 +318,12 @@ const Index = () => {
                                   onClick={() => navigate(`/job/${job.id}`)}
                                 >
                                   <td className="px-3 py-1.5 text-xs">{job.board_name}</td>
-                                  <td className="px-3 py-1.5 text-xs max-w-[180px] truncate">
-                                    {job.details_of_problem || "—"}
-                                  </td>
+                                  <td className="px-3 py-1.5 text-xs">{job.board_serial || "—"}</td>
                                   <td className="px-3 py-1.5 text-xs font-mono font-medium">{job.job_number}</td>
+                                  <td className="px-3 py-1.5 text-xs">{(job as any).charge_type || "—"}</td>
+                                  <td className="px-3 py-1.5 text-xs text-right font-mono">
+                                    {(job as any).service_charge ? Number((job as any).service_charge).toLocaleString() : "—"}
+                                  </td>
                                   <td className="px-3 py-1.5">
                                     <Badge variant="secondary" className={`text-[10px] ${statusColors[job.status] || ""}`}>
                                       {jobStatusLabels[job.status] || job.status}
@@ -391,9 +395,13 @@ const Index = () => {
                           </Badge>
                         </div>
                         <p className="text-xs text-muted-foreground"><span className="font-medium text-foreground">Board:</span> {job.board_name}</p>
-                        {job.details_of_problem && (
-                          <p className="text-xs text-muted-foreground line-clamp-2">{job.details_of_problem}</p>
+                        <p className="text-xs text-muted-foreground"><span className="font-medium text-foreground">Board No:</span> {job.board_serial || "—"}</p>
+                        {(job as any).charge_type && (
+                          <p className="text-xs text-muted-foreground"><span className="font-medium text-foreground">Charge:</span> {(job as any).charge_type}</p>
                         )}
+                        {(job as any).service_charge ? (
+                          <p className="text-xs text-muted-foreground"><span className="font-medium text-foreground">Service:</span> {Number((job as any).service_charge).toLocaleString()}</p>
+                        ) : null}
                       </div>
                     ))}
                   </div>
