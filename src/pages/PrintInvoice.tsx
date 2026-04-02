@@ -187,6 +187,23 @@ export default function PrintInvoice() {
   const totalReceived = jobs.reduce((sum, j) => sum + (j.receive_amount || 0), 0);
   const totalDue = totalPayable - totalReceived;
 
+  const financialKeys = ["service_charge", "discount", "payable_amount"];
+  const visibleCols = columnSettings.filter(c => {
+    if (isDelivery) return c.visible_in_delivery;
+    // For receive copy, exclude financial columns
+    return c.visible_in_receive && !financialKeys.includes(c.column_key);
+  });
+
+  const nonFinancialCols = visibleCols.filter(c => !financialKeys.includes(c.column_key));
+  const financialCols = isDelivery ? columnSettings.filter(c => financialKeys.includes(c.column_key) && c.visible_in_delivery) : [];
+
+  function getCellValue(job: Job | undefined, key: string, index: number): string {
+    if (!job) return "";
+    if (key === "sl") return String(index + 1);
+    if (financialKeys.includes(key)) return (job[key] || 0).toLocaleString();
+    return job[key] || "";
+  }
+
   const invoiceTitle = copyType === "office"
     ? "OFFICE COPY"
     : isDueCollection
