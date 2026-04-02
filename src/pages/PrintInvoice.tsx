@@ -358,11 +358,11 @@ export default function PrintInvoice() {
 
       <div className="inv">
         {/* Company Header */}
-        <div className="inv-header">
-          <div className="inv-company">
+        <div className="inv-header" style={{ flexDirection: "column", alignItems: "center" }}>
+          <div className="inv-company" style={{ textAlign: "center", width: "100%" }}>
             {company ? (
               <>
-                <h2>{company.company_name}</h2>
+                <h2 style={{ fontSize: `${company.header_font_size || 16}px`, textAlign: "center" }}>{company.company_name}</h2>
                 <p>{company.address}</p>
                 {company.phone && <p>Tel: {company.phone} {company.mobile ? `| Mobile: ${company.mobile}` : ""}</p>}
                 {company.email && <p>Email: {company.email} {company.website ? `| Web: ${company.website}` : ""}</p>}

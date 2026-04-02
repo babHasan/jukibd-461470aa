@@ -214,6 +214,19 @@ export default function CompanyInfo() {
                 {uploading && <p className="text-xs text-muted-foreground mt-1">Uploading...</p>}
               </div>
 
+              <div>
+                <Label className="text-sm font-semibold">Invoice Header Font Size (px)</Label>
+                <Input
+                  type="number"
+                  min={10}
+                  max={30}
+                  value={form.header_font_size}
+                  onChange={(e) => setForm((f) => ({ ...f, header_font_size: parseInt(e.target.value) || 16 }))}
+                  className="mt-1 w-24"
+                />
+                <p className="text-xs text-muted-foreground mt-1">Company name font size on printed invoices</p>
+              </div>
+
               <div className="flex items-center justify-between rounded-lg border p-4">
                 <div>
                   <Label className="text-sm font-semibold">Client Portal</Label>
