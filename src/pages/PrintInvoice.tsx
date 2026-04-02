@@ -89,12 +89,13 @@ export default function PrintInvoice() {
 
   useEffect(() => {
     async function fetchData() {
-      const { data: companyData } = await supabase
-        .from("company_info")
-        .select("*")
-        .limit(1)
-        .single();
-      if (companyData) setCompany(companyData);
+      // Fetch company info and column settings in parallel
+      const [companyRes, colRes] = await Promise.all([
+        supabase.from("company_info").select("*").limit(1).single(),
+        supabase.from("invoice_column_settings").select("*").order("display_order", { ascending: true }),
+      ]);
+      if (companyRes.data) setCompany(companyRes.data);
+      if (colRes.data) setColumnSettings(colRes.data as ColumnSetting[]);
 
       let jobsData: Job[] = [];
       if (challan) {
