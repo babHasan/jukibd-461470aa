@@ -436,7 +436,7 @@ export default function PrintInvoice() {
             {isDelivery && (
               <>
                 <tr className="total-row">
-                  <td colSpan={7} className="num">Sub Total</td>
+                  <td colSpan={6} className="num">Sub Total</td>
                   <td className="num">{totalServiceCharge.toLocaleString()}</td>
                   <td className="num">{totalDiscount.toLocaleString()}</td>
                   <td className="num">{totalPayable.toLocaleString()}</td>
