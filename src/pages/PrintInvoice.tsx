@@ -425,12 +425,16 @@ export default function PrintInvoice() {
           <thead>
             <tr>
               {nonFinancialCols.map(col => (
-                <th key={col.column_key} style={col.column_key === "sl" ? { width: 28 } : col.column_key === "job_number" ? { width: 68 } : undefined}>
+                <th key={col.column_key} style={{
+                  ...(col.column_key === "sl" ? { width: 28 } : col.column_key === "job_number" ? { width: 68 } : {}),
+                  fontSize: col.font_size ? `${col.font_size}px` : undefined,
+                  textAlign: (col.alignment as any) || "left",
+                }}>
                   {col.column_label}
                 </th>
               ))}
               {financialCols.map(col => (
-                <th key={col.column_key} className="num">{col.column_label}</th>
+                <th key={col.column_key} className="num" style={{ fontSize: col.font_size ? `${col.font_size}px` : undefined }}>{col.column_label}</th>
               ))}
             </tr>
           </thead>
@@ -440,12 +444,16 @@ export default function PrintInvoice() {
               return (
                 <tr key={i}>
                   {nonFinancialCols.map(col => (
-                    <td key={col.column_key} style={col.column_key === "job_number" ? { fontFamily: "monospace", fontSize: 11 } : undefined}>
+                    <td key={col.column_key} style={{
+                      ...(col.column_key === "job_number" ? { fontFamily: "monospace" } : {}),
+                      fontSize: col.font_size ? `${col.font_size}px` : undefined,
+                      textAlign: (col.alignment as any) || "left",
+                    }}>
                       {getCellValue(job, col.column_key, i)}
                     </td>
                   ))}
                   {financialCols.map(col => (
-                    <td key={col.column_key} className="num">
+                    <td key={col.column_key} className="num" style={{ fontSize: col.font_size ? `${col.font_size}px` : undefined }}>
                       {job ? getCellValue(job, col.column_key, i) : ""}
                     </td>
                   ))}
