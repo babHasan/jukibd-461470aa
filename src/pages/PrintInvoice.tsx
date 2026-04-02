@@ -395,7 +395,6 @@ export default function PrintInvoice() {
             <tr>
               <th style={{ width: 28 }}>Sl</th>
               <th style={{ width: 68 }}>Job No.</th>
-              <th>Machine</th>
               <th>Brand</th>
               <th>Model</th>
               <th>Board</th>
@@ -418,7 +417,6 @@ export default function PrintInvoice() {
                 <tr key={i}>
                   <td>{job ? i + 1 : ""}</td>
                   <td style={{ fontFamily: "monospace", fontSize: 11 }}>{job?.job_number || ""}</td>
-                  <td>{job?.board_name || ""}</td>
                   <td>{job?.brand_name || ""}</td>
                   <td>{job?.model_name || ""}</td>
                   <td>{job?.board_name || ""}</td>
@@ -438,17 +436,17 @@ export default function PrintInvoice() {
             {isDelivery && (
               <>
                 <tr className="total-row">
-                  <td colSpan={7} className="num">Sub Total</td>
+                  <td colSpan={6} className="num">Sub Total</td>
                   <td className="num">{totalServiceCharge.toLocaleString()}</td>
                   <td className="num">{totalDiscount.toLocaleString()}</td>
                   <td className="num">{totalPayable.toLocaleString()}</td>
                 </tr>
                 <tr className="total-row">
-                  <td colSpan={9} className="num">Received Amount</td>
+                  <td colSpan={8} className="num">Received Amount</td>
                   <td className="num">{totalReceived.toLocaleString()}</td>
                 </tr>
                 <tr className="grand-row">
-                  <td colSpan={9} className="num">{totalDue > 0 ? "Due Amount" : "Change"}</td>
+                  <td colSpan={8} className="num">{totalDue > 0 ? "Due Amount" : "Change"}</td>
                   <td className="num">{Math.abs(totalDue).toLocaleString()}</td>
                 </tr>
               </>
