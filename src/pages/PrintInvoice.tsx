@@ -417,7 +417,6 @@ export default function PrintInvoice() {
                 <tr key={i}>
                   <td>{job ? i + 1 : ""}</td>
                   <td style={{ fontFamily: "monospace", fontSize: 11 }}>{job?.job_number || ""}</td>
-                  <td>{job?.board_name || ""}</td>
                   <td>{job?.brand_name || ""}</td>
                   <td>{job?.model_name || ""}</td>
                   <td>{job?.board_name || ""}</td>
