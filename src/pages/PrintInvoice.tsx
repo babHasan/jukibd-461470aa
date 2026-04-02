@@ -30,6 +30,8 @@ interface ColumnSetting {
   visible_in_delivery: boolean;
   visible_in_receive: boolean;
   display_order: number;
+  font_size: number;
+  alignment: string;
 }
 
 interface Job {
