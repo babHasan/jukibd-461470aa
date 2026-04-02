@@ -4,7 +4,9 @@ import { AppLayout } from "@/components/AppLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, ClipboardList, Phone, ChevronRight } from "lucide-react";
+import { Search, ClipboardList, Phone, ChevronRight, Download, Upload } from "lucide-react";
+import * as XLSX from "xlsx";
+import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { CompletionWizard } from "@/components/CompletionWizard";
 import { DeliveryWizard } from "@/components/DeliveryWizard";
@@ -81,6 +83,7 @@ function getGroupStatus(jobs: Job[]): string {
 
 export default function JobList() {
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -114,6 +117,80 @@ export default function JobList() {
   }
 
   useEffect(() => { fetchJobs(); }, []);
+
+
+  function handleExport() {
+    const exportData = jobs.map((j, i) => ({
+      "SL": i + 1,
+      "Job Number": j.job_number,
+      "Job Date": j.job_date,
+      "Customer Name": j.customer_name,
+      "Company Name": j.company_name,
+      "Mobile": j.customer_mobile,
+      "Branch": j.branch_name,
+      "Brand": j.brand_name,
+      "Model": j.model_name,
+      "Board": j.board_name,
+      "Board Serial": j.board_serial,
+      "Details of Problem": j.details_of_problem,
+      "Remarks": j.remarks,
+      "Factory Challan": j.factory_challan_number,
+      "Status": j.status,
+      "Charge Type": (j as any).charge_type || "",
+      "Service Charge": (j as any).service_charge || 0,
+    }));
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Jobs");
+    XLSX.writeFile(wb, `Job_List_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    toast.success("Job list exported successfully");
+  }
+
+  async function handleImport(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (evt) => {
+      try {
+        const data = new Uint8Array(evt.target?.result as ArrayBuffer);
+        const wb = XLSX.read(data, { type: "array" });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const rows: any[] = XLSX.utils.sheet_to_json(ws);
+        if (rows.length === 0) {
+          toast.error("No data found in file");
+          return;
+        }
+        let imported = 0;
+        for (const row of rows) {
+          const jobNumber = row["Job Number"] || row["job_number"];
+          if (!jobNumber) continue;
+          const { error } = await supabase.from("jobs").upsert({
+            job_number: jobNumber,
+            job_date: row["Job Date"] || row["job_date"] || new Date().toISOString().slice(0, 10),
+            customer_name: row["Customer Name"] || row["customer_name"] || "",
+            branch_name: row["Branch"] || row["branch_name"] || "",
+            brand_name: row["Brand"] || row["brand_name"] || "",
+            model_name: row["Model"] || row["model_name"] || "",
+            board_name: row["Board"] || row["board_name"] || "",
+            board_serial: row["Board Serial"] || row["board_serial"] || "",
+            details_of_problem: row["Details of Problem"] || row["details_of_problem"] || "",
+            remarks: row["Remarks"] || row["remarks"] || "",
+            factory_challan_number: row["Factory Challan"] || row["factory_challan_number"] || "",
+            status: row["Status"] || row["status"] || "received",
+            charge_type: row["Charge Type"] || row["charge_type"] || "Normal",
+            service_charge: Number(row["Service Charge"] || row["service_charge"] || 0),
+          }, { onConflict: "job_number" });
+          if (!error) imported++;
+        }
+        toast.success(`${imported} jobs imported successfully`);
+        fetchJobs();
+      } catch (err) {
+        toast.error("Failed to read file");
+      }
+    };
+    reader.readAsArrayBuffer(file);
+    e.target.value = "";
+  }
 
   async function handleGroupStatusUpdate(group: JobGroup) {
     // Check if any job is transitioning from in-progress to completed
@@ -211,9 +288,24 @@ export default function JobList() {
   return (
     <AppLayout>
       <div className="space-y-4">
-        <div className="flex items-center gap-3">
-          <ClipboardList className="h-6 w-6 text-primary" />
-          <h2 className="text-xl font-bold text-foreground">JOB LIST</h2>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <ClipboardList className="h-6 w-6 text-primary" />
+            <h2 className="text-xl font-bold text-foreground">JOB LIST</h2>
+          </div>
+          {isAdmin && (
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" className="gap-1" onClick={handleExport}>
+                <Download className="h-4 w-4" /> Export
+              </Button>
+              <label>
+                <input type="file" accept=".xlsx,.xls,.csv" className="hidden" onChange={handleImport} />
+                <Button variant="outline" size="sm" className="gap-1" asChild>
+                  <span><Upload className="h-4 w-4" /> Import</span>
+                </Button>
+              </label>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
