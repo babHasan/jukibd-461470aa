@@ -118,7 +118,6 @@ export default function JobList() {
 
   useEffect(() => { fetchJobs(); }, []);
 
-  const fileInputRef = useState<HTMLInputElement | null>(null);
 
   function handleExport() {
     const exportData = jobs.map((j, i) => ({
