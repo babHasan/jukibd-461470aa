@@ -395,9 +395,13 @@ const Index = () => {
                           </Badge>
                         </div>
                         <p className="text-xs text-muted-foreground"><span className="font-medium text-foreground">Board:</span> {job.board_name}</p>
-                        {job.details_of_problem && (
-                          <p className="text-xs text-muted-foreground line-clamp-2">{job.details_of_problem}</p>
+                        <p className="text-xs text-muted-foreground"><span className="font-medium text-foreground">Board No:</span> {job.board_serial || "—"}</p>
+                        {(job as any).charge_type && (
+                          <p className="text-xs text-muted-foreground"><span className="font-medium text-foreground">Charge:</span> {(job as any).charge_type}</p>
                         )}
+                        {(job as any).service_charge ? (
+                          <p className="text-xs text-muted-foreground"><span className="font-medium text-foreground">Service:</span> {Number((job as any).service_charge).toLocaleString()}</p>
+                        ) : null}
                       </div>
                     ))}
                   </div>
