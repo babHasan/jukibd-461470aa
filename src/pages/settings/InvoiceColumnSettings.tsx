@@ -168,8 +168,10 @@ export default function InvoiceColumnSettings() {
                         <th className="text-left p-3 font-medium">Order</th>
                         <th className="text-left p-3 font-medium">Column Label</th>
                         <th className="text-left p-3 font-medium">Key</th>
-                        <th className="text-center p-3 font-medium">Delivery Invoice</th>
-                        <th className="text-center p-3 font-medium">Receive Copy</th>
+                        <th className="text-center p-3 font-medium">Font Size</th>
+                        <th className="text-center p-3 font-medium">Alignment</th>
+                        <th className="text-center p-3 font-medium">Delivery</th>
+                        <th className="text-center p-3 font-medium">Receive</th>
                         <th className="text-center p-3 font-medium">Actions</th>
                       </tr>
                     </thead>
