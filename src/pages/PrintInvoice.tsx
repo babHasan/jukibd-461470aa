@@ -202,7 +202,6 @@ export default function PrintInvoice() {
   function getCellValue(job: Job | undefined, key: string, index: number): string {
     if (!job) return "";
     if (key === "sl") return String(index + 1);
-    if (key === "jukibd") return "JUKIBD";
     if (financialKeys.includes(key)) return (job[key] || 0).toLocaleString();
     return job[key] || "";
   }
