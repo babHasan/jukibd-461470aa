@@ -1,0 +1,1 @@
+ALTER TABLE public.company_info ADD COLUMN header_font_size integer NOT NULL DEFAULT 16;
