@@ -473,7 +473,7 @@ const AddJob = () => {
                 <SelectContent>
                   {clients.map((c) => (
                     <SelectItem key={c.id} value={c.id}>
-                      {c.client_name}{c.company_name ? ` (${c.company_name})` : ""}
+                      {c.company_name ? `${c.company_name} (${c.client_name})` : c.client_name}
                     </SelectItem>
                   ))}
                 </SelectContent>
