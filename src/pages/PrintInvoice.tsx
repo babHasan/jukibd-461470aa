@@ -442,7 +442,7 @@ export default function PrintInvoice() {
                   <td className="num">{totalPayable.toLocaleString()}</td>
                 </tr>
                 <tr className="total-row">
-                  <td colSpan={9} className="num">Received Amount</td>
+                  <td colSpan={8} className="num">Received Amount</td>
                   <td className="num">{totalReceived.toLocaleString()}</td>
                 </tr>
                 <tr className="grand-row">
