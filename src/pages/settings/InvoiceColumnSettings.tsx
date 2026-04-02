@@ -138,7 +138,7 @@ export default function InvoiceColumnSettings() {
     ["service_charge", "discount", "payable_amount"].includes(key);
 
   return (
-    <AppLayout title="Invoice Column Settings">
+    <AppLayout>
       <div className="max-w-3xl mx-auto space-y-6">
         <Card>
           <CardHeader>
