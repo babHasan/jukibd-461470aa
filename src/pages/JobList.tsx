@@ -319,37 +319,36 @@ export default function JobList() {
                       <div className="rounded border overflow-hidden">
                         <table className="w-full text-sm">
                           <thead>
-                            <tr className="bg-muted/60">
-                              <th className="px-3 py-1.5 text-left font-semibold text-xs">Board</th>
-                              <th className="px-3 py-1.5 text-left font-semibold text-xs">Details Of Problem</th>
-                              <th className="px-3 py-1.5 text-left font-semibold text-xs">Job Number</th>
-                              <th className="px-3 py-1.5 text-left font-semibold text-xs">Status</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {group.jobs.map((job) => (
-                              <tr
-                                key={job.id}
-                                className="border-t cursor-pointer hover:bg-accent/10 transition-colors"
-                                onClick={() => navigate(`/job/${job.id}`)}
-                              >
-                                <td className="px-3 py-1.5 text-xs">
-                                  <div>
-                                    <span>{job.board_name}</span>
-                                    {job.board_serial && (
-                                      <span className="text-muted-foreground ml-1">({job.board_serial})</span>
-                                    )}
-                                  </div>
-                                </td>
-                                <td className="px-3 py-1.5 text-xs max-w-[180px] truncate">
-                                  {job.details_of_problem || "—"}
-                                </td>
-                                <td className="px-3 py-1.5 text-xs font-mono font-medium">{job.job_number}</td>
-                                <td className="px-3 py-1.5">
-                                  <Badge variant="secondary" className={`text-[10px] ${statusColors[job.status] || ""}`}>
-                                    {jobStatusLabels[job.status] || job.status}
-                                  </Badge>
-                                </td>
+                             <tr className="bg-muted/60">
+                               <th className="px-3 py-1.5 text-left font-semibold text-xs">Board</th>
+                               <th className="px-3 py-1.5 text-left font-semibold text-xs">Board Number</th>
+                               <th className="px-3 py-1.5 text-left font-semibold text-xs">Job Number</th>
+                               <th className="px-3 py-1.5 text-left font-semibold text-xs">Status</th>
+                               <th className="px-3 py-1.5 text-left font-semibold text-xs">Charge Type</th>
+                               <th className="px-3 py-1.5 text-right font-semibold text-xs">Service Charge</th>
+                             </tr>
+                           </thead>
+                           <tbody>
+                             {group.jobs.map((job) => (
+                               <tr
+                                 key={job.id}
+                                 className="border-t cursor-pointer hover:bg-accent/10 transition-colors"
+                                 onClick={() => navigate(`/job/${job.id}`)}
+                               >
+                                 <td className="px-3 py-1.5 text-xs">
+                                   <span>{job.board_name}</span>
+                                 </td>
+                                 <td className="px-3 py-1.5 text-xs">
+                                   {job.board_serial || "—"}
+                                 </td>
+                                 <td className="px-3 py-1.5 text-xs font-mono font-medium">{job.job_number}</td>
+                                 <td className="px-3 py-1.5">
+                                   <Badge variant="secondary" className={`text-[10px] ${statusColors[job.status] || ""}`}>
+                                     {jobStatusLabels[job.status] || job.status}
+                                   </Badge>
+                                 </td>
+                                 <td className="px-3 py-1.5 text-xs">{(job as any).charge_type || "—"}</td>
+                                 <td className="px-3 py-1.5 text-xs text-right font-mono">{(job as any).service_charge ? Number((job as any).service_charge).toLocaleString() : "—"}</td>
                               </tr>
                             ))}
                           </tbody>
