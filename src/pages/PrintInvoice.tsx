@@ -242,7 +242,7 @@ export default function PrintInvoice() {
           margin-bottom: 12px;
         }
         .inv-company { flex: 1; }
-        .inv-company h2 { font-size: 16px; font-weight: 800; margin: 0 0 2px 0; letter-spacing: 0.5px; }
+        .inv-company h2 { font-weight: 800; margin: 0 0 2px 0; letter-spacing: 0.5px; }
         .inv-company p { margin: 0; font-size: 11px; color: #444; line-height: 1.4; }
         .inv-logo { width: 60px; height: 60px; object-fit: contain; margin-left: 12px; }
         .inv-title {
