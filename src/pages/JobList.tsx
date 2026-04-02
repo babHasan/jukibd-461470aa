@@ -83,6 +83,7 @@ function getGroupStatus(jobs: Job[]): string {
 
 export default function JobList() {
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
