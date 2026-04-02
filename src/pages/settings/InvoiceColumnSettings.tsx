@@ -61,6 +61,8 @@ export default function InvoiceColumnSettings() {
           visible_in_delivery: col.visible_in_delivery,
           visible_in_receive: col.visible_in_receive,
           display_order: col.display_order,
+          font_size: col.font_size,
+          alignment: col.alignment,
         })
         .eq("id", col.id);
       if (error) hasError = true;
