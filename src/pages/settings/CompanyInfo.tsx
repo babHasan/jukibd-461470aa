@@ -39,6 +39,7 @@ export default function CompanyInfo() {
           mobile: data.mobile || "",
           logo_url: data.logo_url || null,
           portal_enabled: (data as any).portal_enabled ?? true,
+          header_font_size: (data as any).header_font_size ?? 16,
         });
       }
       setLoading(false);
