@@ -372,7 +372,7 @@ export default function PrintInvoice() {
             )}
           </div>
           {company?.logo_url && (
-            <img src={company.logo_url} alt="Logo" className="inv-logo" />
+            <img src={company.logo_url} alt="Logo" className="inv-logo" style={{ position: "absolute", right: 0, top: 0 }} />
           )}
         </div>
 
