@@ -49,6 +49,7 @@ import PortalScrollMessage from "./pages/settings/PortalScrollMessage";
 import FooterSettings from "./pages/settings/FooterSettings";
 import AppearanceSettings from "./pages/settings/AppearanceSettings";
 import NotificationSettings from "./pages/settings/NotificationSettings";
+import InvoiceColumnSettings from "./pages/settings/InvoiceColumnSettings";
 import CashIn from "./pages/cashbook/CashIn";
 import CashOut from "./pages/cashbook/CashOut";
 import BalanceSheet from "./pages/cashbook/BalanceSheet";
