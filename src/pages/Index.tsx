@@ -303,8 +303,10 @@ const Index = () => {
                             <thead>
                               <tr className="bg-muted/60">
                                 <th className="px-3 py-1.5 text-left font-semibold text-xs">Board</th>
-                                <th className="px-3 py-1.5 text-left font-semibold text-xs">Details Of Problem</th>
+                                <th className="px-3 py-1.5 text-left font-semibold text-xs">Board Number</th>
                                 <th className="px-3 py-1.5 text-left font-semibold text-xs">Job Number</th>
+                                <th className="px-3 py-1.5 text-left font-semibold text-xs">Charge Type</th>
+                                <th className="px-3 py-1.5 text-right font-semibold text-xs">Service Charge</th>
                                 <th className="px-3 py-1.5 text-left font-semibold text-xs">Status</th>
                               </tr>
                             </thead>
