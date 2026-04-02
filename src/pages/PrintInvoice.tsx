@@ -395,7 +395,6 @@ export default function PrintInvoice() {
             <tr>
               <th style={{ width: 28 }}>Sl</th>
               <th style={{ width: 68 }}>Job No.</th>
-              <th>Machine</th>
               <th>Brand</th>
               <th>Model</th>
               <th>Board</th>
