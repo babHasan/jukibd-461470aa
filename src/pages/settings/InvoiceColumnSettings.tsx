@@ -6,6 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Trash2, GripVertical, Save, FileText } from "lucide-react";
 
 interface ColumnSetting {
@@ -15,6 +16,8 @@ interface ColumnSetting {
   visible_in_delivery: boolean;
   visible_in_receive: boolean;
   display_order: number;
+  font_size: number;
+  alignment: string;
 }
 
 export default function InvoiceColumnSettings() {
