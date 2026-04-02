@@ -318,10 +318,12 @@ const Index = () => {
                                   onClick={() => navigate(`/job/${job.id}`)}
                                 >
                                   <td className="px-3 py-1.5 text-xs">{job.board_name}</td>
-                                  <td className="px-3 py-1.5 text-xs max-w-[180px] truncate">
-                                    {job.details_of_problem || "—"}
-                                  </td>
+                                  <td className="px-3 py-1.5 text-xs">{job.board_serial || "—"}</td>
                                   <td className="px-3 py-1.5 text-xs font-mono font-medium">{job.job_number}</td>
+                                  <td className="px-3 py-1.5 text-xs">{(job as any).charge_type || "—"}</td>
+                                  <td className="px-3 py-1.5 text-xs text-right font-mono">
+                                    {(job as any).service_charge ? Number((job as any).service_charge).toLocaleString() : "—"}
+                                  </td>
                                   <td className="px-3 py-1.5">
                                     <Badge variant="secondary" className={`text-[10px] ${statusColors[job.status] || ""}`}>
                                       {jobStatusLabels[job.status] || job.status}
