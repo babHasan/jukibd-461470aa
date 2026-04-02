@@ -234,9 +234,10 @@ export default function PrintInvoice() {
           line-height: 1.5;
         }
         .inv-header {
+          position: relative;
           display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
+          align-items: center;
+          justify-content: center;
           border-bottom: 2px solid #1a1a1a;
           padding-bottom: 10px;
           margin-bottom: 12px;
