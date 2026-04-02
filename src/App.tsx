@@ -118,6 +118,7 @@ function AppRoutes() {
       <Route path="/settings/footer" element={<ProtectedRoute><FooterSettings /></ProtectedRoute>} />
       <Route path="/settings/appearance" element={<ProtectedRoute><AppearanceSettings /></ProtectedRoute>} />
       <Route path="/settings/notifications" element={<ProtectedRoute><NotificationSettings /></ProtectedRoute>} />
+      <Route path="/settings/invoice-columns" element={<ProtectedRoute><InvoiceColumnSettings /></ProtectedRoute>} />
       <Route path="/cashbook/cash-in" element={<ProtectedRoute><CashIn /></ProtectedRoute>} />
       <Route path="/cashbook/cash-out" element={<ProtectedRoute><CashOut /></ProtectedRoute>} />
       <Route path="/cashbook/balance" element={<ProtectedRoute><BalanceSheet /></ProtectedRoute>} />
