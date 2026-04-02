@@ -422,21 +422,14 @@ export default function PrintInvoice() {
         <table className="inv-tbl">
           <thead>
             <tr>
-              <th style={{ width: 28 }}>Sl</th>
-              <th style={{ width: 68 }}>Job No.</th>
-              <th>Brand</th>
-              <th>Model</th>
-              <th>Board</th>
-              <th>Board S/N</th>
-              {isDelivery ? (
-                <>
-                  <th className="num">Charge</th>
-                  <th className="num">Disc.</th>
-                  <th className="num">Payable</th>
-                </>
-              ) : (
-                <th>Problem Details</th>
-              )}
+              {nonFinancialCols.map(col => (
+                <th key={col.column_key} style={col.column_key === "sl" ? { width: 28 } : col.column_key === "job_number" ? { width: 68 } : undefined}>
+                  {col.column_label}
+                </th>
+              ))}
+              {financialCols.map(col => (
+                <th key={col.column_key} className="num">{col.column_label}</th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -444,38 +437,37 @@ export default function PrintInvoice() {
               const job = jobs[i];
               return (
                 <tr key={i}>
-                  <td>{job ? i + 1 : ""}</td>
-                  <td style={{ fontFamily: "monospace", fontSize: 11 }}>{job?.job_number || ""}</td>
-                  <td>{job?.brand_name || ""}</td>
-                  <td>{job?.model_name || ""}</td>
-                  <td>{job?.board_name || ""}</td>
-                  <td>{job?.board_serial || ""}</td>
-                  {isDelivery ? (
-                    <>
-                      <td className="num">{job ? (job.service_charge || 0).toLocaleString() : ""}</td>
-                      <td className="num">{job ? (job.discount || 0).toLocaleString() : ""}</td>
-                      <td className="num">{job ? (job.payable_amount || 0).toLocaleString() : ""}</td>
-                    </>
-                  ) : (
-                    <td>{job?.details_of_problem || ""}</td>
-                  )}
+                  {nonFinancialCols.map(col => (
+                    <td key={col.column_key} style={col.column_key === "job_number" ? { fontFamily: "monospace", fontSize: 11 } : undefined}>
+                      {getCellValue(job, col.column_key, i)}
+                    </td>
+                  ))}
+                  {financialCols.map(col => (
+                    <td key={col.column_key} className="num">
+                      {job ? getCellValue(job, col.column_key, i) : ""}
+                    </td>
+                  ))}
                 </tr>
               );
             })}
-            {isDelivery && (
+            {isDelivery && financialCols.length > 0 && (
               <>
                 <tr className="total-row">
-                  <td colSpan={6} className="num">Sub Total</td>
-                  <td className="num">{totalServiceCharge.toLocaleString()}</td>
-                  <td className="num">{totalDiscount.toLocaleString()}</td>
-                  <td className="num">{totalPayable.toLocaleString()}</td>
+                  <td colSpan={nonFinancialCols.length} className="num">Sub Total</td>
+                  {financialCols.map(col => (
+                    <td key={col.column_key} className="num">
+                      {col.column_key === "service_charge" ? totalServiceCharge.toLocaleString() :
+                       col.column_key === "discount" ? totalDiscount.toLocaleString() :
+                       col.column_key === "payable_amount" ? totalPayable.toLocaleString() : ""}
+                    </td>
+                  ))}
                 </tr>
                 <tr className="total-row">
-                  <td colSpan={8} className="num">Received Amount</td>
+                  <td colSpan={nonFinancialCols.length + financialCols.length - 1} className="num">Received Amount</td>
                   <td className="num">{totalReceived.toLocaleString()}</td>
                 </tr>
                 <tr className="grand-row">
-                  <td colSpan={8} className="num">{totalDue > 0 ? "Due Amount" : "Change"}</td>
+                  <td colSpan={nonFinancialCols.length + financialCols.length - 1} className="num">{totalDue > 0 ? "Due Amount" : "Change"}</td>
                   <td className="num">{Math.abs(totalDue).toLocaleString()}</td>
                 </tr>
               </>
