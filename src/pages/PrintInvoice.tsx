@@ -23,6 +23,15 @@ function numberToWords(num: number): string {
   return "Taka " + convert(whole) + " Only";
 }
 
+interface ColumnSetting {
+  id: string;
+  column_key: string;
+  column_label: string;
+  visible_in_delivery: boolean;
+  visible_in_receive: boolean;
+  display_order: number;
+}
+
 interface Job {
   id: string;
   job_number: string;
@@ -44,6 +53,7 @@ interface Job {
   delivery_date: string | null;
   created_by_name?: string;
   delivered_by_name?: string;
+  [key: string]: any;
 }
 
 interface CompanyInfo {
