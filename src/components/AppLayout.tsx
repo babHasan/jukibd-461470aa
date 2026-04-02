@@ -183,6 +183,7 @@ const navItems: NavItem[] = [
       { to: "/settings/footer", label: "Footer Settings", icon: FileText },
       { to: "/settings/notifications", label: "Notifications", icon: Bell },
       { to: "/settings/appearance", label: "Appearance", icon: Palette },
+      { to: "/settings/invoice-columns", label: "Invoice Columns", icon: FileText },
     ],
   },
   { to: "/backup", label: "BACKUP DATABASE", icon: Database },
