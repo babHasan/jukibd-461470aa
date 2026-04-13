@@ -57,7 +57,7 @@ export default function EditJob() {
       supabase.from("models").select("id, name").order("name"),
       supabase.from("boards").select("id, name").order("name"),
       supabase.from("branches").select("id, name").eq("status", "active").order("name"),
-      supabase.from("clients").select("id, client_name, company_name").order("client_name"),
+      supabase.from("clients").select("id, client_name, company_name, contact_number").order("client_name"),
     ]).then(([b, m, bo, br, cl]) => {
       setBrands(b.data || []);
       setModels(m.data || []);
