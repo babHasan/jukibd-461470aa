@@ -25,7 +25,8 @@ export default function EditJob() {
   const [models, setModels] = useState<{ id: string; name: string }[]>([]);
   const [boardsList, setBoardsList] = useState<{ id: string; name: string }[]>([]);
   const [branches, setBranches] = useState<{ id: string; name: string }[]>([]);
-  const [clients, setClients] = useState<{ id: string; client_name: string; company_name: string }[]>([]);
+  const [clients, setClients] = useState<{ id: string; client_name: string; company_name: string; contact_number: string }[]>([]);
+  const [customerPopoverOpen, setCustomerPopoverOpen] = useState(false);
 
   const [jobNumber, setJobNumber] = useState("");
   const [brandName, setBrandName] = useState("");
