@@ -165,14 +165,14 @@ export default function JobDetailPage() {
 
   async function handlePreviousStatus() {
     if (!job || !prevStatus) return;
-    const updates: Record<string, unknown> = { status: prevStatus };
+    const updates: Record<string, any> = { status: prevStatus };
     // If moving back from completed, clear cost fields
     if (job.status === "completed") {
       updates.service_charge = 0;
       updates.charge_type = "Normal";
       updates.completed_date = null;
     }
-    const { error } = await supabase.from("jobs").update(updates).eq("id", job.id);
+    const { error } = await supabase.from("jobs").update(updates as any).eq("id", job.id);
     if (error) {
       toast.error("Failed to update status");
     } else {
