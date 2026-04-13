@@ -7,10 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { supabase } from "@/integrations/supabase/client";
-
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, Check, ChevronsUpDown } from "lucide-react";
 
 export default function EditJob() {
   const { id } = useParams<{ id: string }>();
@@ -23,7 +25,8 @@ export default function EditJob() {
   const [models, setModels] = useState<{ id: string; name: string }[]>([]);
   const [boardsList, setBoardsList] = useState<{ id: string; name: string }[]>([]);
   const [branches, setBranches] = useState<{ id: string; name: string }[]>([]);
-  const [clients, setClients] = useState<{ id: string; client_name: string; company_name: string }[]>([]);
+  const [clients, setClients] = useState<{ id: string; client_name: string; company_name: string; contact_number: string }[]>([]);
+  const [customerPopoverOpen, setCustomerPopoverOpen] = useState(false);
 
   const [jobNumber, setJobNumber] = useState("");
   const [brandName, setBrandName] = useState("");
@@ -54,7 +57,7 @@ export default function EditJob() {
       supabase.from("models").select("id, name").order("name"),
       supabase.from("boards").select("id, name").order("name"),
       supabase.from("branches").select("id, name").eq("status", "active").order("name"),
-      supabase.from("clients").select("id, client_name, company_name").order("client_name"),
+      supabase.from("clients").select("id, client_name, company_name, contact_number").order("client_name"),
     ]).then(([b, m, bo, br, cl]) => {
       setBrands(b.data || []);
       setModels(m.data || []);
@@ -232,20 +235,46 @@ export default function EditJob() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label>Company Name</Label>
-                <Select value={customerId || ""} onValueChange={(v) => {
-                  setCustomerId(v);
-                  const found = clients.find(c => c.id === v);
-                  if (found) setCustomerName(found.client_name);
-                }}>
-                  <SelectTrigger><SelectValue placeholder="Select company" /></SelectTrigger>
-                  <SelectContent>
-                    {clients.map((c) => (
-                      <SelectItem key={c.id} value={c.id}>
-                        {c.client_name} {c.company_name ? `(${c.company_name})` : ""}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Popover open={customerPopoverOpen} onOpenChange={setCustomerPopoverOpen}>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" role="combobox" aria-expanded={customerPopoverOpen} className="w-full justify-between font-normal h-10">
+                      {customerId
+                        ? (() => {
+                            const c = clients.find((cl) => cl.id === customerId);
+                            return c ? (c.company_name ? `${c.company_name} (${c.client_name})` : c.client_name) : "Select customer";
+                          })()
+                        : "Select or type below"}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                    <Command>
+                      <CommandInput placeholder="Search customer..." className="h-9" />
+                      <CommandList>
+                        <CommandEmpty>No customer found.</CommandEmpty>
+                        <CommandGroup>
+                          {clients.map((c) => (
+                            <CommandItem
+                              key={c.id}
+                              value={`${c.company_name || ""} ${c.client_name} ${c.contact_number || ""}`}
+                              onSelect={() => {
+                                setCustomerId(c.id);
+                                setCustomerName(c.client_name);
+                                setCustomerPopoverOpen(false);
+                              }}
+                            >
+                              <Check className={cn("mr-2 h-4 w-4", customerId === c.id ? "opacity-100" : "opacity-0")} />
+                              <div className="flex flex-col">
+                                <span className="text-sm">{c.company_name ? `${c.company_name} (${c.client_name})` : c.client_name}</span>
+                                {c.contact_number && <span className="text-xs text-muted-foreground">{c.contact_number}</span>}
+                              </div>
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
               </div>
               <div className="space-y-2">
                 <Label>Client Name</Label>
