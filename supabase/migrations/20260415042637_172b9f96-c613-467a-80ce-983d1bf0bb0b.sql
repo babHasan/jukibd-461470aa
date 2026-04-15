@@ -1,0 +1,1 @@
+ALTER TABLE public.jobs ADD CONSTRAINT jobs_job_number_unique UNIQUE (job_number);
