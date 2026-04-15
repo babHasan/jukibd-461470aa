@@ -180,6 +180,7 @@ export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: Delive
         }
       }
 
+      const smsSentChallans = new Set<string>();
       for (const job of selected) {
         const updateData: any = {
           status: "picked-up",
@@ -204,7 +205,12 @@ export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: Delive
           return;
         }
 
-        await sendDeliverySms(job, payableAmount);
+        // Send SMS once per challan, not per job
+        const challanKey = job.factory_challan_number || job.id;
+        if (!smsSentChallans.has(challanKey)) {
+          smsSentChallans.add(challanKey);
+          await sendDeliverySms(job, payableAmount);
+        }
       }
       toast.success("Jobs marked as Picked Up & SMS sent");
       

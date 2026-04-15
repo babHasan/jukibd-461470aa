@@ -108,6 +108,7 @@ export function CompletionWizard({ open, onOpenChange, jobs, onCompleted }: Comp
 
     setSubmitting(true);
     try {
+      const smsSentChallans = new Set<string>();
       for (const job of selected) {
         const entry = entries[job.id];
         const { error } = await supabase
@@ -126,9 +127,13 @@ export function CompletionWizard({ open, onOpenChange, jobs, onCompleted }: Comp
           return;
         }
 
-        // Send SMS notification for completed job
-        const charge = entry.chargeType === "FOC" ? 0 : entry.amount;
-        await sendCompletionSms(job, charge);
+        // Send SMS once per challan, not per job
+        const challanKey = job.factory_challan_number || job.id;
+        if (!smsSentChallans.has(challanKey)) {
+          smsSentChallans.add(challanKey);
+          const charge = entry.chargeType === "FOC" ? 0 : entry.amount;
+          await sendCompletionSms(job, charge);
+        }
       }
       toast.success("Jobs marked as completed");
       

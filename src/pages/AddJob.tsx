@@ -268,9 +268,13 @@ const AddJob = () => {
           
         }
 
-        // Send SMS for each job (trigger_status = "received")
-        if (customerMobile) {
-          for (const job of insertedJobs || []) {
+        // Send SMS once per challan (not per job)
+        if (customerMobile && insertedJobs?.length) {
+          const sentChallans = new Set<string>();
+          for (const job of insertedJobs) {
+            const challanKey = job.factory_challan_number || job.id;
+            if (sentChallans.has(challanKey)) continue;
+            sentChallans.add(challanKey);
             try {
               await supabase.functions.invoke("send-sms", {
                 body: {
@@ -278,14 +282,14 @@ const AddJob = () => {
                   customer_phone: customerMobile,
                   customer_name: job.customer_name,
                   device_brand: job.brand_name,
-                  ticket_number: job.job_number,
+                  ticket_number: job.factory_challan_number || job.job_number,
                   issue: job.details_of_problem,
                   estimated_cost: 0,
                   trigger_status: "received",
                 },
               });
             } catch (smsErr) {
-              console.error("SMS send failed for job:", job.job_number, smsErr);
+              console.error("SMS send failed for challan:", challanKey, smsErr);
             }
           }
         }
