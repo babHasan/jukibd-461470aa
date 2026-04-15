@@ -103,6 +103,23 @@ export default function EditJob() {
 
   async function handleSave() {
     if (!id) return;
+
+    // Validate challan number - same challan must belong to same customer
+    if (factoryChallanNumber.trim()) {
+      const { data: existingChallanJobs } = await supabase
+        .from("jobs")
+        .select("id, customer_id")
+        .eq("factory_challan_number", factoryChallanNumber.trim())
+        .neq("id", id)
+        .limit(1)
+        .maybeSingle();
+
+      if (existingChallanJobs && existingChallanJobs.customer_id && existingChallanJobs.customer_id !== customerId) {
+        toast.error(`Challan "${factoryChallanNumber}" already belongs to a different customer. Same challan number must have the same customer.`);
+        return;
+      }
+    }
+
     setSaving(true);
 
     const selectedBranch = branches.find((b) => b.id === branchId);

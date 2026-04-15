@@ -157,6 +157,29 @@ const AddJob = () => {
       toast.error("Please select or enter a Customer");
       return;
     }
+    // Validate challan number - same challan must belong to same customer
+    if (factoryChallanNumber.trim()) {
+      const { data: existingChallanJobs } = await supabase
+        .from("jobs")
+        .select("customer_id, customer_name")
+        .eq("factory_challan_number", factoryChallanNumber.trim())
+        .limit(1)
+        .maybeSingle();
+
+      if (existingChallanJobs) {
+        const existingCustomerId = existingChallanJobs.customer_id;
+        const currentCustomerId = selectedCustomer || null;
+        if (existingCustomerId && currentCustomerId && existingCustomerId !== currentCustomerId) {
+          toast.error(`Challan "${factoryChallanNumber}" already belongs to a different customer. Same challan number must have the same customer.`);
+          return;
+        }
+        if (!currentCustomerId && existingCustomerId) {
+          toast.error(`Challan "${factoryChallanNumber}" already belongs to a different customer. Same challan number must have the same customer.`);
+          return;
+        }
+      }
+    }
+
     setSubmitting(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
