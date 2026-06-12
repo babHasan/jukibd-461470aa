@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Database, Download, Loader2, RefreshCw, ArrowUpFromLine, ArrowDownToLine, Upload } from "lucide-react";
+import { FileCode } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import * as XLSX from "xlsx";
 
@@ -34,6 +35,9 @@ const BackupDatabase = () => {
   const [importing, setImporting] = useState(false);
   const [importProgress, setImportProgress] = useState(0);
   const [importCurrentTable, setImportCurrentTable] = useState("");
+  const [sqlExporting, setSqlExporting] = useState(false);
+  const [sqlProgress, setSqlProgress] = useState(0);
+  const [sqlCurrentTable, setSqlCurrentTable] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function fetchAllRows(table: TableName) {
@@ -78,6 +82,125 @@ const BackupDatabase = () => {
       toast.error("Backup failed: " + (err.message || "Unknown error"));
     } finally {
       setExporting(false);
+    }
+  }
+
+  function sqlEscape(val: any): string {
+    if (val === null || val === undefined) return "NULL";
+    if (typeof val === "number") return isFinite(val) ? String(val) : "NULL";
+    if (typeof val === "boolean") return val ? "1" : "0";
+    if (val instanceof Date) return `'${val.toISOString().slice(0, 19).replace("T", " ")}'`;
+    if (typeof val === "object") {
+      return `'${JSON.stringify(val).replace(/\\/g, "\\\\").replace(/'/g, "''")}'`;
+    }
+    const s = String(val);
+    return `'${s.replace(/\\/g, "\\\\").replace(/'/g, "''")}'`;
+  }
+
+  function inferMysqlType(values: any[]): string {
+    const sample = values.find((v) => v !== null && v !== undefined);
+    if (sample === undefined) return "TEXT";
+    if (typeof sample === "number") {
+      return Number.isInteger(sample) ? "BIGINT" : "DECIMAL(18,4)";
+    }
+    if (typeof sample === "boolean") return "TINYINT(1)";
+    if (typeof sample === "object") return "JSON";
+    const s = String(sample);
+    if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(s)) return "DATETIME";
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return "DATE";
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s)) return "VARCHAR(36)";
+    const maxLen = Math.max(...values.filter((v) => v != null).map((v) => String(v).length), 1);
+    if (maxLen <= 255) return "VARCHAR(255)";
+    return "TEXT";
+  }
+
+  function formatValueForSql(val: any): any {
+    if (val === null || val === undefined) return null;
+    if (typeof val === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(val)) {
+      return val.slice(0, 19).replace("T", " ");
+    }
+    return val;
+  }
+
+  async function handleSqlExport() {
+    setSqlExporting(true);
+    setSqlProgress(0);
+    try {
+      const lines: string[] = [];
+      const now = new Date();
+      lines.push(`-- MySQL Database Dump`);
+      lines.push(`-- Generated: ${now.toISOString()}`);
+      lines.push(`-- Source: Lovable Cloud (PostgreSQL) → MySQL Compatible Export`);
+      lines.push(``);
+      lines.push(`SET FOREIGN_KEY_CHECKS=0;`);
+      lines.push(`SET NAMES utf8mb4;`);
+      lines.push(``);
+
+      for (let i = 0; i < TABLES.length; i++) {
+        const table = TABLES[i];
+        setSqlCurrentTable(table);
+        setSqlProgress(Math.round((i / TABLES.length) * 100));
+
+        const rows = await fetchAllRows(table);
+
+        lines.push(`-- ---------------------------`);
+        lines.push(`-- Table: ${table}`);
+        lines.push(`-- ---------------------------`);
+        lines.push(`DROP TABLE IF EXISTS \`${table}\`;`);
+
+        if (rows.length === 0) {
+          lines.push(`-- (no rows; schema unknown — table not created)`);
+          lines.push(``);
+          continue;
+        }
+
+        const cols = Object.keys(rows[0]);
+        const colDefs = cols.map((c) => {
+          const vals = rows.map((r) => r[c]);
+          const type = inferMysqlType(vals);
+          const isId = c === "id";
+          return `  \`${c}\` ${type}${isId ? " NOT NULL" : " NULL"}`;
+        });
+        if (cols.includes("id")) colDefs.push(`  PRIMARY KEY (\`id\`)`);
+
+        lines.push(`CREATE TABLE \`${table}\` (`);
+        lines.push(colDefs.join(",\n"));
+        lines.push(`) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`);
+        lines.push(``);
+
+        const colList = cols.map((c) => `\`${c}\``).join(", ");
+        const batchSize = 100;
+        for (let j = 0; j < rows.length; j += batchSize) {
+          const batch = rows.slice(j, j + batchSize);
+          const values = batch
+            .map(
+              (r) =>
+                `(${cols.map((c) => sqlEscape(formatValueForSql(r[c]))).join(", ")})`
+            )
+            .join(",\n");
+          lines.push(`INSERT INTO \`${table}\` (${colList}) VALUES\n${values};`);
+        }
+        lines.push(``);
+      }
+
+      lines.push(`SET FOREIGN_KEY_CHECKS=1;`);
+      setSqlProgress(100);
+      setSqlCurrentTable("");
+
+      const blob = new Blob([lines.join("\n")], { type: "application/sql" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const fname = `backup_${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}_${String(now.getHours()).padStart(2, "0")}${String(now.getMinutes()).padStart(2, "0")}.sql`;
+      a.href = url;
+      a.download = fname;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success("MySQL SQL dump downloaded! Import via phpMyAdmin.");
+    } catch (err: any) {
+      console.error("SQL export failed:", err);
+      toast.error("SQL export failed: " + (err.message || "Unknown error"));
+    } finally {
+      setSqlExporting(false);
     }
   }
 
@@ -203,6 +326,43 @@ const BackupDatabase = () => {
               <><Loader2 className="h-4 w-4 animate-spin" /> Exporting...</>
             ) : (
               <><Download className="h-4 w-4" /> Export Database Backup</>
+            )}
+          </Button>
+        </div>
+
+        {/* MySQL SQL Dump Export */}
+        <div className="rounded-lg border bg-card p-6 shadow-sm space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+              <FileCode className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">MySQL SQL Dump</h2>
+              <p className="text-sm text-muted-foreground">
+                Export as .sql file — import directly via phpMyAdmin / cPanel
+              </p>
+            </div>
+          </div>
+          <div className="rounded-md border bg-muted/30 p-4 text-sm text-muted-foreground space-y-1">
+            <p>Generates a MySQL-compatible dump with <code>CREATE TABLE</code> + <code>INSERT</code> statements for all tables.</p>
+            <p className="text-xs">⚠️ Column types are auto-inferred. Review before importing into production.</p>
+          </div>
+          {sqlExporting && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">
+                  {sqlProgress < 100 ? `Exporting: ${sqlCurrentTable}...` : "Preparing download..."}
+                </span>
+                <span className="font-medium text-foreground">{sqlProgress}%</span>
+              </div>
+              <Progress value={sqlProgress} />
+            </div>
+          )}
+          <Button onClick={handleSqlExport} disabled={sqlExporting} className="w-full gap-2" size="lg" variant="outline">
+            {sqlExporting ? (
+              <><Loader2 className="h-4 w-4 animate-spin" /> Generating SQL...</>
+            ) : (
+              <><FileCode className="h-4 w-4" /> Download MySQL .sql Dump</>
             )}
           </Button>
         </div>
