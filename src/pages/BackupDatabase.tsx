@@ -330,6 +330,43 @@ const BackupDatabase = () => {
           </Button>
         </div>
 
+        {/* MySQL SQL Dump Export */}
+        <div className="rounded-lg border bg-card p-6 shadow-sm space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+              <FileCode className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">MySQL SQL Dump</h2>
+              <p className="text-sm text-muted-foreground">
+                Export as .sql file — import directly via phpMyAdmin / cPanel
+              </p>
+            </div>
+          </div>
+          <div className="rounded-md border bg-muted/30 p-4 text-sm text-muted-foreground space-y-1">
+            <p>Generates a MySQL-compatible dump with <code>CREATE TABLE</code> + <code>INSERT</code> statements for all tables.</p>
+            <p className="text-xs">⚠️ Column types are auto-inferred. Review before importing into production.</p>
+          </div>
+          {sqlExporting && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">
+                  {sqlProgress < 100 ? `Exporting: ${sqlCurrentTable}...` : "Preparing download..."}
+                </span>
+                <span className="font-medium text-foreground">{sqlProgress}%</span>
+              </div>
+              <Progress value={sqlProgress} />
+            </div>
+          )}
+          <Button onClick={handleSqlExport} disabled={sqlExporting} className="w-full gap-2" size="lg" variant="outline">
+            {sqlExporting ? (
+              <><Loader2 className="h-4 w-4 animate-spin" /> Generating SQL...</>
+            ) : (
+              <><FileCode className="h-4 w-4" /> Download MySQL .sql Dump</>
+            )}
+          </Button>
+        </div>
+
         {/* Database Import/Restore */}
         <div className="rounded-lg border bg-card p-6 shadow-sm space-y-6">
           <div className="flex items-center gap-3">
