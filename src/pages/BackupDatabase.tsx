@@ -22,6 +22,19 @@ const TABLES = [
   "user_activity_logs",
   "user_permissions",
   "user_roles",
+  "chart_of_accounts",
+  "company_info",
+  "customer_feedback",
+  "expense_categories",
+  "expenses",
+  "income_categories",
+  "incomes",
+  "inventory",
+  "invoice_column_settings",
+  "footer_content",
+  "portal_scroll_messages",
+  "theme_settings",
+  "warranties",
 ] as const;
 
 type TableName = (typeof TABLES)[number];
