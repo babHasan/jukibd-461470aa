@@ -109,15 +109,20 @@ export function DeliveryWizard({ open, onOpenChange, jobs, onCompleted }: Delive
 
   async function uploadChequePhoto(): Promise<string | null> {
     if (!chequeFile) return null;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast.error("You must be signed in to upload a cheque");
+      return null;
+    }
     const ext = chequeFile.name.split(".").pop();
-    const path = `cheque-${Date.now()}.${ext}`;
+    const path = `${user.id}/cheque-${Date.now()}.${ext}`;
     const { error } = await supabase.storage.from("cheques").upload(path, chequeFile);
     if (error) {
       toast.error("Failed to upload cheque photo");
       return null;
     }
-    const { data: urlData } = supabase.storage.from("cheques").getPublicUrl(path);
-    return urlData.publicUrl;
+    // Bucket is private — store the storage path; create signed URLs on read.
+    return path;
   }
 
   async function sendDeliverySms(job: JobItem, totalCharge: number) {
