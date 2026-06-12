@@ -12,6 +12,7 @@ import {
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import * as XLSX from "xlsx";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -217,7 +218,19 @@ export default function Customers() {
                     <TableCell>{idx + 1}</TableCell>
                     <TableCell className="font-medium">{client.company_name || "—"}</TableCell>
                     <TableCell>{client.client_name}</TableCell>
-                    <TableCell className="text-muted-foreground">{client.contact_number || "—"}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      <div className="flex items-center gap-2">
+                        <span>{client.contact_number || "—"}</span>
+                        {client.contact_number && (
+                          <WhatsAppButton
+                            phone={client.contact_number}
+                            message={`Hello ${client.client_name || client.company_name},`}
+                            iconOnly
+                            label=""
+                          />
+                        )}
+                      </div>
+                    </TableCell>
                     <TableCell className="text-muted-foreground">{client.email || "—"}</TableCell>
                     <TableCell className="text-muted-foreground max-w-[200px] truncate">{client.address || "—"}</TableCell>
                     <TableCell className="text-muted-foreground">{client.remarks || "—"}</TableCell>
