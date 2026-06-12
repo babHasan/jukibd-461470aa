@@ -12,6 +12,7 @@ import {
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import * as XLSX from "xlsx";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
