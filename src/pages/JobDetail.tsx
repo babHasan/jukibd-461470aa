@@ -15,6 +15,7 @@ import {
 import { format } from "date-fns";
 import { CompletionWizard } from "@/components/CompletionWizard";
 import { DeliveryWizard } from "@/components/DeliveryWizard";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 const jobStatusFlow = ["received", "diagnosing", "in-progress", "completed", "picked-up"];
 const jobStatusLabels: Record<string, string> = {
@@ -293,9 +294,15 @@ export default function JobDetailPage() {
                 <h3 className="mb-3 text-sm font-semibold text-muted-foreground uppercase tracking-wider">Customer</h3>
                 <p className="text-lg font-semibold text-foreground">{job.customer_name}</p>
                 {customerMobile && (
-                  <p className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
-                    <Phone className="h-3.5 w-3.5" /> {customerMobile}
-                  </p>
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Phone className="h-3.5 w-3.5" /> {customerMobile}
+                    </p>
+                    <WhatsAppButton
+                      phone={customerMobile}
+                      message={`Hello ${job.customer_name}, regarding your repair ${job.job_number.startsWith("JOB-") ? job.job_number : `JOB-${job.job_number}`} (${job.brand_name} ${job.model_name}) — status: ${jobStatusLabels[job.status] || job.status}.`}
+                    />
+                  </div>
                 )}
               </div>
               <div className="rounded-lg border bg-card p-5">
