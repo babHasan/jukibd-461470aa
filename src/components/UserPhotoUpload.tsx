@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Camera, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
+import { useAvatarUrl } from "@/lib/avatarUrl";
 
 interface UserPhotoUploadProps {
   photoUrl: string | null;
@@ -15,6 +16,7 @@ interface UserPhotoUploadProps {
 export function UserPhotoUpload({ photoUrl, onPhotoChange, userId, userFolder }: UserPhotoUploadProps) {
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const displayUrl = useAvatarUrl(photoUrl);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -44,17 +46,17 @@ export function UserPhotoUpload({ photoUrl, onPhotoChange, userId, userFolder }:
       return;
     }
 
-    const { data } = supabase.storage.from("avatars").getPublicUrl(fileName);
-    onPhotoChange(data.publicUrl);
+    // Store the storage path; signed URLs are generated on display.
+    onPhotoChange(fileName);
     setUploading(false);
   }
 
   return (
     <div className="flex flex-col items-center gap-3">
       <div className="relative h-28 w-28 rounded-full border-2 border-dashed border-muted-foreground/30 bg-muted/50 flex items-center justify-center overflow-hidden">
-        {photoUrl ? (
+        {displayUrl ? (
           <>
-            <img src={photoUrl} alt="User" className="h-full w-full object-cover" />
+            <img src={displayUrl} alt="User" className="h-full w-full object-cover" />
             <button
               type="button"
               onClick={() => onPhotoChange(null)}
