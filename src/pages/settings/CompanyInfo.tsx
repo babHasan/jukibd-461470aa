@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Building, Upload } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { useAvatarUrl } from "@/lib/avatarUrl";
 
 export default function CompanyInfo() {
   const [loading, setLoading] = useState(true);
@@ -25,6 +26,7 @@ export default function CompanyInfo() {
     portal_enabled: true,
     header_font_size: 16,
   });
+  const logoDisplayUrl = useAvatarUrl(form.logo_url);
 
   useEffect(() => {
     supabase.from("company_info").select("*").limit(1).single().then(({ data }) => {
@@ -64,8 +66,7 @@ export default function CompanyInfo() {
       return;
     }
 
-    const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(path);
-    setForm((f) => ({ ...f, logo_url: urlData.publicUrl }));
+    setForm((f) => ({ ...f, logo_url: path }));
     setUploading(false);
     toast.success("Logo uploaded");
   }
@@ -190,9 +191,9 @@ export default function CompanyInfo() {
               <div>
                 <Label className="text-sm font-semibold">Current Logo</Label>
                 <div className="mt-1">
-                  {form.logo_url ? (
+                  {logoDisplayUrl ? (
                     <img
-                      src={form.logo_url}
+                      src={logoDisplayUrl}
                       alt="Company logo"
                       className="h-16 w-auto rounded border object-contain bg-white p-1"
                     />
