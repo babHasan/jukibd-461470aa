@@ -1,6 +1,7 @@
 import { Footer } from "@/components/Footer";
 import { SearchJobWizard } from "@/components/SearchJobWizard";
 import { useAuth } from "@/context/AuthContext";
+import { useAvatarUrl } from "@/lib/avatarUrl";
 import {
   Wrench,
   LayoutDashboard,
@@ -301,6 +302,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profile, setProfile] = useState<{ name: string; photo_url: string | null } | null>(null);
+  const photoUrl = useAvatarUrl(profile?.photo_url);
 
   useEffect(() => {
     if (user) {
@@ -351,8 +353,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
         {!collapsed && profile && (
           <Link to="/my-profile" className="mx-3 mt-4 mb-2 flex items-center gap-3 rounded-xl bg-white/5 px-3 py-2.5 hover:bg-white/8 transition-colors">
             <div className="h-9 w-9 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-xs font-bold text-white overflow-hidden shrink-0 ring-2 ring-white/10">
-              {profile?.photo_url ? (
-                <img src={profile.photo_url} alt="" className="h-full w-full object-cover" />
+              {photoUrl ? (
+                <img src={photoUrl} alt="" className="h-full w-full object-cover" />
               ) : (
                 (profile?.name?.[0] || "U").toUpperCase()
               )}
@@ -419,8 +421,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
             </Link>
             <Link to="/my-profile" className="flex items-center gap-2 rounded-full bg-primary px-2 sm:px-3 py-1 sm:py-1.5 hover:opacity-90 transition-opacity">
               <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-accent flex items-center justify-center text-[10px] sm:text-xs font-bold text-accent-foreground overflow-hidden shrink-0">
-                {profile?.photo_url ? (
-                  <img src={profile.photo_url} alt="" className="h-full w-full object-cover" />
+                {photoUrl ? (
+                  <img src={photoUrl} alt="" className="h-full w-full object-cover" />
                 ) : (
                   (profile?.name?.[0] || (isAdmin ? "A" : "U")).toUpperCase()
                 )}

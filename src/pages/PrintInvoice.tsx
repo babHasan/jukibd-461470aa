@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { QRCodeSVG } from "qrcode.react";
+import { useAvatarUrl } from "@/lib/avatarUrl";
 
 function numberToWords(num: number): string {
   if (num === 0) return "Zero";
@@ -89,6 +90,7 @@ export default function PrintInvoice() {
   const [client, setClient] = useState<ClientInfo | null>(null);
   const [columnSettings, setColumnSettings] = useState<ColumnSetting[]>([]);
   const [loading, setLoading] = useState(true);
+  const logoUrl = useAvatarUrl(company?.logo_url);
 
   useEffect(() => {
     async function fetchData() {
@@ -372,8 +374,8 @@ export default function PrintInvoice() {
               <h2 style={{ color: "#888" }}>Company info not configured</h2>
             )}
           </div>
-          {company?.logo_url && (
-            <img src={company.logo_url} alt="Logo" className="inv-logo" style={{ position: "absolute", right: 0, top: 0 }} />
+          {logoUrl && (
+            <img src={logoUrl} alt="Logo" className="inv-logo" style={{ position: "absolute", right: 0, top: 0 }} />
           )}
         </div>
 
