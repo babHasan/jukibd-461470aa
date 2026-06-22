@@ -1,0 +1,2 @@
+DROP POLICY IF EXISTS "Admins read all templates" ON public.sms_templates;
+CREATE POLICY "Admins read templates" ON public.sms_templates FOR SELECT TO authenticated USING (public.has_role(auth.uid(), 'admin'::app_role));
