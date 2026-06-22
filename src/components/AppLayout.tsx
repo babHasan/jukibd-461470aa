@@ -1,6 +1,7 @@
 import { Footer } from "@/components/Footer";
 import { SearchJobWizard } from "@/components/SearchJobWizard";
 import { useAuth } from "@/context/AuthContext";
+import { useAvatarUrl } from "@/lib/avatarUrl";
 import {
   Wrench,
   LayoutDashboard,
