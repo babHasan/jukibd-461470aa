@@ -150,7 +150,7 @@ export default function SmsSettings() {
             SMS নোটিফিকেশন সেটিংস
           </h2>
           <p className="text-muted-foreground mt-1">
-            বাংলা SMS টেমপ্লেট ম্যানেজ করুন। প্লেসহোল্ডার: {`{{customer_name}}, {{device_brand}}, {{ticket_number}}, {{issue}}, {{estimated_cost}}`}
+            বাংলা SMS টেমপ্লেট ম্যানেজ করুন। প্লেসহোল্ডার: {`{{customer_name}}, {{device_brand}}, {{ticket_number}}, {{job_number}}, {{issue}}, {{estimated_cost}}`}
           </p>
         </div>
 

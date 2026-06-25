@@ -76,6 +76,7 @@ Deno.serve(async (req) => {
       .replace(/\{\{customer_name\}\}/g, customer_name)
       .replace(/\{\{device_brand\}\}/g, device_brand)
       .replace(/\{\{ticket_number\}\}/g, ticket_number)
+      .replace(/\{\{job_number\}\}/g, ticket_number)
       .replace(/\{\{issue\}\}/g, issue)
       .replace(/\{\{estimated_cost\}\}/g, String(estimated_cost));
 
