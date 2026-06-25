@@ -71,12 +71,18 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Ensure ticket/job number is prefixed with "JOB-"
+    const rawTicket = String(ticket_number ?? "").trim();
+    const formattedJobNumber = rawTicket.toUpperCase().startsWith("JOB-")
+      ? rawTicket
+      : `JOB-${rawTicket}`;
+
     // Replace placeholders
     const message = template.template_text
       .replace(/\{\{customer_name\}\}/g, customer_name)
       .replace(/\{\{device_brand\}\}/g, device_brand)
-      .replace(/\{\{ticket_number\}\}/g, ticket_number)
-      .replace(/\{\{job_number\}\}/g, ticket_number)
+      .replace(/\{\{ticket_number\}\}/g, formattedJobNumber)
+      .replace(/\{\{job_number\}\}/g, formattedJobNumber)
       .replace(/\{\{issue\}\}/g, issue)
       .replace(/\{\{estimated_cost\}\}/g, String(estimated_cost));
 
