@@ -104,6 +104,7 @@ export default function JobList() {
       .from("jobs")
       .select("*, clients(contact_number, company_name)")
       .order("created_at", { ascending: false })
+      .range(0, 49999)
       .then(({ data, error }) => {
         if (!error && data) {
           setJobs(data.map((j: any) => ({

@@ -63,7 +63,7 @@ export function SearchJobWizard() {
       .from("jobs")
       .select("id, job_number, customer_name, board_name, brand_name, board_serial, factory_challan_number, status, clients(contact_number, company_name)")
       .order("created_at", { ascending: false })
-      .limit(500)
+      .limit(5000)
       .then(({ data }) => {
         if (data) {
           setJobs(
