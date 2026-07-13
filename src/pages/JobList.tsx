@@ -124,6 +124,42 @@ export default function JobList() {
 
   useEffect(() => { fetchJobs(); }, []);
 
+  // Fallback: if user searches a specific job number/challan and local filter finds nothing,
+  // query the DB directly and merge the missing row into state so it becomes visible.
+  useEffect(() => {
+    const term = search.trim();
+    if (term.length < 2) return;
+    if (loading) return;
+    const localHit = jobs.some(
+      (j) =>
+        (j.job_number || "").toLowerCase() === term.toLowerCase() ||
+        (j.factory_challan_number || "").toLowerCase() === term.toLowerCase()
+    );
+    if (localHit) return;
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from("jobs")
+        .select("*, clients(contact_number, company_name)")
+        .or(`job_number.ilike.%${term}%,factory_challan_number.ilike.%${term}%`)
+        .limit(50);
+      if (cancelled || !data || data.length === 0) return;
+      const mapped = data.map((j: any) => ({
+        ...j,
+        customer_mobile: j.clients?.contact_number || "",
+        company_name: j.clients?.company_name || "",
+      }));
+      setJobs((prev) => {
+        const ids = new Set(prev.map((p) => p.id));
+        const additions = mapped.filter((m: any) => !ids.has(m.id));
+        return additions.length ? [...additions, ...prev] : prev;
+      });
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [search, loading, jobs]);
+
 
   function handleExport() {
     const exportData = jobs.map((j, i) => ({
