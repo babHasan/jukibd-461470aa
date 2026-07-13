@@ -1,0 +1,1 @@
+ALTER FUNCTION public.soft_delete_trigger() SET search_path = public;
