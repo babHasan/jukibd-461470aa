@@ -17,6 +17,8 @@ export type Database = {
       boards: {
         Row: {
           created_at: string
+          deleted_at: string | null
+          deleted_by: string | null
           id: string
           image_url: string | null
           name: string
@@ -24,6 +26,8 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           id?: string
           image_url?: string | null
           name: string
@@ -31,6 +35,8 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           id?: string
           image_url?: string | null
           name?: string
@@ -42,6 +48,8 @@ export type Database = {
         Row: {
           address: string
           created_at: string
+          deleted_at: string | null
+          deleted_by: string | null
           email: string
           id: string
           name: string
@@ -52,6 +60,8 @@ export type Database = {
         Insert: {
           address?: string
           created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           email?: string
           id?: string
           name: string
@@ -62,6 +72,8 @@ export type Database = {
         Update: {
           address?: string
           created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           email?: string
           id?: string
           name?: string
@@ -74,18 +86,24 @@ export type Database = {
       brands: {
         Row: {
           created_at: string
+          deleted_at: string | null
+          deleted_by: string | null
           id: string
           name: string
           remarks: string
         }
         Insert: {
           created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           id?: string
           name: string
           remarks?: string
         }
         Update: {
           created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           id?: string
           name?: string
           remarks?: string
@@ -98,6 +116,8 @@ export type Database = {
           account_name: string
           account_type: string
           created_at: string
+          deleted_at: string | null
+          deleted_by: string | null
           description: string
           id: string
           is_active: boolean
@@ -108,6 +128,8 @@ export type Database = {
           account_name: string
           account_type?: string
           created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           description?: string
           id?: string
           is_active?: boolean
@@ -118,6 +140,8 @@ export type Database = {
           account_name?: string
           account_type?: string
           created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           description?: string
           id?: string
           is_active?: boolean
@@ -140,6 +164,8 @@ export type Database = {
           company_name: string
           contact_number: string
           created_at: string
+          deleted_at: string | null
+          deleted_by: string | null
           email: string
           id: string
           image_url: string | null
@@ -152,6 +178,8 @@ export type Database = {
           company_name?: string
           contact_number?: string
           created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           email?: string
           id?: string
           image_url?: string | null
@@ -164,6 +192,8 @@ export type Database = {
           company_name?: string
           contact_number?: string
           created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           email?: string
           id?: string
           image_url?: string | null
@@ -255,18 +285,24 @@ export type Database = {
       expense_categories: {
         Row: {
           created_at: string
+          deleted_at: string | null
+          deleted_by: string | null
           id: string
           name: string
           remarks: string
         }
         Insert: {
           created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           id?: string
           name: string
           remarks?: string
         }
         Update: {
           created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           id?: string
           name?: string
           remarks?: string
@@ -280,6 +316,8 @@ export type Database = {
           category_name: string
           created_at: string
           created_by: string | null
+          deleted_at: string | null
+          deleted_by: string | null
           expense_date: string
           id: string
           memo_no: string
@@ -294,6 +332,8 @@ export type Database = {
           category_name?: string
           created_at?: string
           created_by?: string | null
+          deleted_at?: string | null
+          deleted_by?: string | null
           expense_date?: string
           id?: string
           memo_no?: string
@@ -308,6 +348,8 @@ export type Database = {
           category_name?: string
           created_at?: string
           created_by?: string | null
+          deleted_at?: string | null
+          deleted_by?: string | null
           expense_date?: string
           id?: string
           memo_no?: string
@@ -350,18 +392,24 @@ export type Database = {
       income_categories: {
         Row: {
           created_at: string
+          deleted_at: string | null
+          deleted_by: string | null
           id: string
           name: string
           remarks: string
         }
         Insert: {
           created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           id?: string
           name: string
           remarks?: string
         }
         Update: {
           created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           id?: string
           name?: string
           remarks?: string
@@ -375,6 +423,8 @@ export type Database = {
           category_name: string
           created_at: string
           created_by: string | null
+          deleted_at: string | null
+          deleted_by: string | null
           id: string
           income_date: string
           remarks: string
@@ -386,6 +436,8 @@ export type Database = {
           category_name?: string
           created_at?: string
           created_by?: string | null
+          deleted_at?: string | null
+          deleted_by?: string | null
           id?: string
           income_date?: string
           remarks?: string
@@ -397,6 +449,8 @@ export type Database = {
           category_name?: string
           created_at?: string
           created_by?: string | null
+          deleted_at?: string | null
+          deleted_by?: string | null
           id?: string
           income_date?: string
           remarks?: string
@@ -417,6 +471,8 @@ export type Database = {
           brand: string
           category: string
           created_at: string
+          deleted_at: string | null
+          deleted_by: string | null
           id: string
           location: string
           min_stock_level: number
@@ -432,6 +488,8 @@ export type Database = {
           brand?: string
           category?: string
           created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           id?: string
           location?: string
           min_stock_level?: number
@@ -447,6 +505,8 @@ export type Database = {
           brand?: string
           category?: string
           created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           id?: string
           location?: string
           min_stock_level?: number
@@ -512,6 +572,8 @@ export type Database = {
           created_by_name: string
           customer_id: string | null
           customer_name: string
+          deleted_at: string | null
+          deleted_by: string | null
           delivered_by_name: string
           delivery_date: string | null
           details_of_problem: string
@@ -543,6 +605,8 @@ export type Database = {
           created_by_name?: string
           customer_id?: string | null
           customer_name?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           delivered_by_name?: string
           delivery_date?: string | null
           details_of_problem?: string
@@ -574,6 +638,8 @@ export type Database = {
           created_by_name?: string
           customer_id?: string | null
           customer_name?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           delivered_by_name?: string
           delivery_date?: string | null
           details_of_problem?: string
@@ -610,18 +676,24 @@ export type Database = {
       models: {
         Row: {
           created_at: string
+          deleted_at: string | null
+          deleted_by: string | null
           id: string
           name: string
           remarks: string
         }
         Insert: {
           created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           id?: string
           name: string
           remarks?: string
         }
         Update: {
           created_at?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           id?: string
           name?: string
           remarks?: string
@@ -893,6 +965,8 @@ export type Database = {
         Row: {
           created_at: string
           customer_name: string
+          deleted_at: string | null
+          deleted_by: string | null
           id: string
           job_id: string | null
           job_number: string
@@ -906,6 +980,8 @@ export type Database = {
         Insert: {
           created_at?: string
           customer_name?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           id?: string
           job_id?: string | null
           job_number?: string
@@ -919,6 +995,8 @@ export type Database = {
         Update: {
           created_at?: string
           customer_name?: string
+          deleted_at?: string | null
+          deleted_by?: string | null
           id?: string
           job_id?: string | null
           job_number?: string
@@ -955,10 +1033,31 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_super_admin: { Args: { _user_id: string }; Returns: boolean }
+      list_deleted_rows: {
+        Args: never
+        Returns: {
+          data: Json
+          deleted_at: string
+          deleted_by: string
+          deleted_by_name: string
+          label: string
+          row_id: string
+          table_name: string
+        }[]
+      }
       lookup_email_by_mobile: { Args: { _mobile: string }; Returns: string }
+      purge_deleted_row: {
+        Args: { _id: string; _table: string }
+        Returns: undefined
+      }
+      restore_deleted_row: {
+        Args: { _id: string; _table: string }
+        Returns: undefined
+      }
     }
     Enums: {
-      app_role: "admin" | "user"
+      app_role: "admin" | "user" | "super_admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1086,7 +1185,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user"],
+      app_role: ["admin", "user", "super_admin"],
     },
   },
 } as const

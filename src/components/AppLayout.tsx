@@ -50,6 +50,7 @@ import {
   ShieldCheck,
   Star,
   QrCode,
+  Trash2,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { ReactNode, useState, useEffect } from "react";
@@ -67,6 +68,7 @@ interface NavItem {
   label: string;
   icon: any;
   children?: SubItem[];
+  superOnly?: boolean;
 }
 
 const navItems: NavItem[] = [
@@ -188,6 +190,7 @@ const navItems: NavItem[] = [
     ],
   },
   { to: "/backup", label: "BACKUP DATABASE", icon: Database },
+  { to: "/recycle-bin", label: "RECYCLE BIN", icon: Trash2, superOnly: true },
 ];
 
 function SidebarItem({
@@ -298,7 +301,7 @@ const navPermissionMap: Record<string, string> = {
 export function AppLayout({ children }: { children: ReactNode }) {
   const location = useLocation();
   
-  const { signOut, user, isAdmin, permissions } = useAuth();
+  const { signOut, user, isAdmin, isSuperAdmin, permissions } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profile, setProfile] = useState<{ name: string; photo_url: string | null } | null>(null);
@@ -369,6 +372,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
         <nav className="flex-1 overflow-y-auto space-y-1 px-3 py-3 scrollbar-thin">
           {navItems
             .filter((item) => {
+              if (item.superOnly) return isSuperAdmin;
               if (isAdmin) return true;
               if (item.label === "ADMIN") return false;
               const requiredModule = navPermissionMap[item.label];

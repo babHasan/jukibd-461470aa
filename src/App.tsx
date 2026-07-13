@@ -59,6 +59,7 @@ import AnalyticsDashboard from "./pages/analytics/AnalyticsDashboard";
 import CustomerFeedback from "./pages/feedback/CustomerFeedback";
 import QrScanner from "./pages/QrScanner";
 import TallyExport from "./pages/TallyExport";
+import RecycleBin from "./pages/RecycleBin";
 import { ThemeProvider } from "@/context/ThemeContext";
 
 const queryClient = new QueryClient();
@@ -129,6 +130,7 @@ function AppRoutes() {
       <Route path="/feedback" element={<ProtectedRoute><CustomerFeedback /></ProtectedRoute>} />
       <Route path="/qr-scanner" element={<ProtectedRoute><QrScanner /></ProtectedRoute>} />
       <Route path="/tally-export" element={<ProtectedRoute><TallyExport /></ProtectedRoute>} />
+      <Route path="/recycle-bin" element={<ProtectedRoute><RecycleBin /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

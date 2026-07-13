@@ -7,6 +7,7 @@ interface AuthContextValue {
   session: Session | null;
   loading: boolean;
   isAdmin: boolean;
+  isSuperAdmin: boolean;
   permissions: string[];
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signUp: (email: string, password: string, name: string) => Promise<{ error: any }>;
@@ -20,6 +21,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [permissions, setPermissions] = useState<string[]>([]);
 
   async function fetchRoleAndPermissions(userId: string) {
@@ -27,7 +29,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       supabase.from("user_roles").select("role").eq("user_id", userId),
       supabase.from("user_permissions").select("module").eq("user_id", userId),
     ]);
-    setIsAdmin(rolesRes.data?.some((r: any) => r.role === "admin") ?? false);
+    const roles = rolesRes.data?.map((r: any) => r.role) ?? [];
+    setIsAdmin(roles.includes("admin") || roles.includes("super_admin"));
+    setIsSuperAdmin(roles.includes("super_admin"));
     setPermissions(permsRes.data?.map((p: any) => p.module) ?? []);
   }
 
@@ -49,6 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       } else {
         setIsAdmin(false);
+        setIsSuperAdmin(false);
         setPermissions([]);
       }
       setLoading(false);
@@ -94,7 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, isAdmin, permissions, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading, isAdmin, isSuperAdmin, permissions, signIn, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   );
