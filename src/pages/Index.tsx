@@ -21,6 +21,7 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import { ChevronLeft } from "lucide-react";
 
 interface Job {
   id: string;
@@ -95,6 +96,8 @@ const Index = () => {
   const [wizardJobs, setWizardJobs] = useState<Job[]>([]);
   const [deliveryWizardOpen, setDeliveryWizardOpen] = useState(false);
   const [deliveryWizardJobs, setDeliveryWizardJobs] = useState<Job[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
 
   async function fetchJobs() {
     const pageSize = 1000;
@@ -119,6 +122,7 @@ const Index = () => {
   }
 
   useEffect(() => { fetchJobs(); }, []);
+  useEffect(() => { setCurrentPage(1); }, [jobSearch, jobFilter, fromDate, toDate, pageSize]);
 
   async function handleGroupStatusUpdate(group: JobGroup) {
     // Intercept in-progress → completed transition (open CompletionWizard)
@@ -192,6 +196,11 @@ const Index = () => {
     }
     return Array.from(map.values());
   }, [filteredJobs]);
+
+  const totalGroups = groups.length;
+  const totalPages = Math.max(1, Math.ceil(totalGroups / pageSize));
+  const pageStart = (currentPage - 1) * pageSize;
+  const pagedGroups = groups.slice(pageStart, pageStart + pageSize);
 
   return (
     <AppLayout>
@@ -283,7 +292,7 @@ const Index = () => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  groups.map((group) => (
+                  pagedGroups.map((group) => (
                     <TableRow key={group.key} className={`align-top border-b ${rowBgColors[getGroupStatus(group.jobs)] || ""}`}>
                       <TableCell className="text-sm whitespace-nowrap">{group.job_date}</TableCell>
                       <TableCell>
@@ -365,7 +374,7 @@ const Index = () => {
             {groups.length === 0 ? (
               <div className="py-8 text-center text-muted-foreground">No jobs found.</div>
             ) : (
-              groups.map((group) => (
+              pagedGroups.map((group) => (
                 <div key={group.key} className={`p-4 space-y-3 ${rowBgColors[getGroupStatus(group.jobs)] || ""}`}>
                   {/* Header row */}
                   <div className="flex items-start justify-between gap-2">
@@ -426,6 +435,42 @@ const Index = () => {
               ))
             )}
           </div>
+
+          {/* Pagination controls */}
+          {totalGroups > 0 && (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t p-4">
+              <div className="text-sm text-muted-foreground">
+                Showing {pageStart + 1}-{Math.min(pageStart + pageSize, totalGroups)} of {totalGroups} groups ({jobs.length} total jobs)
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <Select value={String(pageSize)} onValueChange={(v) => setPageSize(Number(v))}>
+                  <SelectTrigger className="w-[110px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="10">10 / page</SelectItem>
+                    <SelectItem value="25">25 / page</SelectItem>
+                    <SelectItem value="50">50 / page</SelectItem>
+                    <SelectItem value="100">100 / page</SelectItem>
+                    <SelectItem value="250">250 / page</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button variant="outline" size="sm" onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
+                  First
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1}>
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <span className="text-sm px-2">Page {currentPage} of {totalPages}</span>
+                <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage >= totalPages}>
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => setCurrentPage(totalPages)} disabled={currentPage >= totalPages}>
+                  Last
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
         <CompletionWizard
           open={wizardOpen}
