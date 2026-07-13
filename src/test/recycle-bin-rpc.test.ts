@@ -24,7 +24,7 @@ describe("list_deleted_rows RPC (latest migration)", () => {
   const sql = latestListDeletedRowsMigration();
 
   it("labels jobs with job_number, not ticket_number", () => {
-    expect(sql).toMatch(/'JOB-'\s*\|\|\s*job_number/);
+    expect(sql).toMatch(/JOB-''\s*\|\|\s*job_number/);
     expect(sql).not.toMatch(/ticket_number/);
   });
 
