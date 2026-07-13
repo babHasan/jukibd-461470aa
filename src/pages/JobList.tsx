@@ -98,23 +98,28 @@ export default function JobList() {
   const [deliveryWizardOpen, setDeliveryWizardOpen] = useState(false);
   const [deliveryWizardJobs, setDeliveryWizardJobs] = useState<Job[]>([]);
 
-  function fetchJobs() {
+  async function fetchJobs() {
     setLoading(true);
-    supabase
-      .from("jobs")
-      .select("*, clients(contact_number, company_name)")
-      .order("created_at", { ascending: false })
-      .range(0, 49999)
-      .then(({ data, error }) => {
-        if (!error && data) {
-          setJobs(data.map((j: any) => ({
-            ...j,
-            customer_mobile: j.clients?.contact_number || "",
-            company_name: j.clients?.company_name || "",
-          })));
-        }
-        setLoading(false);
-      });
+    const pageSize = 1000;
+    let from = 0;
+    const all: any[] = [];
+    while (true) {
+      const { data, error } = await supabase
+        .from("jobs")
+        .select("*, clients(contact_number, company_name)")
+        .order("created_at", { ascending: false })
+        .range(from, from + pageSize - 1);
+      if (error || !data) break;
+      all.push(...data);
+      if (data.length < pageSize) break;
+      from += pageSize;
+    }
+    setJobs(all.map((j: any) => ({
+      ...j,
+      customer_mobile: j.clients?.contact_number || "",
+      company_name: j.clients?.company_name || "",
+    })));
+    setLoading(false);
   }
 
   useEffect(() => { fetchJobs(); }, []);
