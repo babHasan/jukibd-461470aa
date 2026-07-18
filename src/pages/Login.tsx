@@ -46,6 +46,7 @@ export default function Login() {
           <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-accent">
             <Wrench className="h-6 w-6 text-accent-foreground" />
           </div>
+          <h1 className="sr-only">Sign in to jukibd RepairDesk</h1>
           <CardTitle className="text-xl">RepairDesk Login</CardTitle>
         </CardHeader>
         <CardContent>
