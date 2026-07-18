@@ -1,0 +1,10 @@
+# jukibd
+
+> Repair desk and service center management platform for tracking jobs, inventory, invoices and customer communication.
+
+jukibd helps repair shops manage their end-to-end workflow: intake jobs, track diagnostic and repair status, manage spare-parts inventory, invoice customers, and give customers a public tracker for their repair.
+
+## Pages
+
+- [Home](/): Product overview and sign-in entry point.
+- [Track your repair](/track): Public customer portal to look up a repair job by ticket or challan number and leave feedback.

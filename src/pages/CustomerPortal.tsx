@@ -107,6 +107,8 @@ function FeedbackForm({ jobId, jobNumber, customerName }: { jobId: string; jobNu
             onMouseEnter={() => setHovered(i)}
             onMouseLeave={() => setHovered(0)}
             onClick={() => setRating(i)}
+            aria-label={`Rate ${i} star${i === 1 ? "" : "s"}`}
+            type="button"
             className="p-0.5 transition-transform hover:scale-110"
           >
             <Star className={`h-6 w-6 ${i <= (hovered || rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`} />
